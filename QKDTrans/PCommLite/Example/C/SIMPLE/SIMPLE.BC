@@ -1,0 +1,43 @@
+#
+# Borland makefile for SIMPLE
+# Please set BC command line environment first.
+# (PATH ; INCLUDE; LIB) 
+# Requires PComm.dll
+#
+# To use: "make -f simple.bc"
+#
+
+EXPATH  = ..
+LIBPATH = ..\..\..\lib
+CCFLAGS = -c -w-par -P- -DWIN32 -DSTRICT -I$(LIBPATH) -I$(EXPATH)
+RCFLAGS = -i$(EXPATH)
+LINKOPT = -Tpe -aa
+
+simple.exe: simple.res simple.obj \
+            about.obj comm.obj mxtool.obj $(LIBPATH)\PCommb.lib
+	tlink32 $(LINKOPT) c0w32.obj *.obj,simple,,\
+$(LIBPATH)\PCommb.lib cw32.lib import32.lib,,simple
+
+simple.res: simple.rc
+    brcc32 $(RCFLAGS) -dWIN32 simple.rc
+
+# construct LIB for (Microsoft generated) PComm.DLL
+# PCommb.lib: $(LIBPATH)\PComm.dll
+#   implib PCommb.lib $(LIBPATH)\PComm.dll
+
+simple.obj: simple.c $(EXPATH)\mxtool.h $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  simple.c
+
+# public module
+about.obj: $(EXPATH)\about.c
+	bcc32 $(CCFLAGS)  $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\mxtool.c
+
+############

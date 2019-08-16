@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="GB2312"?>
+<MESSAGES>
+	<VersionControl Id="$Id: message.xml 772 2012-08-03 13:59:49Z lwy $" URL="$URL: http://172.17.8.1/svn/QUESS/tags/QKDBench-2.2.1/message.xml $"/>
+	<MessageBlock name="量子工程参数1" startByte="0">
+		<Message name="采样时刻" startByte="0" byteLength="6" parseType="calc" dispIndex="3">
+		</Message>
+		<Message name="量子工作状态1" startByte="6" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="工作模式" startBit="0" bitLength="3">
+				<BitsValue name="待机模式" value="0"/>
+				<BitsValue name="量子密钥分发模式" value="1"/>
+				<BitsValue name="量子密钥分析模式" value="2"/>
+				<BitsValue name="量子接收实验模式" value="3"/>
+				<BitsValue name="量子密钥提取模式" value="4"/>
+				<BitsValue name="激光通信实验模式" value="5"/>
+			</Bits>
+			<Bits name="量子接收/发射模式" startBit="3" bitLength="1">
+				<BitsValue name="量子发射模式" value="0"/>
+				<BitsValue name="量子接收模式" value="1"/>
+			</Bits>
+			<Bits name="量子集成控制板主/备工作状态" startBit="4" bitLength="1">
+				<BitsValue name="主板工作" value="0"/>
+				<BitsValue name="备板工作" value="1"/>
+			</Bits>
+			<Bits name="保留" startBit="5" bitLength="3">
+				<BitsValue name="固定值(0)" value="0"/>
+			</Bits>
+		</Message>
+		<Message name="量子工作状态2" startByte="7" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="GPS主备状态" startBit="0" bitLength="1">
+				<BitsValue name="GPS主工作" value="0"/>
+				<BitsValue name="GPS备工作" value="1"/>
+			</Bits>
+			<Bits name="GPS模式" startBit="1" bitLength="1">
+				<BitsValue name="GPS外部输入" value="0"/>
+				<BitsValue name="GPS内部模拟" value="1"/>
+			</Bits>
+			<Bits name="量子通信状态" startBit="2" bitLength="1">
+				<BitsValue name="不在量子通信" value="0"/>
+				<BitsValue name="正在量子通信" value="1"/>
+			</Bits>
+			<Bits name="量子通信等待状态" startBit="3" bitLength="1">
+				<BitsValue name="不在等待量子通信" value="0"/>
+				<BitsValue name="正在等待量子通信" value="1"/>
+			</Bits>
+			<Bits name="QKD接收CCU正确指令注入计数，收到正确注入指令时+1" startBit="4" bitLength="2">
+				<BitsValue name="正确注入指令数0" value="0"/>
+				<BitsValue name="正确注入指令数1" value="1"/>
+				<BitsValue name="正确注入指令数2" value="2"/>
+				<BitsValue name="正确注入指令数3" value="3"/>
+			</Bits>
+			<Bits name="指令执行状态" startBit="6" bitLength="1">
+				<BitsValue name="指令执行状态空闲" value="0"/>
+				<BitsValue name="指令执行状态忙碌" value="1"/>
+			</Bits>
+			<Bits name="QKD执行异常指令计数" startBit="7" bitLength="1">
+				<BitsValue name="执行异常指令数0" value="0"/>
+				<BitsValue name="执行异常指令数1" value="1"/>
+			</Bits>
+		</Message>
+		<Message name="量子工作状态3" startByte="8" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="保留" startBit="0" bitLength="1">
+				<BitsValue name="固定值(0)" value="0"/>
+			</Bits>
+			<Bits name="随机数模式" startBit="1" bitLength="2">
+				<BitsValue name="随机数模式1" value="0"/>
+				<BitsValue name="随机数模式2" value="1"/>
+				<BitsValue name="随机数模式3" value="2"/>
+				<BitsValue name="保留" value="3"/>
+			</Bits>
+			<Bits name="同步光通道状态" startBit="3" bitLength="2">
+				<BitsValue name="同步光通道1" value="0"/>
+				<BitsValue name="同步光通道2" value="1"/>
+				<BitsValue name="同步光通道3" value="2"/>
+				<BitsValue name="保留" value="3"/>
+			</Bits>
+			<Bits name="同步光TDC主备选择" startBit="5" bitLength="1">
+				<BitsValue name="同步光TDC主工作" value="0"/>
+				<BitsValue name="同步光TDC备工作" value="1"/>
+			</Bits>
+			<Bits name="信号TDC模式" startBit="6" bitLength="2">
+				<BitsValue name="TDC单模式1" value="0"/>
+				<BitsValue name="TDC单模式2" value="1"/>
+				<BitsValue name="TDC乒乓模式" value="2"/>
+				<BitsValue name="保留" value="3"/>
+			</Bits>
+		</Message>
+		<Message name="量子工作状态4" startByte="9" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="激光器LD1主备状态" startBit="0" bitLength="1">
+				<BitsValue name="LD1主工作" value="0"/>
+				<BitsValue name="LD1备工作" value="1"/>
+			</Bits>
+			<Bits name="激光器LD2主备状态" startBit="1" bitLength="1">
+				<BitsValue name="LD2主工作" value="0"/>
+				<BitsValue name="LD2备工作" value="1"/>
+			</Bits>
+			<Bits name="激光器LD3主备状态" startBit="2" bitLength="1">
+				<BitsValue name="LD3主工作" value="0"/>
+				<BitsValue name="LD3备工作" value="1"/>
+			</Bits>
+			<Bits name="激光器LD4主备状态" startBit="3" bitLength="1">
+				<BitsValue name="LD4主工作" value="0"/>
+				<BitsValue name="LD4备工作" value="1"/>
+			</Bits>
+			<Bits name="偏振激光器电源开关状态" startBit="4" bitLength="1">
+				<BitsValue name="偏振激光器电源关" value="0"/>
+				<BitsValue name="偏振激光器电源开" value="1"/>
+			</Bits>
+			<Bits name="偏振激光器使能状态" startBit="5" bitLength="1">
+				<BitsValue name="偏振激光器禁止" value="0"/>
+				<BitsValue name="偏振激光器允许" value="1"/>
+			</Bits>
+			<Bits name="LD功率控制" startBit="6" bitLength="1">
+				<BitsValue name="自动功率控制" value="0"/>
+				<BitsValue name="DAC直接控制" value="1"/>
+			</Bits>
+			<Bits name="LD APD +5V电源主备状态" startBit="7" bitLength="1">
+				<BitsValue name="LD APD +5V电源主" value="0"/>
+				<BitsValue name="LD APD +5V电源备" value="1"/>
+			</Bits>
+		</Message>
+		<Message name="量子工作状态5" startByte="10" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="LD1开关状态" startBit="0" bitLength="1">
+				<BitsValue name="LD1关" value="0"/>
+				<BitsValue name="LD1开" value="1"/>
+			</Bits>
+			<Bits name="LD2开关状态" startBit="1" bitLength="1">
+				<BitsValue name="LD2关" value="0"/>
+				<BitsValue name="LD2开" value="1"/>
+			</Bits>
+			<Bits name="LD3开关状态" startBit="2" bitLength="1">
+				<BitsValue name="LD3关" value="0"/>
+				<BitsValue name="LD3开" value="1"/>
+			</Bits>
+			<Bits name="LD4开关状态" startBit="3" bitLength="1">
+				<BitsValue name="LD4关" value="0"/>
+				<BitsValue name="LD4开" value="1"/>
+			</Bits>
+			<Bits name="LD1发光状态" startBit="4" bitLength="1">
+				<BitsValue name="LD1不发光" value="0"/>
+				<BitsValue name="LD1发光" value="1"/>
+			</Bits>
+			<Bits name="LD2发光状态" startBit="5" bitLength="1">
+				<BitsValue name="LD2不发光" value="0"/>
+				<BitsValue name="LD2发光" value="1"/>
+			</Bits>
+			<Bits name="LD3发光状态" startBit="6" bitLength="1">
+				<BitsValue name="LD3不发光" value="0"/>
+				<BitsValue name="LD3发光" value="1"/>
+			</Bits>
+			<Bits name="LD4发光状态" startBit="7" bitLength="1">
+				<BitsValue name="LD4不发光" value="0"/>
+				<BitsValue name="LD4发光" value="1"/>
+			</Bits>
+		</Message>
+		<Message name="量子工作状态6" startByte="11" byteLength="1" parseType="bits" dispIndex="0">
+			<Bits name="APD1开关状态" startBit="0" bitLength="1">
+				<BitsValue name="APD1关" value="0"/>
+				<BitsValue name="APD1开" value="1"/>
+			</Bits>
+			<Bits name="APD2开关状态" startBit="1" bitLength="1">
+				<BitsValue name="APD2关" value="0"/>
+				<BitsValue name="APD2开" value="1"/>
+			</Bits>
+			<Bits name="APD3开关状态" startBit="2" bitLength="1">
+				<BitsValue name="APD3关" value="0"/>
+				<BitsValue name="APD3开" value="1"/>
+			</Bits>
+			<Bits name="APD4开关状态" startBit="3" bitLength="1">
+				<BitsValue name="APD4关" value="0"/>
+				<BitsValue name="APD4开" value="1"/>
+			</Bits>
+			<Bits name="APD高压开关状态" startBit="4" bitLength="1">
+				<BitsValue name="APD高压关" value="0"/>
+				<BitsValue name="APD高压开" value="1"/>
+			</Bits>
+			<Bits name="APD正负电源开关状态" startBit="5" bitLength="1">
+				<BitsValue name="APD正负电源关" value="0"/>
+				<BitsValue name="APD正负电源开" value="1"/>
+			</Bits>
+			<Bits name="保留" startBit="6" bitLength="2">
+				<BitsValue name="固定值(0)" value="0"/>
+			</Bits>
+		</Message>
+		<Message name="QKD接收CCU事件计数" startByte="12" byteLength="1" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="量子+28V电流" startByte="13" byteLength="1" parseType="calc" dispIndex="5">
+		</Message>
+		<Message name="量子APD 320V高压" startByte="14" byteLength="1" parseType="calc" dispIndex="6">
+		</Message>
+		<Message name="LD功率检测值" startByte="15" byteLength="2" parseType="calc" dispIndex="7">
+		</Message>
+		<Message name="QCAP板量子光GP1芯片环境温度" startByte="17" byteLength="1" parseType="calc" dispIndex="8">
+		</Message>
+		<Message name="QCAP板同步光GP1芯片环境温度" startByte="18" byteLength="1" parseType="calc" dispIndex="8">
+		</Message>
+		<Message name="LD1主/备电压+5V" startByte="19" byteLength="1" parseType="calc" dispIndex="9">
+		</Message>
+		<Message name="LD2主/备电压+5V" startByte="20" byteLength="1" parseType="calc" dispIndex="9">
+		</Message>
+		<Message name="LD3主/备电压+5V" startByte="21" byteLength="1" parseType="calc" dispIndex="9">
+		</Message>
+		<Message name="LD4主/备电压+5V" startByte="22" byteLength="1" parseType="calc" dispIndex="9">
+		</Message>
+		<Message name="APD1电压+5V" startByte="23" byteLength="1" parseType="calc" dispIndex="10">
+		</Message>
+		<Message name="APD2电压+5V" startByte="24" byteLength="1" parseType="calc" dispIndex="10">
+		</Message>
+		<Message name="APD3电压+5V" startByte="25" byteLength="1" parseType="calc" dispIndex="10">
+		</Message>
+		<Message name="APD4电压+5V" startByte="26" byteLength="1" parseType="calc" dispIndex="10">
+		</Message>
+		<Message name="APD LD+5V电压" startByte="27" byteLength="1" parseType="calc" dispIndex="11">
+		</Message>
+		<Message name="LD板环境温度1" startByte="28" byteLength="1" parseType="calc" dispIndex="12">
+		</Message>
+		<Message name="LD板环境温度2" startByte="29" byteLength="1" parseType="calc" dispIndex="12">
+		</Message>
+		<Message name="功率监测板温度" startByte="30" byteLength="1" parseType="calc" dispIndex="13">
+		</Message>
+		<Message name="LD1主激光二极管温度" startByte="31" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD2主激光二极管温度" startByte="32" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD3主激光二极管温度" startByte="33" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD4主激光二极管温度" startByte="34" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD1备激光二极管温度" startByte="35" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD2备激光二极管温度" startByte="36" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD3备激光二极管温度" startByte="37" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="LD4备激光二极管温度" startByte="38" byteLength="1" parseType="calc" dispIndex="14">
+		</Message>
+		<Message name="APD1雪崩二极管温度" startByte="39" byteLength="1" parseType="calc" dispIndex="15">
+		</Message>
+		<Message name="APD2雪崩二极管温度" startByte="40" byteLength="1" parseType="calc" dispIndex="15">
+		</Message>
+		<Message name="APD3雪崩二极管温度" startByte="41" byteLength="1" parseType="calc" dispIndex="15">
+		</Message>
+		<Message name="APD4雪崩二极管温度" startByte="42" byteLength="1" parseType="calc" dispIndex="15">
+		</Message>
+		<Message name="LD1 Signal功率检测值" startByte="43" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD1 Decoy功率检测值" startByte="45" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD2 Signal功率检测值" startByte="47" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD2 Decoy功率检测值" startByte="49" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD3 Signal功率检测值" startByte="51" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD3 Decoy功率检测值" startByte="53" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD4 Signal功率检测值" startByte="55" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="LD4 Decoy功率检测值" startByte="57" byteLength="2" parseType="calc" dispIndex="16">
+		</Message>
+		<Message name="FPGA温度" startByte="59" byteLength="1" parseType="calc" dispIndex="17">
+		</Message>
+		<Message name="填充数据" startByte="60" byteLength="4" parseType="calc" dispIndex="18">
+		</Message>
+	</MessageBlock>
+	<MessageBlock name="量子工程参数2" startByte="64">
+		<Message name="采样时刻" startByte="0" byteLength="6" parseType="calc" dispIndex="3">
+		</Message>
+		<Message name="GPS时间" startByte="6" byteLength="6" parseType="calc" dispIndex="4">
+		</Message>
+		<Message name="QKD接收CCU正确指令注入计数" startByte="12" byteLength="2" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="QKD接收CCU错误指令注入计数" startByte="14" byteLength="2" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="QKD发送CCU数据包计数" startByte="16" byteLength="2" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="QKD发送CCU数据类型" startByte="18" byteLength="1" parseType="calc" dispIndex="32">
+		</Message>
+		<Message name="QKD接收CCU正确数据包计数" startByte="19" byteLength="2" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="QKD接收CCU错误数据包计数" startByte="21" byteLength="2" parseType="calc" dispIndex="2">
+		</Message>
+		<Message name="QKD接收CCU数据类型" startByte="23" byteLength="1" parseType="calc" dispIndex="32">
+		</Message>
+		<Message name="QKD科学数据处理状态" startByte="24" byteLength="2" parseType="calc" dispIndex="31">
+		</Message>
+		<Message name="Flash存储数据类型" startByte="26" byteLength="1" parseType="calc" dispIndex="32">
+		</Message>
+		<Message name="Flash读取数据类型" startByte="27" byteLength="1" parseType="calc" dispIndex="32">
+		</Message>
+		<Message name="Flash清除数据类型" startByte="28" byteLength="1" parseType="calc" dispIndex="32">
+		</Message>
+		<Message name="Flash数据访问状态" startByte="29" byteLength="1" parseType="calc" dispIndex="0">
+		</Message>
+		<Message name="填充数据" startByte="30" byteLength="34" parseType="calc" dispIndex="18">
+		</Message>
+	</MessageBlock>
+</MESSAGES>

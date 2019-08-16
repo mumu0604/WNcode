@@ -1,0 +1,48 @@
+#
+# Borland makefile for PORTSTAT
+# Please set BC command line environment first.
+# (PATH ; INCLUDE; LIB) 
+# Requires PComm.dll
+#
+# To use: "make -f portstat.bc"
+#
+
+EXPATH  = ..
+LIBPATH = ..\..\..\lib
+CCFLAGS = -c -w-par -P- -DWIN32 -DSTRICT -I$(LIBPATH) -I$(EXPATH)
+RCFLAGS = -i$(EXPATH)
+LINKOPT = -Tpe -aa
+
+
+portstat.exe: portstat.res portstat.obj statdlg.obj\
+            about.obj comm.obj mxtool.obj $(LIBPATH)\PCommb.lib
+	tlink32 $(LINKOPT) c0w32.obj *.obj,portstat,,\
+$(LIBPATH)\PCommb.lib cw32.lib import32.lib,,portstat
+
+portstat.res: portstat.rc
+    brcc32 $(RCFLAGS) -dWIN32 portstat.rc
+
+# construct LIB for (Microsoft generated) PComm.DLL
+# PCommb.lib: $(LIBPATH)\PComm.dll
+#   implib PCommb.lib $(LIBPATH)\PComm.dll
+
+portstat.obj: portstat.c $(EXPATH)\mxtool.h $(EXPATH)\comm.h \
+$(EXPATH)\resource.h $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  portstat.c
+
+statdlg.obj : statdlg.c $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  statdlg.c
+
+# public module
+about.obj: $(EXPATH)\about.c
+	bcc32 $(CCFLAGS)  $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\mxtool.c
+
+############

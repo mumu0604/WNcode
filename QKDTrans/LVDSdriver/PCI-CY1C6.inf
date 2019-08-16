@@ -1,0 +1,98 @@
+[Version]
+Signature   = $CHICAGO$
+Provider    = %PLX%
+Class       = Unknown
+DriverVer   = 07/31/2007, 1.0.0.0
+
+
+;-----------------------------------------------------------
+; Driver information
+;-----------------------------------------------------------
+[Manufacturer]
+%PLX% = PLX.Mfg
+
+[PLX.Mfg]
+"PCI-CY1C6开发系统"                = DDInstall_9054, PCI\VEN_10b5&DEV_9054
+
+
+;-----------------------------------------------------------
+; General installation section
+;-----------------------------------------------------------
+[CopyFiles_ApiDll]
+PlxApi.dll,,,4
+
+[CopyFiles_9054]
+Pci9054.sys,,,4
+
+
+;-----------------------------------------------------------
+; Windows 2000&XP installation section
+;
+;-----------------------------------------------------------
+[DDInstall_9054.NT]
+AddReg    = AddRegistry_NT_9054
+CopyFiles = CopyFiles_ApiDll, CopyFiles_9054
+
+[DDInstall_9054.NT.Services]
+AddService = Pci9054, 0x00000002, Service_Inst_9054, EventLog_Inst_9054
+
+[AddRegistry_NT_9054]
+HKLM,System\CurrentControlSet\Services\Pci9054,CommonBufferSize,0x00010003,0x10000
+HKLM,System\CurrentControlSet\Services\Pci9054,MaxSglTransferSize,0x00010003,0x300000
+HKLM,System\CurrentControlSet\Services\Pci9054,PhysicalMemoryCacheable,0x00010003,0x0
+
+[Service_Inst_9054]
+ServiceType    = 1                  ; SERVICE_KERNEL_DRIVER
+StartType      = 3                  ; SERVICE_DEMAND_START
+ErrorControl   = 0                  ; SERVICE_ERROR_IGNORE
+ServiceBinary  = %10%\System32\Drivers\Pci9054.sys
+
+
+;-----------------------------------------------------------
+; Windows 98 installation section
+;
+;-----------------------------------------------------------
+[DDInstall_9054]
+AddReg    = AddRegistry_9054
+CopyFiles = CopyFiles_ApiDll, CopyFiles_9054
+
+[AddRegistry_9054]
+HKR,,DevLoader,,*ntkern
+HKR,,NTMPDriver,,Pci9054.sys
+HKR,,ErrorLogLevel,0x00010003,2
+HKR,,CommonBufferSize,0x00010003,0x10000
+HKR,,MaxSglTransferSize,0x00010003,0x100000
+
+
+;-----------------------------------------------------------
+; Event log registry entries
+;-----------------------------------------------------------
+[EventLog_Inst_9054]
+AddReg = EventLog_AddReg_9054
+
+[EventLog_AddReg_9054]
+HKR,,EventMessageFile,0x00020000,"%SystemRoot%\System32\IoLogMsg.dll;%SystemRoot%\System32\Drivers\Pci9054.sys"
+HKR,,TypesSupported,0x00010001,7
+
+
+;-----------------------------------------------------------
+; Source file information
+;-----------------------------------------------------------
+[SourceDisksNames.x86]
+1 = %InstallDisk%
+
+[SourceDisksFiles]
+PlxApi.dll  = 1
+Pci9054.sys = 1
+
+[DestinationDirs]
+CopyFiles_ApiDll = 11                        ;11 = System Directory
+DefaultDestDir   = 10, System32\Drivers      ;10 = Windows Directory
+
+
+;-----------------------------------------------------------
+; String information
+;-----------------------------------------------------------
+[Strings]
+InstallDisk = "Red Logic Installtion"
+PLX         = "Red Logic, China"

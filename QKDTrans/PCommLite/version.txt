@@ -1,0 +1,36 @@
+
+Product:	PComm Lite
+Version:	1.3
+Date:		10/25/2005
+Company:	Moxa Technologies Co., Ltd
+
+Support Product (Diagnostic/Monitor/Library):
+Intellio, Smartio, Industio, UPCI Multiport Serial Board
+
+Support Platform:
+Windows 2000,
+Windows XP,
+Windows 2003,
+Windows XP x64 Edition,
+Windows 2003 x64 Edition.
+
+
+Version List:
+PComm Diagnostic: 	1.3 
+PComm Mointor: 		1.3 
+PComm Terminal: 	2.7 
+PComm Library: 	        2.5
+
+
+Release Note:
+Ver1.3
+1. Utilities support Moxa MSB x64 driver.
+2. PComm Library supports Windows x64 Edition (AMD64, EM64T).
+   For cross development, x86 & x64 library will be all installed.
+3. Improve PComm Terminal display performance.
+4. Improve PComm Terminal status bar display problem.
+5. Improve PComm Terminal display problem with Moxa UC series/
+   EtherDevice/W2004 console.
+
+-End-
+ 

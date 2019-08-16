@@ -1,0 +1,56 @@
+#
+# Borland makefile for FTRANS
+# Please set BC command line environment first.
+# (PATH ; INCLUDE; LIB) 
+#
+# Requires PComm.dll
+#
+# To use: "make -f ftrans.bc"
+#
+
+EXPATH  = ..
+LIBPATH = ..\..\..\lib
+CCFLAGS = -c -w-par -P- -DWIN32 -DSTRICT -I$(LIBPATH) -I$(EXPATH)
+RCFLAGS = -i$(EXPATH)
+LINKOPT = -Tpe -aa 
+OBJFILE = ftrans.obj ftproc.obj fstatus.obj ftset.obj about.obj \
+comm.obj mxtool.obj
+
+ftrans.exe: $(OBJFILE) ftrans.res $(LIBPATH)\PComm.lib
+	tlink32 $(LINKOPT) c0w32.obj *.obj,ftrans,,\
+$(LIBPATH)\PCommb.lib cw32.lib import32.lib,,ftrans
+
+ftrans.res: ftrans.rc $(EXPATH)\resource.h
+    brcc32 $(RCFLAGS) -dWIN32 ftrans.rc
+
+# construct LIB for (Microsoft generated) PComm.DLL
+# PCommb.lib: $(LIBPATH)\PComm.dll
+#   implib PCommb.lib $(LIBPATH)\PComm.dll
+
+ftrans.obj: ftrans.c $(LIBPATH)\PComm.h $(EXPATH)\resource.h \
+$(EXPATH)\mxtool.h $(EXPATH)\comm.h
+	bcc32 $(CCFLAGS)  ftrans.c
+
+ftproc.obj : ftproc.c $(LIBPATH)\PComm.h $(EXPATH)\resource.h ftrans.h \
+$(EXPATH)\comm.h
+        bcc32 $(CCFLAGS) ftproc.c
+
+fstatus.obj : fstatus.c $(LIBPATH)\PComm.h $(EXPATH)\resource.h ftrans.h \
+$(EXPATH)\comm.h
+	bcc32 $(CCFLAGS)  fstatus.c
+
+ftset.obj : ftset.c $(EXPATH)\resource.h ftrans.h
+	bcc32 $(CCFLAGS)  ftset.c
+
+# public module
+about.obj: $(EXPATH)\about.c
+	bcc32 $(CCFLAGS)  $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\mxtool.c
+
+############

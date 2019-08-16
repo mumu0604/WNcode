@@ -1,0 +1,5 @@
+:Base diag.hlp
+:Title PComm Diagnostic Help File
+1 PComm Diagnostic Message Document=ID_HLP_TITLE
+1 Diagnostic Error Message=ID_HLP_DIAG
+1 Board Status Description=ID_HLP_BRDSTATUS

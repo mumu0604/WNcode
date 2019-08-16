@@ -1,0 +1,43 @@
+#
+# Borland makefile for IRQDEMO
+# Please set BC command line environment first.
+# (PATH ; INCLUDE; LIB) 
+# Requires PComm.dll
+#
+# To use: "make -f irqdemo.bc"
+#
+
+EXPATH  = ..
+LIBPATH = ..\..\..\lib
+CCFLAGS = -c -w-par -P- -DWIN32 -DSTRICT -I$(LIBPATH) -I$(EXPATH)
+RCFLAGS = -i$(EXPATH)
+LINKOPT = -Tpe -aa
+
+irqdemo.exe: irqdemo.res irqdemo.obj \
+            about.obj comm.obj mxtool.obj $(LIBPATH)\PCommb.lib
+	tlink32 $(LINKOPT) c0w32.obj *.obj,irqdemo,,\
+$(LIBPATH)\PCommb.lib cw32.lib import32.lib,,irqdemo
+
+irqdemo.res: irqdemo.rc
+    brcc32 $(RCFLAGS) -dWIN32 irqdemo.rc
+
+# construct LIB for (Microsoft generated) PComm.DLL
+# PCommb.lib: $(LIBPATH)\PComm.dll
+#   implib PCommb.lib $(LIBPATH)\PComm.dll
+
+irqdemo.obj: irqdemo.c $(EXPATH)\mxtool.h $(EXPATH)\comm.h \
+$(EXPATH)\resource.h $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  irqdemo.c
+
+# public module
+about.obj: $(EXPATH)\about.c
+	bcc32 $(CCFLAGS)  $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h \
+$(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(LIBPATH)\PComm.h
+	bcc32 $(CCFLAGS)  $(EXPATH)\mxtool.c
+
+############

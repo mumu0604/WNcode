@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="GB2312"?>
+<CommandSet>
+	<Category CategoryName="实验机指令">
+		<Device DeviceName="实验机" DeviceID="33"/>
+		<Command CommandName="事件01--模式配置" CommandCode="01" ArgumentByteLength="1">
+			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="工作模式">3C</ArgValue>
+				<ArgValue ArgumentValueName="待机模式">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件02--通信启停" CommandCode="02" ArgumentByteLength="1">
+			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="通信结束">3C</ArgValue>
+				<ArgValue ArgumentValueName="通信开始">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件03--DAC设置" CommandCode="03" ArgumentByteLength="21">
+			<Arg ArgumentName="DAC通道1" bitStart="0" bitLength="16" initValue="0404"/>
+			<Arg ArgumentName="DAC通道2" bitStart="16" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="DAC通道3" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="DAC通道4" bitStart="48" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="DAC通道5" bitStart="64" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="DAC通道6" bitStart="80" bitLength="16" initValue="FF23"/>			
+			<Arg ArgumentName="DAC通道7" bitStart="96" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="DAC通道8" bitStart="112" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="DAC通道9" bitStart="128" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="DAC通道10" bitStart="144" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="结束地址" bitStart="160" bitLength="16" initValue="C3">	
+			<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>			
+		</Command>
+		<Command CommandName="事件04--量子通信启停" CommandCode="04" ArgumentByteLength="1">
+			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="量子通信禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="量子通信使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="低速调制使能使能">96</ArgValue>
+				<ArgValue ArgumentValueName="低速调制使能禁止">69</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件05--通道延时" CommandCode="05" ArgumentByteLength="6">
+			<Arg ArgumentName="通道1" bitStart="0" bitLength="8" initValue="04"/>
+			<Arg ArgumentName="通道2" bitStart="8" bitLength="8" initValue="FF"/>
+			<Arg ArgumentName="通道3" bitStart="16" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="通道4" bitStart="24" bitLength="8" initValue="FF"/>
+			<Arg ArgumentName="通道5" bitStart="32" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="通道6" bitStart="48" bitLength="8" initValue="23"/>			
+		</Command>
+		<Command CommandName="事件06--随机数控制" CommandCode="06" ArgumentByteLength="11">
+			<Arg ArgumentName="随机数芯片" bitStart="0" bitLength="60" initValue="0404"/>
+			<Arg ArgumentName="芯片选择" bitStart="60" bitLength="4" initValue="0">	
+				<ArgValue ArgumentValueName="芯片0">0</ArgValue>
+				<ArgValue ArgumentValueName="芯片1">C</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="芯片使能" bitStart="64" bitLength="8" initValue="C3">	
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="固定随机数" bitStart="72" bitLength="64" initValue="0001020304050607"/>					
+		</Command>
+		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
+			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>
+			<Arg ArgumentName="结束地址" bitStart="24" bitLength="24" initValue="FFFFFF"/>
+		</Command>
+		<Command CommandName="事件03--密钥桶生成初始化" CommandCode="6A" ArgumentByteLength="14">
+			<Arg ArgumentName="读取地址" bitStart="0" bitLength="32" initValue="06000404"/>
+			<Arg ArgumentName="结束地址" bitStart="32" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="读取地址" bitStart="48" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="结束地址" bitStart="64" bitLength="16" initValue="FFFF"/>
+			<Arg ArgumentName="读取地址" bitStart="80" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="结束地址" bitStart="96" bitLength="8" initValue="FF"/>			
+		</Command>
+		<Command CommandName="事件04--密钥中继初始化" CommandCode="6C" ArgumentByteLength="4">
+			<Arg ArgumentName="中继桶个数" bitStart="0" bitLength="16" initValue="0404"/>
+			<Arg ArgumentName="任务编号" bitStart="16" bitLength="8" initValue="FF"/>
+		</Command>
+		<Command CommandName="事件05--数据填充" CommandCode="6F" ArgumentByteLength="8">
+			<Arg ArgumentName="填充类型" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="密钥中继加密密钥">3C</ArgValue>
+				<ArgValue ArgumentValueName="密钥中继待加密数据">C3</ArgValue>
+				<ArgValue ArgumentValueName="数据下行数据">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="桶个数" bitStart="8" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="结束地址" bitStart="24" bitLength="32" initValue="FFFFFFFF"/>			
+		</Command>
+		<Command CommandName="事件06--用户数据上行初始化" CommandCode="71" ArgumentByteLength="5">
+			<Arg ArgumentName="桶个数" bitStart="0" bitLength="16" initValue="8000"/>
+			<Arg ArgumentName="桶号偏移" bitStart="16" bitLength="16" initValue="0404"/>
+			<Arg ArgumentName="任务编号" bitStart="24" bitLength="8" initValue="00"/>			
+		</Command>
+		<Command CommandName="相干-下行通信停止" CommandCode="DD" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-FPGA重加载" CommandCode="F3" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-清空事件表" CommandCode="F5" ArgumentByteLength="0">
+		</Command>
+</Category>
+</CommandSet>

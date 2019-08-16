@@ -1,0 +1,57 @@
+#
+# Microsoft makefile for FTRANS
+# Please run VC tool first to set environment:
+#	vcvars32 x86				
+#		
+# To use: "nmake -f ftrans.vc"
+#
+
+!include <win32.mak>
+
+EXPATH  = ..
+INCPATH = ..\..\..\include
+!if "$(CPU)" == "AMD64"
+LIBPATH = ..\..\..\lib\x64
+!else
+LIBPATH = ..\..\..\lib\x86
+!endif
+
+MX_CFLAGS =  /I$(INCPATH) /I$(EXPATH)
+MX_RCFLAGS = /i$(EXPATH)
+#LINKOPT = /DEFAULTLIB:$(LIBPATH)\PComm.lib
+
+
+ftrans.exe: ftrans.res ftrans.obj fstatus.obj ftproc.obj ftset.obj\
+            about.obj comm.obj mxtool.obj
+	$(link) $(LINKOPT) $(guilflags) ftrans fstatus ftproc ftset ftrans.res \
+            about comm mxtool $(guilibs) $(LIBPATH)\PComm.lib
+
+#public module
+
+about.obj: $(EXPATH)\about.c
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS) $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  $(EXPATH)\mxtool.c
+####
+
+ftrans.res: ftrans.rc $(EXPATH)\resource.h
+	$(rc) $(rcvars) $(rcflags) $(MX_RCFLAGS) ftrans.rc
+
+ftrans.obj: ftrans.c $(EXPATH)\mxtool.h $(EXPATH)\comm.h $(EXPATH)\resource.h $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  ftrans.c
+
+fstatus.obj : fstatus.c ftrans.h $(INCPATH)\PComm.h $(EXPATH)\resource.h $(EXPATH)\comm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  fstatus.c
+
+ftproc.obj : ftproc.c ftrans.h $(INCPATH)\PComm.h $(EXPATH)\resource.h \
+$(EXPATH)\comm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  ftproc.c
+
+ftset.obj : ftset.c $(EXPATH)\resource.h ftrans.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  ftset.c
+
+

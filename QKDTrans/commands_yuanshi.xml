@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="GB2312"?>
+<COMMANDS>
+	<VersionControl Id="$Id: commands.xml 773 2012-08-03 14:17:20Z lwy $" URL="$URL: http://172.17.8.1/svn/QUESS/tags/QKDBench-2.2.1/commands.xml $"/>
+	<HostCommand>
+		<Command name="CCU指令注入事件(地检)" code="B0" argByteLength="1">
+			<Arg seqNum="1" name="CCU指令注入参数" byteLength="1" inputType="0">
+				<ArgValue name="量子28V电源开" code="3C"/>
+				<ArgValue name="量子28V电源关" code="C3"/>
+				<ArgValue name="量子单元切主" code="69"/>
+				<ArgValue name="量子单元切备" code="96"/>
+				<ArgValue name="量子复位" code="39"/>
+				<ArgValue name="同步光+5V电源开" code="6C"/>
+				<ArgValue name="同步光+5V电源关" code="C6"/>
+			</Arg>
+		</Command>
+		<Command name="发送LVDS数据(地检)" code="B1" argByteLength="5">
+			<Arg seqNum="1" name="数据文件编号" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="发送数据长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="接收LVDS数据(地检)" code="B2" argByteLength="5">
+			<Arg seqNum="1" name="接收数据类型" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="接收数据长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="GPS时间选择(地检)" code="B3" argByteLength="1">
+			<Arg seqNum="1" name="GPS时间选择参数" byteLength="1" inputType="0">
+				<ArgValue name="取计算机时间为GPS时间" code="00"/>
+				<ArgValue name="取平台时间为GPS时间" code="01"/>
+			</Arg>
+		</Command>
+		<Command name="平台时间设置(地检)" code="B4" argByteLength="6">
+			<Arg seqNum="1" name="平台时间设置参数(最大100天)" byteLength="6" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="指令通道设置(地检)" code="B5" argByteLength="2">
+			<Arg seqNum="1" name="总线选择参数" byteLength="1" inputType="0">
+				<ArgValue name="422总线" code="00"/>
+				<ArgValue name="CAN总线" code="01"/>
+				<ArgValue name="内部仿真" code="02"/>
+				<ArgValue name="无" code="03"/>
+			</Arg>
+			<Arg seqNum="2" name="端口选择参数" byteLength="1" inputType="1">
+			</Arg>
+		</Command>
+	</HostCommand>
+	<TargetCommand>
+		<Command name="产生随机数指令事件" code="42" argByteLength="2">
+			<Arg seqNum="1" name="随机数产生控制参数" byteLength="1" inputType="0">
+				<ArgValue name="随机数模式1" code="03"/>
+				<ArgValue name="随机数模式2" code="0C"/>
+				<ArgValue name="随机数模式3" code="30"/>
+			</Arg>
+			<Arg seqNum="2" name="重复长度参数" byteLength="1" inputType="0">
+				<ArgValue name="重复长度为4M字节" code="03"/>
+				<ArgValue name="重复长度为8M字节" code="30"/>
+				<ArgValue name="重复长度为16M字节" code="69"/>
+				<ArgValue name="重复长度为32M字节" code="96"/>
+			</Arg>
+		</Command>
+		<Command name="读取Flash数据" code="45" argByteLength="9">
+			<Arg seqNum="1" name="读取数据类型" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="数据起始地址" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="读取数据长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="LD主备选择事件" code="48" argByteLength="1">
+			<Arg seqNum="1" name="LD主备选择参数" byteLength="1" inputType="0">
+				<ArgValue name="LD全主工作" code="E5"/>
+				<ArgValue name="LD全备工作" code="5E"/>
+				<ArgValue name="LD1主工作" code="3C"/>
+				<ArgValue name="LD1备工作" code="C3"/>
+				<ArgValue name="LD2主工作" code="69"/>
+				<ArgValue name="LD2备工作" code="96"/>
+				<ArgValue name="LD3主工作" code="39"/>
+				<ArgValue name="LD3备工作" code="93"/>
+				<ArgValue name="LD4主工作" code="6C"/>
+				<ArgValue name="LD4备工作" code="C6"/>
+			</Arg>
+		</Command>
+		<Command name="LD电源开关事件" code="4B" argByteLength="1">
+			<Arg seqNum="1" name="LD电源开关参数" byteLength="1" inputType="0">
+				<ArgValue name="LD1开" code="3C"/>
+				<ArgValue name="LD1关" code="C3"/>
+				<ArgValue name="LD2开" code="69"/>
+				<ArgValue name="LD2关" code="96"/>
+				<ArgValue name="LD3开" code="39"/>
+				<ArgValue name="LD3关" code="93"/>
+				<ArgValue name="LD4开" code="6C"/>
+				<ArgValue name="LD4关" code="C6"/>
+				<ArgValue name="LD全开" code="99"/>
+				<ArgValue name="LD全关" code="CC"/>
+			</Arg>
+		</Command>
+		<Command name="LD发光事件" code="4E" argByteLength="1">
+			<Arg seqNum="1" name="LD发光参数" byteLength="1" inputType="0">
+				<ArgValue name="LD1 Signal发光" code="3C"/>
+				<ArgValue name="LD1 Signal不发光" code="C3"/>
+				<ArgValue name="LD2 Signal发光" code="69"/>
+				<ArgValue name="LD2 Signal不发光" code="96"/>
+				<ArgValue name="LD3 Signal发光" code="39"/>
+				<ArgValue name="LD3 Signal不发光" code="93"/>
+				<ArgValue name="LD4 Signal发光" code="6C"/>
+				<ArgValue name="LD4 Signal不发光" code="C6"/>
+				<ArgValue name="LD1 Decoy发光" code="36"/>
+				<ArgValue name="LD1 Decoy不发光" code="63"/>
+				<ArgValue name="LD2 Decoy发光" code="9C"/>
+				<ArgValue name="LD2 Decoy不发光" code="C9"/>
+				<ArgValue name="LD3 Decoy发光" code="33"/>
+				<ArgValue name="LD3 Decoy不发光" code="66"/>
+				<ArgValue name="LD4 Decoy发光" code="99"/>
+				<ArgValue name="LD4 Decoy不发光" code="CC"/>
+			</Arg>
+		</Command>
+		<Command name="LD功率设置模式事件" code="51" argByteLength="17">
+			<Arg seqNum="1" name="LD功率模式设置" byteLength="1" inputType="0">
+				<ArgValue name="自动功率设置" code="3C"/>
+				<ArgValue name="直接功率设置" code="C3"/>
+			</Arg>
+			<Arg seqNum="2" name="LD1 Signal功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="LD1 Decoy功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="4" name="LD2 Signal功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="5" name="LD2 Decoy功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="6" name="LD3 Signal功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="7" name="LD3 Decoy功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="8" name="LD4 Signal功率设置值" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="9" name="LD4 Decoy功率设置值" byteLength="2" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="APD开关事件" code="57" argByteLength="1">
+			<Arg seqNum="1" name="APD开关参数" byteLength="1" inputType="0">
+				<ArgValue name="APD1开" code="3C"/>
+				<ArgValue name="APD1关" code="C3"/>
+				<ArgValue name="APD2开" code="69"/>
+				<ArgValue name="APD2关" code="96"/>
+				<ArgValue name="APD3开" code="6C"/>
+				<ArgValue name="APD3关" code="C6"/>
+				<ArgValue name="APD4开" code="39"/>
+				<ArgValue name="APD4关" code="93"/>
+				<ArgValue name="APD全开" code="99"/>
+				<ArgValue name="APD全关" code="CC"/>
+				<ArgValue name="APD高压开" code="36"/>
+				<ArgValue name="APD高压关" code="63"/>
+				<ArgValue name="APD正负电源开" code="9C"/>
+				<ArgValue name="APD正负电源关" code="C9"/>
+			</Arg>
+		</Command>
+		<Command name="偏振激光器电源控制" code="6D" argByteLength="1">
+			<Arg seqNum="1" name="偏振激光器电源控制参数" byteLength="1" inputType="0">
+				<ArgValue name="偏振激光器使能" code="36"/>
+				<ArgValue name="偏振激光器禁止" code="63"/>
+				<ArgValue name="偏振激光器电源开" code="C9"/>
+				<ArgValue name="偏振激光器电源关" code="9C"/>
+			</Arg>
+		</Command>
+		<Command name="QKD科学数据注入指令事件" code="60" argByteLength="9">
+			<Arg seqNum="1" name="QKD科学数据注入类型" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="QKD科学数据注入起始地址" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="QKD科学数据注入长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="QKD科学数据下传指令事件" code="63" argByteLength="9">
+			<Arg seqNum="1" name="QKD科学数据下传类型" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="QKD科学数据下传起始地址" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="QKD科学数据下传长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="同步光通道选择指令事件" code="6F" argByteLength="1">
+			<Arg seqNum="1" name="同步光通道选择参数" byteLength="1" inputType="0">
+				<ArgValue name="同步光通道1" code="03"/>
+				<ArgValue name="同步光通道2" code="0C"/>
+				<ArgValue name="同步光通道3" code="30"/>
+			</Arg>
+		</Command>
+		<Command name="同步光TDC主备选择指令事件" code="72" argByteLength="1">
+			<Arg seqNum="1" name="同步光TDC主备选择参数" byteLength="1" inputType="0">
+				<ArgValue name="同步光TDC主工作" code="3C"/>
+				<ArgValue name="同步光TDC备工作" code="C3"/>
+			</Arg>
+		</Command>
+		<Command name="APD TDC工作方式选择指令事件" code="75" argByteLength="1">
+			<Arg seqNum="1" name="APD TDC工作方式选择参数" byteLength="1" inputType="0">
+				<ArgValue name="APD TDC单1" code="03"/>
+				<ArgValue name="APD TDC单2" code="0C"/>
+				<ArgValue name="APD TDC乒乓" code="30"/>
+			</Arg>
+		</Command>
+		<Command name="量子通信指令事件" code="78" argByteLength="8">
+			<Arg seqNum="1" name="量子通信控制参数" byteLength="1" inputType="0">
+				<ArgValue name="开始量子通信" code="3C"/>
+				<ArgValue name="停止量子通信" code="C3"/>
+			</Arg>
+			<Arg seqNum="2" name="量子发射频率" byteLength="1" inputType="0">
+				<ArgValue name="25MHz" code="3C"/>
+				<ArgValue name="50MHz" code="C3"/>
+				<ArgValue name="100MHz" code="69"/>
+			</Arg>
+			<Arg seqNum="3" name="执行时刻" byteLength="6" inputType="2">
+			</Arg>
+		</Command>
+		<Command name="QKD复位指令事件" code="7B" argByteLength="1">
+			<Arg seqNum="1" name="复位模块选择参数" byteLength="1" inputType="0">
+				<ArgValue name="复位所有控制逻辑" code="3C"/>
+				<ArgValue name="复位TDC模块" code="96"/>
+				<ArgValue name="复位RS422接口模块" code="93"/>
+				<ArgValue name="复位LVDS接口模块" code="6C"/>
+				<ArgValue name="复位遥控遥测温控功率控制模块" code="C6"/>
+			</Arg>
+		</Command>
+		<Command name="Flash数据清除指令事件" code="7E" argByteLength="9">
+			<Arg seqNum="1" name="清除数据块起始地址" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="清除数据块长度" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="清除数据类型" byteLength="1" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="QKD科学数据处理事件" code="84" argByteLength="22">
+			<Arg seqNum="1" name="QKD科学数据处理任务选择" byteLength="4" inputType="0">
+				<ArgValue name="拷贝内存" code="00000000"/>
+				<ArgValue name="加载代码" code="00000001"/>
+				<ArgValue name="获取脉冲数据" code="20000400"/>
+				<ArgValue name="脉冲数据去密" code="200004A0"/>
+				<ArgValue name="原始密钥提取" code="2000054C"/>
+				<ArgValue name="计算校验和" code="200005EC"/>
+				<ArgValue name="比较校验和" code="200006E0"/>
+				<ArgValue name="计算汉明伴随式" code="200007D8"/>
+				<ArgValue name="汉明纠错" code="200008E8"/>
+				<ArgValue name="丢弃泄漏信息" code="20000A40"/>
+				<ArgValue name="隐私放大" code="20000B78"/>
+				<ArgValue name="密钥应用" code="20000C68"/>
+				<ArgValue name="读取FLASH" code="20000E68"/>
+				<ArgValue name="改写FLASH" code="20000F6C"/>
+				<ArgValue name="获取脉冲数据(Flash)" code="20001070"/>
+				<ArgValue name="脉冲数据去密(Flash)" code="2000128C"/>
+				<ArgValue name="原始密钥提取(Flash)" code="200013C0"/>
+				<ArgValue name="计算校验和(Flash)" code="200015DC"/>
+				<ArgValue name="比较校验和(Flash)" code="20001830"/>
+				<ArgValue name="计算汉明伴随式(Flash)" code="20001B14"/>
+				<ArgValue name="汉明纠错(Flash)" code="20001D84"/>
+				<ArgValue name="丢弃泄漏信息(Flash)" code="200020C8"/>
+				<ArgValue name="隐私放大(Flash)" code="200023B4"/>
+				<ArgValue name="密钥应用(Flash)" code="20002578"/>
+			</Arg>
+			<Arg seqNum="2" name="QKD科学数据处理任务参数B0-B3" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="QKD科学数据处理任务参数B4-B7" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="4" name="QKD科学数据处理任务参数B8-B11" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="5" name="QKD科学数据处理任务参数B12-B15" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="6" name="QKD科学数据处理任务参数B16-B17" byteLength="2" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="工作模式转换事件" code="87" argByteLength="1">
+			<Arg seqNum="1" name="工作模式选择参数" byteLength="1" inputType="0">
+				<ArgValue name="待机模式" code="3C"/>
+				<ArgValue name="量子密钥分发模式" code="C3"/>
+				<ArgValue name="量子密钥分析模式" code="69"/>
+				<ArgValue name="量子接收实验模式" code="96"/>
+				<ArgValue name="激光通信实验模式" code="39"/>
+				<ArgValue name="量子密钥提取实验模式" code="93"/>
+			</Arg>
+		</Command>
+		<Command name="LD APD+5V主备选择事件" code="8A" argByteLength="1">
+			<Arg seqNum="1" name="LD APD+5V主备选择参数" byteLength="1" inputType="0">
+				<ArgValue name="LD APD+5V切主" code="3C"/>
+				<ArgValue name="LD APD+5V切备" code="C3"/>
+			</Arg>
+		</Command>
+		<Command name="GPS主备选择事件" code="8D" argByteLength="1">
+			<Arg seqNum="1" name="GPS主备选择参数" byteLength="1" inputType="0">
+				<ArgValue name="GPS主工作" code="3C"/>
+				<ArgValue name="GPS备工作" code="C3"/>
+			</Arg>
+		</Command>
+		<Command name="存储数据指令事件" code="8F" argByteLength="9">
+			<Arg seqNum="1" name="数据类型" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="数据存储起始地址" byteLength="4" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="数据存储长度" byteLength="4" inputType="1">
+			</Arg>
+		</Command>
+		<Command name="QKD温控参数设置" code="9A" argByteLength="7">
+			<Arg seqNum="1" name="通道选择参数" byteLength="1" inputType="1">
+			</Arg>
+			<Arg seqNum="2" name="P参数" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="3" name="I参数" byteLength="2" inputType="1">
+			</Arg>
+			<Arg seqNum="4" name="温度点参数" byteLength="2" inputType="1">
+			</Arg>
+		</Command>
+	</TargetCommand>
+</COMMANDS>
+
+
+  

@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="GB2312"?>
+<CommandSet>
+	<Category CategoryName="实验机指令">
+		<Device DeviceName="实验机" DeviceID="33"/>
+		<Command CommandName="事件01--KZ模式切换指令" CommandCode="66" ArgumentByteLength="1">
+			<Arg ArgumentName="工作模式" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="进入工作模式">3C</ArgValue>
+				<ArgValue ArgumentValueName="进入待机模式">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件02--KZ分系统开机状态通知指令" CommandCode="69" ArgumentByteLength="3">
+			<Arg ArgumentName="密钥通信机开机通知" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="状态不更改">96</ArgValue>
+				<ArgValue ArgumentValueName="关机">69</ArgValue>
+				<ArgValue ArgumentValueName="开机备状态">3C</ArgValue>
+				<ArgValue ArgumentValueName="开机主状态">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="纠缠发射机开机通知" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="状态不更改">96</ArgValue>
+				<ArgValue ArgumentValueName="关机">69</ArgValue>
+				<ArgValue ArgumentValueName="开机备状态">3C</ArgValue>
+				<ArgValue ArgumentValueName="开机主状态">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="相干通信机开机通知" bitStart="16" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="状态不更改">96</ArgValue>
+				<ArgValue ArgumentValueName="关机">69</ArgValue>
+				<ArgValue ArgumentValueName="开机备状态">3C</ArgValue>
+				<ArgValue ArgumentValueName="开机主状态">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件03--KZ地面注入转发指令" CommandCode="6A" ArgumentByteLength="1">
+			<Arg ArgumentName="转发目的分系统" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="相干通信机">69</ArgValue>
+				<ArgValue ArgumentValueName="纠缠发射机">3C</ArgValue>
+				<ArgValue ArgumentValueName="密钥通信机">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件04--KZ校时使能指令" CommandCode="6C" ArgumentByteLength="1">
+			<Arg ArgumentName="使能参数" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁用校时功能">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能校时功能">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件05--KZ随机数制备指令" CommandCode="6F" ArgumentByteLength="19">
+			<Arg ArgumentName="制备模式" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="指定数据重复模式">3C</ArgValue>
+				<ArgValue ArgumentValueName="真随机数模式">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="开始地址" bitStart="8" bitLength="40" initValue="0000000000"/>
+			<Arg ArgumentName="结束地址" bitStart="48" bitLength="40" initValue="00FFFFFFFF"/>
+			<Arg ArgumentName="指定数据" bitStart="88" bitLength="64" initValue="0000000000000000"/>
+		</Command>
+		<Command CommandName="事件06--KZ随机数输出指令" CommandCode="71" ArgumentByteLength="17">
+			<Arg ArgumentName="输出长度" bitStart="0" bitLength="32" initValue="00008000"/>
+			<Arg ArgumentName="随机数位置数据地址" bitStart="32" bitLength="32" initValue="06000404"/>
+			<Arg ArgumentName="随机数数据存储地址" bitStart="64" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="随机数输出起始块地址" bitStart="96" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="随机数输出结束块地址" bitStart="112" bitLength="16" initValue="0001"/>
+			<Arg ArgumentName="随机数连续输出使能" bitStart="128" bitLength="8" initValue="3C">
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件07--KZ量子通信指令" CommandCode="72" ArgumentByteLength="17">
+			<Arg ArgumentName="时间测量使能" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="量子光LD调制使能" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="同步光LD调制使能" bitStart="16" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="极化APD单路计数使能" bitStart="24" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="极化APD符合计数使能" bitStart="32" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="隐形传态APD计数使能" bitStart="40" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="LD测试使能" bitStart="48" bitLength="8" initValue="3C">
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+			</Arg>
+			<Arg ArgumentName="随机数输出起始块地址" bitStart="56" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="随机数输出结束块地址" bitStart="72" bitLength="16" initValue="0001"/>
+			<Arg ArgumentName="随机数循环输出使能" bitStart="88" bitLength="8" initValue="3C">
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+			</Arg>
+			<Arg ArgumentName="通信开始GPS时刻(主控软件使用)" bitStart="96" bitLength="32" initValue="FFFFFFFF"/>
+			<Arg ArgumentName="同步光频率选择" bitStart="128" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="100K">3C</ArgValue>
+				<ArgValue ArgumentValueName="10K">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件08--KZ LVDS数传指令" CommandCode="74" ArgumentByteLength="12">
+			<Arg ArgumentName="发送方标识" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="数传通信机">66</ArgValue>
+				<ArgValue ArgumentValueName="量子功能逻辑">33</ArgValue>
+				<ArgValue ArgumentValueName="实验控制与处理机">96</ArgValue>
+				<ArgValue ArgumentValueName="相干通信机">69</ArgValue>
+				<ArgValue ArgumentValueName="纠缠发射机">3C</ArgValue>
+				<ArgValue ArgumentValueName="密钥通信机">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="接收方标识" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="数传通信机">66</ArgValue>
+				<ArgValue ArgumentValueName="量子功能逻辑">33</ArgValue>
+				<ArgValue ArgumentValueName="实验控制与处理机">96</ArgValue>
+				<ArgValue ArgumentValueName="相干通信机">69</ArgValue>
+				<ArgValue ArgumentValueName="纠缠发射机">3C</ArgValue>
+				<ArgValue ArgumentValueName="密钥通信机">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="数据存取地址" bitStart="16" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="数据长度" bitStart="48" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="数据类型" bitStart="80" bitLength="8" initValue="10">
+				<ArgValue ArgumentValueName="空闲">FF</ArgValue>
+				<ArgValue ArgumentValueName="纠错失败位置数据">27</ArgValue>
+				<ArgValue ArgumentValueName="汉明伴随式数据">26</ArgValue>
+				<ArgValue ArgumentValueName="校验和比较数据(8)">25</ArgValue>
+				<ArgValue ArgumentValueName="校验和数据(7)">24</ArgValue>
+				<ArgValue ArgumentValueName="原始密钥数据(6)">23</ArgValue>
+				<ArgValue ArgumentValueName="原始密钥位置数据(5)">22</ArgValue>
+				<ArgValue ArgumentValueName="脉冲强度数据(4)">21</ArgValue>
+				<ArgValue ArgumentValueName="脉冲位置数据(3)">20</ArgValue>
+				<ArgValue ArgumentValueName="TDC数据(2)">17</ArgValue>
+				<ArgValue ArgumentValueName="随机数数据(1)">10</ArgValue>
+			</Arg>
+			<Arg ArgumentName="总线主备选择" bitStart="88" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="备">3C</ArgValue>
+				<ArgValue ArgumentValueName="主">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件09--KZ SDRAM管理指令" CommandCode="77" ArgumentByteLength="12">
+			<Arg ArgumentName="源地址" bitStart="0" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="目的地址" bitStart="32" bitLength="32" initValue="00000001"/>
+			<Arg ArgumentName="数据长度" bitStart="64" bitLength="32" initValue="00000001"/>
+		</Command>
+		<Command CommandName="事件10--KZ密钥后处理" CommandCode="78" ArgumentByteLength="19">
+			<Arg ArgumentName="子功能编码" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="LDPC编码">CC</ArgValue>
+				<ArgValue ArgumentValueName="数据加密">99</ArgValue>
+				<ArgValue ArgumentValueName="隐私放大">33</ArgValue>
+				<ArgValue ArgumentValueName="泄露信息抛弃">66</ArgValue>
+				<ArgValue ArgumentValueName="汉明伴随式计算">96</ArgValue>
+				<ArgValue ArgumentValueName="校验和计算">69</ArgValue>
+				<ArgValue ArgumentValueName="原始密钥提取">3C</ArgValue>
+				<ArgValue ArgumentValueName="基矢提取">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="参数" bitStart="8" bitLength="144" initValue="000000000000000000000000000000000000"/>
+		</Command>
+		<Command CommandName="事件11--KZ Flash管理指令" CommandCode="7B" ArgumentByteLength="13">
+			<Arg ArgumentName="子功能编码" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="写">3C</ArgValue>
+				<ArgValue ArgumentValueName="读">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="数据类型" bitStart="8" bitLength="8" initValue="10">
+				<ArgValue ArgumentValueName="其他数据">FF</ArgValue>
+				<ArgValue ArgumentValueName="功能扩展数据">90</ArgValue>
+				<ArgValue ArgumentValueName="量子密钥应用数据">80</ArgValue>
+				<ArgValue ArgumentValueName="量子辅助数据">40</ArgValue>
+				<ArgValue ArgumentValueName="安全密钥数据">29</ArgValue>
+				<ArgValue ArgumentValueName="纠错结果数据">28</ArgValue>
+				<ArgValue ArgumentValueName="纠错失败位置数据">27</ArgValue>
+				<ArgValue ArgumentValueName="汉明伴随式数据">26</ArgValue>
+				<ArgValue ArgumentValueName="校验和比较数据">25</ArgValue>
+				<ArgValue ArgumentValueName="校验和数据">24</ArgValue>
+				<ArgValue ArgumentValueName="原始密钥数据">23</ArgValue>
+				<ArgValue ArgumentValueName="原始密钥位置数据">22</ArgValue>
+				<ArgValue ArgumentValueName="脉冲强度数据">21</ArgValue>
+				<ArgValue ArgumentValueName="脉冲位置数据">20</ArgValue>
+				<ArgValue ArgumentValueName="TDC数据">17</ArgValue>
+				<ArgValue ArgumentValueName="随机数数据">10</ArgValue>
+			</Arg>
+			<Arg ArgumentName="页数" bitStart="16" bitLength="16" initValue="0001"/>
+			<Arg ArgumentName="起始页" bitStart="32" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="数据地址" bitStart="64" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="坏块管理" bitStart="96" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件12--KZ极化控制指令" CommandCode="7D" ArgumentByteLength="17">
+			<Arg ArgumentName="工作方式" bitStart="0" bitLength="8" initValue="69">
+				<ArgValue ArgumentValueName="纠缠光纠缠发射机单边方式">3C</ArgValue>
+				<ArgValue ArgumentValueName="纠缠光密钥通信机单边方式">C3</ArgValue>
+				<ArgValue ArgumentValueName="经典光纠缠发射机单边方式">96</ArgValue>
+				<ArgValue ArgumentValueName="经典光密钥通信机单边方式">69</ArgValue>
+			</Arg>
+			<Arg ArgumentName="控制方式" bitStart="8" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="自适应算法控制方式">33</ArgValue>
+				<ArgValue ArgumentValueName="随机梯度控制方式">66</ArgValue>
+				<ArgValue ArgumentValueName="遍历方式">3C</ArgValue>
+				<ArgValue ArgumentValueName="直接控制方式">C3</ArgValue>
+				<ArgValue ArgumentValueName="算法控制方式">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="波片1角度值" bitStart="16" bitLength="16" initValue="待定  "/>
+			<Arg ArgumentName="波片2角度值" bitStart="32" bitLength="16" initValue="待定  "/>
+			<Arg ArgumentName="波片3角度值" bitStart="48" bitLength="16" initValue="待定  "/>
+			<Arg ArgumentName="增益因子" bitStart="64" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="逼近方式对比度阈值" bitStart="72" bitLength="16" initValue="待定  "/>
+			<Arg ArgumentName="转动步长" bitStart="88" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="备用" bitStart="96" bitLength="24" initValue="待定   "/>
+			<Arg ArgumentName="最大控制次数" bitStart="120" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="遍历范围" bitStart="128" bitLength="8" initValue="待定 "/>
+		</Command>
+		<Command CommandName="事件13--KZ功能扩展指令" CommandCode="7E" ArgumentByteLength="22">
+			<Arg ArgumentName="子功能编码" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="扩展功能执行">3C</ArgValue>
+				<ArgValue ArgumentValueName="扩展功能加载">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="保留" bitStart="8" bitLength="24" initValue="474747"/>
+			<Arg ArgumentName="扩展功能数据地址/扩展功能标识" bitStart="32" bitLength="32" initValue="06000404"/>
+			<Arg ArgumentName="扩展功能执行参数" bitStart="64" bitLength="112" initValue="0000000000000000000000"/>
+		</Command>
+		<Command CommandName="事件14--KZ程控指令" CommandCode="81" ArgumentByteLength="21">
+			<Arg ArgumentName="相干机复位" bitStart="0" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="输出程控脉冲">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="密钥机复位" bitStart="8" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="输出程控脉冲">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="发射机复位" bitStart="16" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="输出程控脉冲">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="量子功能逻辑复位" bitStart="24" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="输出程控脉冲">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="随机数逻辑复位" bitStart="32" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="输出程控脉冲">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="主控板电源开关" bitStart="40" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关">3C</ArgValue>
+				<ArgValue ArgumentValueName="开">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="存储板电源开关" bitStart="48" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关">3C</ArgValue>
+				<ArgValue ArgumentValueName="开">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="泵浦光LD主备切换" bitStart="56" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="切备">3C</ArgValue>
+				<ArgValue ArgumentValueName="切主">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="泵浦光驱动主备切换" bitStart="64" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="切备">3C</ArgValue>
+				<ArgValue ArgumentValueName="切主">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="极化光上下电" bitStart="72" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="上电">3C</ArgValue>
+				<ArgValue ArgumentValueName="下电">C3</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="TEC主备切换2(主泵浦光)" bitStart="80" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="切备">C3</ArgValue>
+				<ArgValue ArgumentValueName="切主">3C</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="PI上下电" bitStart="88" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="下电">C3</ArgValue>
+				<ArgValue ArgumentValueName="上电">3C</ArgValue>
+				<ArgValue ArgumentValueName="不输出程控脉冲">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="泵浦光主驱动使能" bitStart="96" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="不使能">3C</ArgValue>
+				<ArgValue ArgumentValueName="强制使能">69</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="泵浦光备驱动使能" bitStart="104" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="不使能">3C</ArgValue>
+				<ArgValue ArgumentValueName="强制使能">69</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="H极化检测光LD使能" bitStart="112" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="不使能">3C</ArgValue>
+				<ArgValue ArgumentValueName="强制使能">69</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="+极化检测光LD使能" bitStart="120" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="不使能">3C</ArgValue>
+				<ArgValue ArgumentValueName="强制使能">69</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="纠缠源总线驱动使能" bitStart="128" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="不使能">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="密钥机看门狗屏蔽" bitStart="136" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="无效">3C</ArgValue>
+				<ArgValue ArgumentValueName="有效">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="发射机看门狗屏蔽" bitStart="144" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="无效">3C</ArgValue>
+				<ArgValue ArgumentValueName="有效">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="极化检测光LD功率" bitStart="152" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="3档">66</ArgValue>
+				<ArgValue ArgumentValueName="2档">3C</ArgValue>
+				<ArgValue ArgumentValueName="1档">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="泵浦光LD功率" bitStart="160" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="3档">66</ArgValue>
+				<ArgValue ArgumentValueName="2档">3C</ArgValue>
+				<ArgValue ArgumentValueName="1档">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件15--KZ纠缠源温控指令" CommandCode="82" ArgumentByteLength="16">
+			<Arg ArgumentName="温控开关1" bitStart="0" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关闭">69</ArgValue>
+				<ArgValue ArgumentValueName="打开但不设置温度预设值">3C</ArgValue>
+				<ArgValue ArgumentValueName="打开并设置温度预设值">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温度预设值1" bitStart="8" bitLength="16" initValue="07f4"/>
+			<Arg ArgumentName="温控开关2" bitStart="24" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关闭">69</ArgValue>
+				<ArgValue ArgumentValueName="打开但不设置温度预设值">3C</ArgValue>
+				<ArgValue ArgumentValueName="打开并设置温度预设值">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温度预设值2" bitStart="32" bitLength="16" initValue="07f4"/>
+			<Arg ArgumentName="温控开关3" bitStart="48" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关闭">69</ArgValue>
+				<ArgValue ArgumentValueName="打开但不设置温度预设值">3C</ArgValue>
+				<ArgValue ArgumentValueName="打开并设置温度预设值">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温度预设值3" bitStart="56" bitLength="16" initValue="07f4"/>
+			<Arg ArgumentName="温控开关4" bitStart="72" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关闭">69</ArgValue>
+				<ArgValue ArgumentValueName="打开但不设置温度预设值">3C</ArgValue>
+				<ArgValue ArgumentValueName="打开并设置温度预设值">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温度预设值4" bitStart="80" bitLength="16" initValue="07f4"/>
+			<Arg ArgumentName="温控开关5" bitStart="96" bitLength="8" initValue="96">
+				<ArgValue ArgumentValueName="关闭">69</ArgValue>
+				<ArgValue ArgumentValueName="打开但不设置温度预设值">3C</ArgValue>
+				<ArgValue ArgumentValueName="打开并设置温度预设值">C3</ArgValue>
+				<ArgValue ArgumentValueName="不变">96</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温度预设值5" bitStart="104" bitLength="16" initValue="07f4"/>
+			<Arg ArgumentName="PPTKP测温电阻选择" bitStart="120" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="备">3C</ArgValue>
+				<ArgValue ArgumentValueName="主">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件16--KZ数传遥测使能指令" CommandCode="84" ArgumentByteLength="2">
+			<Arg ArgumentName="数传遥测开关" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="返回周期" bitStart="8" bitLength="8" initValue="00">
+				<ArgValue ArgumentValueName="32768ms">04</ArgValue>
+				<ArgValue ArgumentValueName="16384ms">03</ArgValue>
+				<ArgValue ArgumentValueName="8192ms">02</ArgValue>
+				<ArgValue ArgumentValueName="4096ms">01</ArgValue>
+				<ArgValue ArgumentValueName="2048ms">00</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件17--KZ纠缠源PI控制指令" CommandCode="87" ArgumentByteLength="8">
+			<Arg ArgumentName="DAC值1" bitStart="0" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值2" bitStart="16" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值3" bitStart="32" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值4" bitStart="48" bitLength="16" initValue="0627"/>
+		</Command>
+		<Command CommandName="事件18--KZ量子功能逻辑参数配置指令" CommandCode="88" ArgumentByteLength="19">
+			<Arg ArgumentName="量子光LD调制频率" bitStart="0" bitLength="8" initValue="3C">
+				<ArgValue ArgumentValueName="12.5MHz">33</ArgValue>
+				<ArgValue ArgumentValueName="25MHz">96</ArgValue>
+				<ArgValue ArgumentValueName="50MHz">69</ArgValue>
+				<ArgValue ArgumentValueName="200MHz">C3</ArgValue>
+				<ArgValue ArgumentValueName="100MHz">3C</ArgValue>
+			</Arg>
+			<Arg ArgumentName="量子光LD调制随机数模式" bitStart="8" bitLength="64" initValue="0000000000000000"/>
+			<Arg ArgumentName="量子光LD调制通道选择" bitStart="72" bitLength="16" initValue="aaaa"/>
+			<Arg ArgumentName="量子光LD测试通道掩码" bitStart="88" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="时间测量通道掩码" bitStart="96" bitLength="24" initValue="0000A0"/>
+			<Arg ArgumentName="量子通信持续时间" bitStart="120" bitLength="16" initValue="00DC"/>
+			<Arg ArgumentName="同步光LD1选择" bitStart="136" bitLength="8" initValue="5A">
+				<ArgValue ArgumentValueName="备开">C3</ArgValue>
+				<ArgValue ArgumentValueName="主开">3C</ArgValue>
+				<ArgValue ArgumentValueName="主备均关闭">5A</ArgValue>
+			</Arg>
+			<Arg ArgumentName="同步光LD2选择" bitStart="144" bitLength="8" initValue="5A">
+				<ArgValue ArgumentValueName="备开">C3</ArgValue>
+				<ArgValue ArgumentValueName="主开">3C</ArgValue>
+				<ArgValue ArgumentValueName="主备均关闭">5A</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件19--KZ量子通信结束指令" CommandCode="8B" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="事件20--KZ纠缠源温控PI参数配置指令" CommandCode="8D" ArgumentByteLength="20">
+			<Arg ArgumentName="第一路PI算法P参数" bitStart="0" bitLength="16" initValue="1000"/>
+			<Arg ArgumentName="第一路PI算法I参数" bitStart="16" bitLength="16" initValue="0300"/>
+			<Arg ArgumentName="第二路PI算法P参数" bitStart="32" bitLength="16" initValue="1000"/>
+			<Arg ArgumentName="第二路PI算法I参数" bitStart="48" bitLength="16" initValue="0300"/>
+			<Arg ArgumentName="第三路PI算法P参数" bitStart="64" bitLength="16" initValue="1000"/>
+			<Arg ArgumentName="第三路PI算法I参数" bitStart="80" bitLength="16" initValue="0300"/>
+			<Arg ArgumentName="第四路PI算法P参数" bitStart="96" bitLength="16" initValue="1000"/>
+			<Arg ArgumentName="第四路PI算法I参数" bitStart="112" bitLength="16" initValue="0300"/>
+			<Arg ArgumentName="第五路PI算法P参数" bitStart="128" bitLength="16" initValue="1000"/>
+			<Arg ArgumentName="第五路PI算法I参数" bitStart="144" bitLength="16" initValue="0300"/>
+		</Command>
+		<Command CommandName="事件21--KZ下CAN遥测总线切换指令" CommandCode="8E" ArgumentByteLength="2">
+			<Arg ArgumentName="下CAN节点" bitStart="0" bitLength="8" initValue="3C">
+				<ArgValue ArgumentValueName="相干通信机">96</ArgValue>
+				<ArgValue ArgumentValueName="纠缠发射机">C3</ArgValue>
+				<ArgValue ArgumentValueName="密钥通信机">3C</ArgValue>
+			</Arg>
+			<Arg ArgumentName="总线选择" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="B">3C</ArgValue>
+				<ArgValue ArgumentValueName="A">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件22--KZ随机数擦除指令" CommandCode="90" ArgumentByteLength="10">
+			<Arg ArgumentName="起始地址" bitStart="0" bitLength="40" initValue="0000000000"/>
+			<Arg ArgumentName="结束地址" bitStart="40" bitLength="40" initValue="00FFFFFFFF"/>
+		</Command>
+		<Command CommandName="事件23--KZ看门狗使能" CommandCode="93" ArgumentByteLength="1">
+			<Arg ArgumentName="使能参数" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止看门狗">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能看门狗">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件24--KZ秒脉冲检测使能" CommandCode="95" ArgumentByteLength="1">
+			<Arg ArgumentName="使能参数" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁用pps检测">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能pps检测">C3</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件25--KZ随机数注入指令" CommandCode="96" ArgumentByteLength="13">
+			<Arg ArgumentName="开始块地址" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="结束块地址" bitStart="16" bitLength="16" initValue="0001"/>
+			<Arg ArgumentName="数据类型" bitStart="32" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="SDRAM数据">3C</ArgValue>
+				<ArgValue ArgumentValueName="固定数">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="SDRAM地址" bitStart="40" bitLength="32" initValue="06000404"/>
+			<Arg ArgumentName="固定数" bitStart="72" bitLength="32" initValue="01234567"/>
+		</Command>
+		<Command CommandName="事件26--KZ极化控制归一化系数配置" CommandCode="99" ArgumentByteLength="9">
+			<Arg ArgumentName="工作模式" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="纠缠光">3C</ArgValue>
+				<ArgValue ArgumentValueName="经典光">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="H(MT_H)" bitStart="8" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="V(MT_V)" bitStart="16" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="+(MT_+)" bitStart="24" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="-(MT_-)" bitStart="32" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="JF_H" bitStart="40" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="JF_V" bitStart="48" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="JF_+" bitStart="56" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="JF_-" bitStart="64" bitLength="8" initValue="待定 "/>
+		</Command>
+		<Command CommandName="事件27--KZ符合门宽及offset参数设置" CommandCode="9A" ArgumentByteLength="17">
+			<Arg ArgumentName="符合门宽" bitStart="0" bitLength="8" initValue="3C"/>
+			<Arg ArgumentName="MT-H、JF-Hoffset值" bitStart="8" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-H、JF-Voffset值" bitStart="16" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-H、JF-Poffset值" bitStart="24" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-H、JF-Noffset值" bitStart="32" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-V、JF-Hoffset值" bitStart="40" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-V、JF-Voffset值" bitStart="48" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-V、JF-Poffset值" bitStart="56" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-V、JF-Noffset值" bitStart="64" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-P、JF-Hoffset值" bitStart="72" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-P、JF-Voffset值" bitStart="80" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-P、JF-Poffset值" bitStart="88" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-P、JF-Noffset值" bitStart="96" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-N、JF-Hoffset值" bitStart="104" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-N、JF-Voffset值" bitStart="112" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-N、JF-Poffset值" bitStart="120" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="MT-N、JF-Noffset值" bitStart="128" bitLength="8" initValue="00"/>
+		</Command>
+		<Command CommandName="事件28--KZ PI扫描" CommandCode="9C" ArgumentByteLength="12">
+			<Arg ArgumentName="待扫描PI标识" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="第二路PI">3C</ArgValue>
+				<ArgValue ArgumentValueName="第一路PI">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="PI扫描使能" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="DAC值1" bitStart="16" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值2" bitStart="32" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值3" bitStart="48" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="DAC值4" bitStart="64" bitLength="16" initValue="0627"/>
+			<Arg ArgumentName="扫描步长" bitStart="80" bitLength="8" initValue="待定 "/>
+			<Arg ArgumentName="扫描步数" bitStart="88" bitLength="8" initValue="待定 "/>
+		</Command>
+		<Command CommandName="事件29--KZ随机数三取二控制指令" CommandCode="9F" ArgumentByteLength="10">
+			<Arg ArgumentName="随机数三取二输出使能" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="随机数三取二拷贝使能" bitStart="8" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="源开始块地址(第一份样本)" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="源结束块地址(第一份样本)" bitStart="32" bitLength="16" initValue="0001"/>
+			<Arg ArgumentName="样本2开始块地址" bitStart="48" bitLength="16" initValue="2000"/>
+			<Arg ArgumentName="样本3开始块地址" bitStart="64" bitLength="16" initValue="4000"/>
+		</Command>
+	</Category>
+		<Device DeviceName="相干机" DeviceID="F3"/>
+		<Command CommandName="相干-激光通信系统扫频温度基准设置指令" CommandCode="CA" ArgumentByteLength="2">
+			<Arg ArgumentName="温度设置值高" bitStart="0" bitLength="8" initValue="00"/>
+			<Arg ArgumentName="温度设置值低" bitStart="8" bitLength="8" initValue="00"/>
+		</Command>
+		<Command CommandName="相干-FPGA温度报警阈值设置指令" CommandCode="EB" ArgumentByteLength="2">
+			<Arg ArgumentName="参数1" bitStart="0" bitLength="8" initValue="08"/>
+			<Arg ArgumentName="参数2" bitStart="8" bitLength="8" initValue="00"/>
+		</Command>
+		<Command CommandName="相干-上行通信通道选择指令" CommandCode="EE" ArgumentByteLength="1">
+			<Arg ArgumentName="A/B通道选择" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="B通道">0C</ArgValue>
+				<ArgValue ArgumentValueName="A通道">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-稳频失锁监控指令" CommandCode="F0" ArgumentByteLength="1">
+			<Arg ArgumentName="监控状态" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="监控关闭">0C</ArgValue>
+				<ArgValue ArgumentValueName="监控使能">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-上行通信误码率测试启动指令" CommandCode="CF" ArgumentByteLength="1">
+			<Arg ArgumentName="码长" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="长码">0C</ArgValue>
+				<ArgValue ArgumentValueName="短码">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-上行通信数据传输指令" CommandCode="D1" ArgumentByteLength="1">
+			<Arg ArgumentName="数据源" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="212">0C</ArgValue>
+				<ArgValue ArgumentValueName="2028">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-LVDS上传数据指令" CommandCode="D2" ArgumentByteLength="2">
+			<Arg ArgumentName="数据类型" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="212">0C</ArgValue>
+				<ArgValue ArgumentValueName="2028">03</ArgValue>
+			</Arg>
+			<Arg ArgumentName="主备机" bitStart="8" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="备机">0C</ArgValue>
+				<ArgValue ArgumentValueName="主机">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-LVDS接收量子实验控制机下传数据指令" CommandCode="D7" ArgumentByteLength="1">
+			<Arg ArgumentName="主备机" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="备机">0C</ArgValue>
+				<ArgValue ArgumentValueName="主机">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-上行通信停止指令" CommandCode="D4" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-下行通信激光开启指令" CommandCode="D8" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-下行通信激光关闭指令" CommandCode="DE" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-指示光开启指令" CommandCode="E1" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-指示光关闭指令" CommandCode="E2" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-激光器扫频稳频关闭指令" CommandCode="E7" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-强制开机指令" CommandCode="E8" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-下行通信启动" CommandCode="DB" ArgumentByteLength="2">
+			<Arg ArgumentName="数据源" bitStart="0" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="预存图片C">2B</ArgValue>
+				<ArgValue ArgumentValueName="预存图片B">21</ArgValue>
+				<ArgValue ArgumentValueName="预存图片A">17</ArgValue>
+				<ArgValue ArgumentValueName="LVDS注入数据">0C</ArgValue>
+				<ArgValue ArgumentValueName="误码测试数据">03</ArgValue>
+			</Arg>
+			<Arg ArgumentName="传输速率" bitStart="8" bitLength="8" initValue="03">
+				<ArgValue ArgumentValueName="5.12GHz">30</ArgValue>
+				<ArgValue ArgumentValueName="2.56GHz">0C</ArgValue>
+				<ArgValue ArgumentValueName="1.28GHz">03</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="相干-下行通信停止" CommandCode="DD" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-FPGA重加载" CommandCode="F3" ArgumentByteLength="0">
+		</Command>
+		<Command CommandName="相干-清空事件表" CommandCode="F5" ArgumentByteLength="0">
+		</Command>
+
+</CommandSet>

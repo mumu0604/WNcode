@@ -1,0 +1,47 @@
+#
+# Microsoft makefile for IRQDEMO
+# Please run VC tool first to set environment:
+#	vcvars32 x86				
+#
+# To use: "nmake -f irqdemo.vc"
+#
+
+!include <win32.mak>
+
+EXPATH  = ..
+INCPATH = ..\..\..\include
+!if "$(CPU)" == "AMD64"
+LIBPATH = ..\..\..\lib\x64
+!else
+LIBPATH = ..\..\..\lib\x86
+!endif
+
+MX_CFLAGS =  /I$(INCPATH) /I$(EXPATH)
+MX_RCFLAGS = /i$(EXPATH)
+#LINKOPT = /DEFAULTLIB:$(LIBPATH)\PComm.lib
+
+
+irqdemo.exe: irqdemo.res irqdemo.obj  \
+	    about.obj comm.obj mxtool.obj
+	$(link) $(LINKOPT) $(guilflags) irqdemo irqdemo.res  about comm mxtool \
+	$(guilibs) $(LIBPATH)\PComm.lib
+
+#public module
+
+about.obj: $(EXPATH)\about.c
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS) $(EXPATH)\about.c
+
+comm.obj : $(EXPATH)\comm.c $(EXPATH)\comm.h $(EXPATH)\resource.h $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  $(EXPATH)\comm.c
+
+mxtool.obj : $(EXPATH)\mxtool.c $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  $(EXPATH)\mxtool.c
+
+####
+
+
+irqdemo.res: irqdemo.rc $(EXPATH)\resource.h
+	$(rc) $(rcvars) $(rcflags) $(MX_RCFLAGS) irqdemo.rc
+
+irqdemo.obj: irqdemo.c $(EXPATH)\mxtool.h $(EXPATH)\comm.h $(EXPATH)\resource.h $(INCPATH)\PComm.h
+	$(cc) $(cvars) $(cflags) $(MX_CFLAGS)  irqdemo.c

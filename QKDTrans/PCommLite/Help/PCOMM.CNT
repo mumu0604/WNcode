@@ -1,0 +1,22 @@
+:Base PComm.hlp>main
+:Title PComm Library
+1 Introduction=introduction
+1 File list=list
+1 Programming Quick Start=quick
+1 Document History=doc_history
+1 PComm Functions
+2 Function List by Functionality
+3 Port Control=pcontrol
+3 Input Data=idata
+3 Output Data=odata
+3 Port Status Inquiry=pstatus
+3 Event Service=icontrol
+3 Miscellaneous=misc
+3 File Transfer=ftransfer
+2 Function List by Alphabetic
+3 Function List by Alphabetic=alphabetic
+1 Programming Notes
+2 For Borland C/C++ Compiler Users=bc
+2 Read/ Write Buffer Usage for Visual Basic=vb_rw_buffer
+2 File Name Buffer for Zmodem,Ymodem,Kermit=Ft_Fname_Buffer
+2 Callback Function Note=Callback
