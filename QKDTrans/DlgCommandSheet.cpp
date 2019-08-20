@@ -28,6 +28,7 @@ CDlgCommandSheet::CDlgCommandSheet(CWnd* pParent /*=NULL*/)
 	m_iCmdStartIdx = 0;
 	m_iRealCmdCnt = 0;
 	GPSTimeNowday = m_Timer.GetGPSTimeNowday();
+	m_displayMonitor = true;
 }
 
 CDlgCommandSheet::~CDlgCommandSheet()
@@ -1680,6 +1681,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	}		
 	else if (strCOMname == "¹Ø±Õ´®¿Ú")
 	{
+		m_displayMonitor = false;
 		bool rec = m_pInterface->CloseComm(m_COMportNum);
 		if (rec)
 		{
@@ -1948,12 +1950,12 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	m_pDlg->SetTimer(2, 1000, NULL);
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
-	while (TRUE)
+	while (m_pDlg->m_displayMonitor)
 	{
 		templength = m_pInterface->RecvCmd(RecvBuferLength, m_COMportNum, tempBuf);
 		memcpy(RecvBuf + Recvlength, tempBuf, templength);
 		Recvlength += templength;		
-		if (Recvlength>=RecvBuferLength)
+		if (Recvlength >= RecvBuferLength && Recvlength > 0)
 		{
 			unsigned short crc_Recv = 0,crc_cal=0;
 			for (int i = 0; i < RecvBuferLength; i++){

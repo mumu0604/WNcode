@@ -44,9 +44,9 @@ enum
 	COL_ARG_LEN,
 	COL_ARG
 };
-#define MAX_ARG_NUM 40
-#define MAX_ARG_LENGTH	22
-#define MAX_NAME_LENGTH	40
+#define MAX_ARG_NUM 128
+#define MAX_ARG_LENGTH	128
+#define MAX_NAME_LENGTH	128
 
 #define DEV_ID_KZ	0x03
 #define DEV_ID_MT	0x33
