@@ -3,7 +3,7 @@
 	<Category CategoryName="实验机指令">
 		<Device DeviceName="实验机" DeviceID="33"/>
 		<Command CommandName="事件01--模式配置" CommandCode="01" ArgumentByteLength="1">
-			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
+			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="3C">
 				<ArgValue ArgumentValueName="工作模式">3C</ArgValue>
 				<ArgValue ArgumentValueName="待机模式">C3</ArgValue>
 			</Arg>
@@ -25,7 +25,7 @@
 			<Arg ArgumentName="DAC通道8" bitStart="112" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="DAC通道9" bitStart="128" bitLength="16" initValue="FFFF"/>
 			<Arg ArgumentName="DAC通道10" bitStart="144" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="结束地址" bitStart="160" bitLength="16" initValue="C3">	
+			<Arg ArgumentName="使能禁止" bitStart="160" bitLength="8" initValue="C3">	
 			<ArgValue ArgumentValueName="禁止">3C</ArgValue>
 				<ArgValue ArgumentValueName="使能">C3</ArgValue>
 			</Arg>			
@@ -47,7 +47,7 @@
 			<Arg ArgumentName="通道6" bitStart="40" bitLength="8" initValue="23"/>			
 		</Command>
 		<Command CommandName="事件06--随机数控制" CommandCode="06" ArgumentByteLength="11">
-			<Arg ArgumentName="随机数芯片" bitStart="0" bitLength="60" initValue="0404"/>
+			<Arg ArgumentName="随机数芯片" bitStart="0" bitLength="60" initValue="fffffffffffffff0"/>
 			<Arg ArgumentName="芯片选择" bitStart="60" bitLength="4" initValue="0">	
 				<ArgValue ArgumentValueName="芯片0">0</ArgValue>
 				<ArgValue ArgumentValueName="芯片1">C</ArgValue>
@@ -57,6 +57,48 @@
 				<ArgValue ArgumentValueName="使能">C3</ArgValue>
 			</Arg>	
 			<Arg ArgumentName="固定随机数" bitStart="72" bitLength="64" initValue="0001020304050607"/>					
+		</Command>
+		<Command CommandName="事件07--量子通信参数配置" CommandCode="07" ArgumentByteLength="18">
+			<Arg ArgumentName="随机数选择" bitStart="0" bitLength="8" initValue="00">
+				<ArgValue ArgumentValueName="真随机">00</ArgValue>
+				<ArgValue ArgumentValueName="指令随机">01</ArgValue>
+				<ArgValue ArgumentValueName="256随机">02</ArgValue>
+				<ArgValue ArgumentValueName="SHVH随机">03</ArgValue>
+				<ArgValue ArgumentValueName="SHDHVH随机">04</ArgValue>
+				<ArgValue ArgumentValueName="H/V随机">05</ArgValue>
+				<ArgValue ArgumentValueName="H/V/P/N随机">06</ArgValue>
+				<ArgValue ArgumentValueName="SHVVVPVN随机">07</ArgValue>
+				<ArgValue ArgumentValueName="VHSVVPVN随机">08</ArgValue>
+				<ArgValue ArgumentValueName="VHVVSPVN随机">09</ArgValue>
+				<ArgValue ArgumentValueName="VHVVVPSN随机">0a</ArgValue>
+				<ArgValue ArgumentValueName="4M随机">0b</ArgValue>
+			</Arg>
+			<Arg ArgumentName="占空比" bitStart="8" bitLength="8" initValue="C3">	
+				<ArgValue ArgumentValueName="100%">C3</ArgValue>
+				<ArgValue ArgumentValueName="98.6%">96</ArgValue>
+				<ArgValue ArgumentValueName="97.3%">69</ArgValue>
+				<ArgValue ArgumentValueName="996%">3C</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="频率" bitStart="16" bitLength="8" initValue="C3">	
+				<ArgValue ArgumentValueName="625M">C3</ArgValue>
+				<ArgValue ArgumentValueName="312.5M">96</ArgValue>
+				<ArgValue ArgumentValueName="156.25M">3C</ArgValue>
+			</Arg>
+			<Arg ArgumentName="HS边界" bitStart="24" bitLength="8" initValue="1F"/>		
+			<Arg ArgumentName="VS边界" bitStart="32" bitLength="8" initValue="3F"/>
+			<Arg ArgumentName="PS边界" bitStart="40" bitLength="8" initValue="5F"/>	
+			<Arg ArgumentName="NS边界" bitStart="48" bitLength="8" initValue="7F"/>	
+			<Arg ArgumentName="HD边界" bitStart="56" bitLength="8" initValue="8F"/>	
+			<Arg ArgumentName="VD边界" bitStart="64" bitLength="8" initValue="9F"/>	
+			<Arg ArgumentName="PD边界" bitStart="72" bitLength="8" initValue="AF"/>	
+			<Arg ArgumentName="ND边界" bitStart="80" bitLength="8" initValue="BF"/>	
+			<Arg ArgumentName="HV边界" bitStart="88" bitLength="8" initValue="CF"/>	
+			<Arg ArgumentName="VV边界" bitStart="96" bitLength="8" initValue="DF"/>	
+			<Arg ArgumentName="PV边界" bitStart="104" bitLength="8" initValue="EF"/>	
+			<Arg ArgumentName="X探测比例" bitStart="112" bitLength="8" initValue="80"/>
+			<Arg ArgumentName="信号态平均光子" bitStart="120" bitLength="8" initValue="CC"/>
+			<Arg ArgumentName="诱骗态平均光子" bitStart="128" bitLength="8" initValue="33"/>
+			<Arg ArgumentName="波动" bitStart="136" bitLength="8" initValue="0"/>
 		</Command>
 		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
 			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>

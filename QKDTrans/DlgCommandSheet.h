@@ -31,6 +31,7 @@ public:
 	bool m_bCmdChanged;
 	CMD m_CMDArray[MAXCOMMAND];
 	int m_iCmdSendCnt;
+	bool m_displayMonitor;
 	
 	QKDDisplay m_display;
 	QKDTimer m_Timer;

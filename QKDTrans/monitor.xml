@@ -2,33 +2,74 @@
 <CommandSet>
 	<Category CategoryName="实验机指令">
 		<Device DeviceName="实验机" DeviceID="33"/>
-		<Command CommandName="遥测01--模式配置" CommandCode="00" ArgumentByteLength="2">
-			<Arg ArgumentName="模式配置1" bitStart="0" bitLength="8" initValue="03">
+		<Command CommandName="遥测00--指令状态" CommandCode="00" ArgumentByteLength="11">			
+			<Arg ArgumentName="GPS计数" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="直接指令计数" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入错误计数" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入正确计数" bitStart="48" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入总计数" bitStart="64" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="模式配置" bitStart="80" bitLength="8" initValue="c3">
 				<ArgValue ArgumentValueName="工作模式">3C</ArgValue>
 				<ArgValue ArgumentValueName="待机模式">C3</ArgValue>
 			</Arg>
-			<Arg ArgumentName="模式配置2" bitStart="8" bitLength="8" initValue="00">
-				<ArgValue ArgumentValueName="通信结束">3C</ArgValue>
-				<ArgValue ArgumentValueName="通信开始">C3</ArgValue>
-			</Arg>
 		</Command>
-		<Command CommandName="遥测02--通信启停" CommandCode="01" ArgumentByteLength="1">
-			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
-				<ArgValue ArgumentValueName="通信结束">3C</ArgValue>
-				<ArgValue ArgumentValueName="通信开始">C3</ArgValue>
+		<Command CommandName="遥测01--ld遥测" CommandCode="01" ArgumentByteLength="9">		
+			<Arg ArgumentName="延时锁定" bitStart="0" bitLength="8" initValue="3c">
+				<ArgValue ArgumentValueName="失败">3C</ArgValue>
+				<ArgValue ArgumentValueName="成功">C3</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="DDR1初始化" bitStart="8" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="完成">1</ArgValue>
+				<ArgValue ArgumentValueName="未完成">0</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="DDR2初始化" bitStart="9" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="完成">1</ArgValue>
+				<ArgValue ArgumentValueName="未完成">0</ArgValue>
 			</Arg>
-		</Command>
-		<Command CommandName="遥测03--DAC设置" CommandCode="02" ArgumentByteLength="4">
-			<Arg ArgumentName="DAC通道1" bitStart="0" bitLength="16" initValue="023"/>
-			<Arg ArgumentName="DAC通道2" bitStart="16" bitLength="16" initValue="0456"/>
-		</Command>
-		<Command CommandName="遥测04--量子通信启停" CommandCode="03" ArgumentByteLength="1">
-			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
-				<ArgValue ArgumentValueName="量子通信禁止">3C</ArgValue>
-				<ArgValue ArgumentValueName="量子通信使能">C3</ArgValue>
-				<ArgValue ArgumentValueName="低速调制使能使能">96</ArgValue>
-				<ArgValue ArgumentValueName="低速调制使能禁止">69</ArgValue>
+			<Arg ArgumentName="DDR1读写状态" bitStart="10" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="错误">1</ArgValue>
+				<ArgValue ArgumentValueName="正确">0</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="DDR2读写状态" bitStart="11" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="错误">1</ArgValue>
+				<ArgValue ArgumentValueName="正确">0</ArgValue>
 			</Arg>
-		</Command>		
+			<Arg ArgumentName="秒脉冲状态" bitStart="12" bitLength="2" initValue="0">
+				<ArgValue ArgumentValueName="主">0</ArgValue>
+				<ArgValue ArgumentValueName="备">1</ArgValue>
+				<ArgValue ArgumentValueName="内部">2</ArgValue>
+			</Arg>
+			<Arg ArgumentName="量子通信状态" bitStart="14" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="不在进行量子通信">0</ArgValue>
+				<ArgValue ArgumentValueName="正在进行量子通信">1</ArgValue>
+			</Arg>
+			<Arg ArgumentName="随机数状态" bitStart="15" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="不在产生随机数">0</ArgValue>
+				<ArgValue ArgumentValueName="正在产生随机数">1</ArgValue>
+			</Arg>
+			<Arg ArgumentName="随机数配置状态" bitStart="16" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="不在配置">0</ArgValue>
+				<ArgValue ArgumentValueName="正在配置">1</ArgValue>
+			</Arg>
+			<Arg ArgumentName="量子通信帧数" bitStart="40" bitLength="32" initValue="0000"/>
+		</Command>
+		<Command CommandName="遥测02--隐私放大" CommandCode="02" ArgumentByteLength="64">			
+			<Arg ArgumentName="块号" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="最终密钥" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="发射计数" bitStart="32" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="真空态计数" bitStart="96" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基信号态计数" bitStart="128" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基信号态采样计数" bitStart="160" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基信号态采样错误计数" bitStart="192" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基诱骗态计数" bitStart="224" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基诱骗态采样计数" bitStart="256" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="x基诱骗态采样错误计数" bitStart="288" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基信号态计数" bitStart="320" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基信号态采样计数" bitStart="352" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基信号态采样错误计数" bitStart="384" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基诱骗态计数" bitStart="416" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基诱骗态采样计数" bitStart="448" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="z基诱骗态采样错误计数" bitStart="480" bitLength="32" initValue="0000"/>
+		</Command>
 </Category>
 </CommandSet>

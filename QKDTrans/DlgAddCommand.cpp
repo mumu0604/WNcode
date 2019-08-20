@@ -23,7 +23,7 @@ CDlgAddCommand::CDlgAddCommand(CDlgCommandSheet *pDlg, CMD_WN *pCmd, int bNew, C
 	m_max_sec = 86399;
 	m_min_sec = -86399;
 	m_sec = 0;
-	m_CheckTimeFlag = FALSE;
+	m_CheckTimeFlag = TRUE;
 }
 
 CDlgAddCommand::~CDlgAddCommand()
