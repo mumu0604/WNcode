@@ -1622,29 +1622,33 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 
 }
 
-
-void CDlgCommandSheet::OnTimer(UINT_PTR nIDEvent)
-{
-	// TODO: Add your message handler code here and/or call default
+void CDlgCommandSheet::displayList(bool isFirst){
 	CmdInfo *pCmdInfo;
-	switch (nIDEvent)
+	m_listCurrentNum = 0;
+//	m_listMonitor.DeleteAllItems();
+	for (int i = 0; i < m_MonitorCmdNum; i++)
 	{
-	case 2:
-		m_listCurrentNum = 0;
-		m_listMonitor.DeleteAllItems();
-		for (int i = 0; i < m_MonitorCmdNum; i++)
-		{
-			pCmdInfo = m_pCmdInfo_Recv[i];
-			MonitorDisplay(pCmdInfo,m_listCurrentNum);
-			m_listCurrentNum += pCmdInfo->arg_num;
-		}
-		break;
-	default:
-		break;
+		pCmdInfo = m_pCmdInfo_Recv[i];
+		MonitorDisplay(pCmdInfo, m_listCurrentNum, isFirst);
+		m_listCurrentNum += pCmdInfo->arg_num;
 	}
-
-	CDialogEx::OnTimer(nIDEvent);
 }
+
+//void CDlgCommandSheet::OnTimer(UINT_PTR nIDEvent)
+//{
+//	// TODO: Add your message handler code here and/or call default
+////	CmdInfo *pCmdInfo;
+//	switch (nIDEvent)
+//	{
+//	case 2:
+//		displayList();
+//		break;
+//	default:
+//		break;
+//	}
+//
+//	CDialogEx::OnTimer(nIDEvent);
+//}
 
 
 void CDlgCommandSheet::OnBnClickedOk()
@@ -1678,6 +1682,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 			hThread_recv = CreateThread(NULL, 0, RecvGPSProc, (LPVOID)pRecvParam, 0, NULL);
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("关闭串口"));
 		}
+
 	}		
 	else if (strCOMname == "关闭串口")
 	{
@@ -1695,7 +1700,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	
 }
 
-void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum)
+void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, bool isFirst)
 {
 	int i = 0, k = 0;
 	
@@ -1710,46 +1715,47 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum)
 	for (i = 0; i < pCmdInfo->arg_num; i++)
 	{
 		index = listCurrentNum + i;
-		m_listMonitor.InsertItem(index, "");
-		strBuf.Format("%0d", index);
-		m_listMonitor.SetItemText(index, 0, strBuf);
-		m_listMonitor.SetItemText(index, 1, (char *)pCmdInfo->cmd_name);
-
 		ExtractArgValue(tempbuf, pCmdInfo->init_value, pCmdInfo->bit_start[i], pCmdInfo->arg_length[i]);
-		for (k = 0; k < pCmdInfo->arg_length[i] / 8; k++){
-			strBuf1.Format("%02X", tempbuf[k]);
-			strBuf += strBuf1;
-		}
-		if (pCmdInfo->arg_length[i] & 0x7){
-			if (pCmdInfo->input_type[i] == 0){
-				tempbuf[k] >>= (8 - (pCmdInfo->arg_length[i] & 0x7));
+		if (isFirst){
+			m_listMonitor.InsertItem(index, "");
+			strBuf.Format("%0d", index);
+			m_listMonitor.SetItemText(index, 0, strBuf);
+			m_listMonitor.SetItemText(index, 1, (char *)pCmdInfo->cmd_name);
+			
+			for (k = 0; k < pCmdInfo->arg_length[i] / 8; k++){
+				strBuf1.Format("%02X", tempbuf[k]);
+				strBuf += strBuf1;
 			}
-			strBuf1.Format("%02X", tempbuf[k]);
-			strBuf += strBuf1;
+			if (pCmdInfo->arg_length[i] & 0x7){
+				if (pCmdInfo->input_type[i] == 0){
+					tempbuf[k] >>= (8 - (pCmdInfo->arg_length[i] & 0x7));
+				}
+				strBuf1.Format("%02X", tempbuf[k]);
+				strBuf += strBuf1;
+			}
+			strBuf += " ";
+
+			//m_ListCtrlCommand.SetItemText(index, COL_ARG, strBuf);
+			//////////////////////////////////////////////////////////////////////
+			m_listMonitor.SetItemText(index, 2, (char *)pCmdInfo->arg_name[i]);
 		}
-		strBuf += " ";
-		//m_ListCtrlCommand.SetItemText(index, COL_ARG, strBuf);
-		//////////////////////////////////////////////////////////////////////
-			if (pCmdInfo->input_type[i] == 0)//combox
-			{
-				m_listMonitor.SetItemText(index, 2, (char *)pCmdInfo->arg_name[i]);
-				for (int j = 0; j < pCmdInfo->combcntNum[i];j++)
-				{					
-					if (tempbuf[0] == pCmdInfo->Arg_CombxCode[i][j])//init_value 是从高位到地位填充
-					{
-						m_listMonitor.SetItemText(index, 3, (char *)pCmdInfo->Arg_CombxName[i][j]);
-					}
+		if (pCmdInfo->input_type[i] == 0)//combox
+		{				
+			for (int j = 0; j < pCmdInfo->combcntNum[i];j++)
+			{					
+				if (tempbuf[0] == pCmdInfo->Arg_CombxCode[i][j])//init_value 是从高位到地位填充
+				{
+					m_listMonitor.SetItemText(index, 3, (char *)pCmdInfo->Arg_CombxName[i][j]);
 				}
 			}
-			else                                 //edit
-			{
-				m_listMonitor.SetItemText(index, 2, (char *)pCmdInfo->arg_name[i]);
-				
-				strBuf.Format("%0d", tempbuf);
-				m_listMonitor.SetItemText(index, 3, strBuf);
-				int in_num, decimal;
+		}
+		else                                 //edit
+		{			
+			strBuf.Format("%0d", *(int*)tempbuf);
+			m_listMonitor.SetItemText(index, 3, strBuf);
+			int in_num, decimal;
 
-			}
+		}
 
 	}
 }
@@ -1802,10 +1808,13 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 			xmlRtn = xmlGetProp(pNode, BAD_CAST("CommandCode"));
 			idx = strtol((char *)xmlRtn, &endptr, 16);
 			idx &= 0xFF;
-			xmlFree(xmlRtn);
+			xmlFree(xmlRtn);			
 			pCmdInfo = (CmdInfo *)malloc(sizeof(CmdInfo));
 			m_pCmdInfo[idx] = pCmdInfo;
 			memset(pCmdInfo, 0, sizeof(CmdInfo));
+			xmlRtn = xmlGetProp(pNode, BAD_CAST("ArgumentByteLength"));
+			pCmdInfo->arg_byte_num = strtol((char *)xmlRtn, &endptr, 10);
+			xmlFree(xmlRtn);
 			xmlRtn = CXML::xmlGetPropGBK(pNode, BAD_CAST("CommandName"));
 			length = strlen((char *)xmlRtn);
 			if (length > MAX_NAME_LENGTH){
@@ -1894,7 +1903,7 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 					if (pCmdInfo->bit_start[idx] + pCmdInfo->arg_length[idx] > MAX_ARG_LENGTH * 8){
 						break;
 					}
-					pCmdInfo->arg_byte_num += pCmdInfo->arg_length[idx];
+//					pCmdInfo->arg_byte_num += pCmdInfo->arg_length[idx];
 					xmlRtn = xmlGetProp(pNode, BAD_CAST("initValue"));
 					strTemp = xmlRtn;
 					xmlFree(xmlRtn);
@@ -1923,7 +1932,6 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 				pNode = pNode->next;
 			}
 			pCmdInfo->arg_num = idx;
-			pCmdInfo->arg_byte_num /= 8;
 		}
 		xmlXPathFreeObject(xpathObj);
 	}
@@ -1939,7 +1947,7 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 }
 DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 {
-	#define  RecvBuferLength 22
+	#define  RecvBuferLength 512
 	char RecvBuf[RecvBuferLength] = { 0 };
 	char tempBuf[RecvBuferLength] = { 0 };
 	int Recvlength = 0, templength = 0;
@@ -1947,9 +1955,11 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	m_pDlg = ((RECVPARAM*)lpParameter)->aa;
 	m_pDlg->m_xml.Open("monitor.xml");
 	m_pDlg->GetCmdInfo_monitor(m_pDlg->m_pCmdInfo_Recv);
-	m_pDlg->SetTimer(2, 1000, NULL);
+//	m_pDlg->SetTimer(2, 1000, NULL);
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
+	int idx;
+	m_pDlg->displayList(true);
 	while (m_pDlg->m_displayMonitor)
 	{
 		templength = m_pInterface->RecvCmd(RecvBuferLength, m_COMportNum, tempBuf);
@@ -1958,10 +1968,10 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 		if (Recvlength >= RecvBuferLength && Recvlength > 0)
 		{
 			unsigned short crc_Recv = 0,crc_cal=0;
-			for (int i = 0; i < RecvBuferLength; i++){
+			for (int i = 0; i < RecvBuferLength-2; i++){
 				crc_cal += (unsigned char)(RecvBuf[i]);
 			}
-			crc_Recv = *(unsigned short *)(RecvBuf + RecvBuferLength - 1);
+			crc_Recv = *(unsigned short *)(RecvBuf + RecvBuferLength - 2);
 			lastBufCntRe = Recvlength - RecvBuferLength;
 			Recvlength = RecvBuferLength;
 			if (crc_cal == crc_Recv)
@@ -1970,7 +1980,14 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 				int lastCharCnt = 0;
 				while (Recvlength > 0)
 				{
-					pCmdInfo = m_pDlg->m_pCmdInfo_Recv[RecvBuf[lastCharCnt] & 0xFF];
+					idx = RecvBuf[lastCharCnt] & 0xFF;
+					if (idx < 0){
+						break;
+					}
+					pCmdInfo = m_pDlg->m_pCmdInfo_Recv[idx];
+					if (pCmdInfo == NULL){
+						break;
+					}
 					memcpy(pCmdInfo->init_value, RecvBuf + lastCharCnt + 1, pCmdInfo->arg_byte_num);
 					lastCharCnt += pCmdInfo->arg_byte_num + 1;
 					Recvlength -= (pCmdInfo->arg_byte_num + 1);
@@ -1978,7 +1995,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 				Recvlength = lastBufCntRe;
 				memcpy(RecvBuf, tempBuf + templength - lastBufCntRe, lastBufCntRe);//将多余字符给下一个帧
 				templength = 0;
-				
+				m_pDlg->displayList(false);
 			}
 			else
 			{
