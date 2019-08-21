@@ -43,8 +43,7 @@ bool  CInterface::CloseComm(int PortNum)
 }
 int CInterface::RecvCmd(int RecvLength, int PortNum, char RecvBuf[100])
 {
-	RecvLength = sio_read(PortNum, (char *)RecvBuf, 32);
-	return RecvLength;
+		return sio_read(PortNum, (char *)RecvBuf, RecvLength);
 }
 void CInterface::ClearRflush(int PortNum)
 {

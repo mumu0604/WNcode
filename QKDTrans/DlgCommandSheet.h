@@ -73,7 +73,7 @@ public:
 	CEdit m_pEditCmdRecv;
 	afx_msg void OnBnClickedButtonInCmd();
 	afx_msg void OnBnClickedButtonOutCmd();
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
+//	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CListCtrl m_listMonitor;
 	ULARGE_INTEGER m_base_relative;
 	ULARGE_INTEGER m_base_abs;
@@ -82,11 +82,13 @@ public:
 	char *m_CMDBuf;
 	int m_CMD_length;
 	CComboBox m_ComboPort;
-	void MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum);
+	void MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNumbool, bool isFirst);
 	void monitorini(CmdInfo *pCmdInfo[256], CListCtrl listMonitor);
 	void GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256]);
 	int m_MonitorCmdNum;
 	int m_listCurrentNum;
 	bool m_ComStatus;
 	afx_msg void OnBnClickedButtonOpencom();
+	void displayList(bool isFirst);
+	void initList();
 };

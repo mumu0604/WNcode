@@ -14,7 +14,8 @@
 			</Arg>
 		</Command>
 		<Command CommandName="Ò£²â01--ldÒ£²â" CommandCode="01" ArgumentByteLength="9">		
-			<Arg ArgumentName="ÑÓÊ±Ëø¶¨" bitStart="0" bitLength="8" initValue="3c">
+			<Arg ArgumentName="ÑÓÊ±Ëø¶¨" bitStart="0" bitLength="8" initValue="99">
+				<ArgValue ArgumentValueName="¿ÕÏÐ">99</ArgValue>
 				<ArgValue ArgumentValueName="Ê§°Ü">3C</ArgValue>
 				<ArgValue ArgumentValueName="³É¹¦">C3</ArgValue>
 			</Arg>	

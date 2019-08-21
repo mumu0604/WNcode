@@ -72,8 +72,8 @@ typedef struct
 {
 	unsigned char cmd_name[MAX_NAME_LENGTH];
 	unsigned char init_value[MAX_ARG_LENGTH];
-	unsigned char bit_start[MAX_ARG_NUM];
-	unsigned char arg_length[MAX_ARG_NUM];
+	unsigned short bit_start[MAX_ARG_NUM];
+	unsigned short arg_length[MAX_ARG_NUM];
 	unsigned char arg_name[MAX_ARG_NUM][MAX_NAME_LENGTH];
 	unsigned char Arg_CombxName[MAX_ARG_NUM][MAX_ARG_NUM][MAX_NAME_LENGTH];
 	unsigned char Arg_CombxCode[MAX_ARG_NUM][MAX_ARG_NUM];
