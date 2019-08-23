@@ -100,6 +100,111 @@
 			<Arg ArgumentName="诱骗态平均光子" bitStart="128" bitLength="8" initValue="33"/>
 			<Arg ArgumentName="波动" bitStart="136" bitLength="8" initValue="0"/>
 		</Command>
+		<Command CommandName="事件08--LD 温控PI" CommandCode="08" ArgumentByteLength="20">
+			<Arg ArgumentName="通道" bitStart="0" bitLength="8" initValue="0">
+				<ArgValue ArgumentValueName="通道1">00</ArgValue>
+				<ArgValue ArgumentValueName="通道2">01</ArgValue>
+				<ArgValue ArgumentValueName="通道3">02</ArgValue>
+				<ArgValue ArgumentValueName="通道4">03</ArgValue>
+				<ArgValue ArgumentValueName="通道5">04</ArgValue>
+				<ArgValue ArgumentValueName="通道6">05</ArgValue>
+				<ArgValue ArgumentValueName="通道7">06</ArgValue>
+				<ArgValue ArgumentValueName="通道8">07</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温控P" bitStart="8" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="温控I" bitStart="24" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="通道" bitStart="40" bitLength="8" initValue="1">
+				<ArgValue ArgumentValueName="通道1">00</ArgValue>
+				<ArgValue ArgumentValueName="通道2">01</ArgValue>
+				<ArgValue ArgumentValueName="通道3">02</ArgValue>
+				<ArgValue ArgumentValueName="通道4">03</ArgValue>
+				<ArgValue ArgumentValueName="通道5">04</ArgValue>
+				<ArgValue ArgumentValueName="通道6">05</ArgValue>
+				<ArgValue ArgumentValueName="通道7">06</ArgValue>
+				<ArgValue ArgumentValueName="通道8">07</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温控P" bitStart="48" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="温控I" bitStart="64" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="通道" bitStart="80" bitLength="8" initValue="2">
+				<ArgValue ArgumentValueName="通道1">00</ArgValue>
+				<ArgValue ArgumentValueName="通道2">01</ArgValue>
+				<ArgValue ArgumentValueName="通道3">02</ArgValue>
+				<ArgValue ArgumentValueName="通道4">03</ArgValue>
+				<ArgValue ArgumentValueName="通道5">04</ArgValue>
+				<ArgValue ArgumentValueName="通道6">05</ArgValue>
+				<ArgValue ArgumentValueName="通道7">06</ArgValue>
+				<ArgValue ArgumentValueName="通道8">07</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温控P" bitStart="88" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="温控I" bitStart="104" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="通道" bitStart="120" bitLength="8" initValue="3">
+				<ArgValue ArgumentValueName="通道1">00</ArgValue>
+				<ArgValue ArgumentValueName="通道2">01</ArgValue>
+				<ArgValue ArgumentValueName="通道3">02</ArgValue>
+				<ArgValue ArgumentValueName="通道4">03</ArgValue>
+				<ArgValue ArgumentValueName="通道5">04</ArgValue>
+				<ArgValue ArgumentValueName="通道6">05</ArgValue>
+				<ArgValue ArgumentValueName="通道7">06</ArgValue>
+				<ArgValue ArgumentValueName="通道8">07</ArgValue>
+			</Arg>
+			<Arg ArgumentName="温控P" bitStart="128" bitLength="16" initValue="1F7F"/>
+			<Arg ArgumentName="温控I" bitStart="144" bitLength="16" initValue="1F7F"/>			
+		</Command>
+		<Command CommandName="事件09--LD 温度使能" CommandCode="09" ArgumentByteLength="18">
+			<Arg ArgumentName="Ld1温度" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld2温度" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld3温度" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld4温度" bitStart="48" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld5温度" bitStart="64" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld6温度" bitStart="80" bitLength="16" initValue="0000"/>		
+			<Arg ArgumentName="Ld7温度" bitStart="96" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="Ld8温度" bitStart="112" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="ld8使能" bitStart="128" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>	
+			<Arg ArgumentName="ld7使能" bitStart="130" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld6使能" bitStart="132" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld5使能" bitStart="134" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld4使能" bitStart="136" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld3使能" bitStart="138" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld2使能" bitStart="140" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+			<Arg ArgumentName="ld1使能" bitStart="142" bitLength="2" initValue="0">	
+				<ArgValue ArgumentValueName="使能">03</ArgValue>
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件0a--ld遥测使能" CommandCode="0a" ArgumentByteLength="1">
+			<Arg ArgumentName="模式配置" bitStart="0" bitLength="8" initValue="C3">
+				<ArgValue ArgumentValueName="禁止">3C</ArgValue>
+				<ArgValue ArgumentValueName="使能">C3</ArgValue>
+			</Arg>
+		</Command>
+
+		
+		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
+			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>
+			<Arg ArgumentName="结束地址" bitStart="24" bitLength="24" initValue="FFFFFF"/>
+		</Command>
+		
 		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
 			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>
 			<Arg ArgumentName="结束地址" bitStart="24" bitLength="24" initValue="FFFFFF"/>

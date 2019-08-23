@@ -54,6 +54,9 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_WM_TIMER()
 	ON_BN_CLICKED(IDOK, &CDlgCommandSheet::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON_OPENCOM, &CDlgCommandSheet::OnBnClickedButtonOpencom)
+	ON_BN_CLICKED(IDC_BUTTON_READ, &CDlgCommandSheet::OnBnClickedButtonRead)
+	ON_BN_CLICKED(IDC_BUTTON_WRITE, &CDlgCommandSheet::OnBnClickedButtonWrite)
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -1751,7 +1754,12 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 		}
 		else                                 //edit
 		{			
-			strBuf.Format("%0d", *(int*)tempbuf);
+			int va = 0;
+			int len = (pCmdInfo->arg_length[i] + 7) / 8;
+			for (int v = 0; v < len; v++){
+				va |= (tempbuf[v] << v * 8);
+			}
+			strBuf.Format("%08x", va);
 			m_listMonitor.SetItemText(index, 3, strBuf);
 			int in_num, decimal;
 
@@ -1955,6 +1963,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	m_pDlg = ((RECVPARAM*)lpParameter)->aa;
 	m_pDlg->m_xml.Open("monitor.xml");
 	m_pDlg->GetCmdInfo_monitor(m_pDlg->m_pCmdInfo_Recv);
+	m_pDlg->m_xml.Open("commands.xml");
 //	m_pDlg->SetTimer(2, 1000, NULL);
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
@@ -2011,4 +2020,104 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	
 	return 0;
 
+}
+
+void CDlgCommandSheet::OnBnClickedButtonRead()
+{
+	// TODO: Add your control notification handler code here
+	CString v;
+	int i;
+	unsigned long addr;
+	unsigned long data;
+	unsigned char sv[32] = { 0 };
+	GetDlgItem(IDC_EDIT_ADDR)->GetWindowTextA(v);
+	addr = strtoul(v, NULL, 16);
+	memset(sv, 0x5a, 32);
+	data = 0;
+	i = 0;
+	sv[i++] = 0x33;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x01;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x88;
+	sv[i++] = 0x3c;
+	sv[i++] = (addr >> 24) & 0x00ff;
+	sv[i++] = (addr >> 16) & 0x00ff;
+	sv[i++] = (addr >> 8) & 0x00ff;
+	sv[i++] = (addr >> 0) & 0x00ff;
+	data = 0;
+	for (i = 0; i < 31; i++){
+		data +=sv[i];
+	}
+	sv[31] = data;
+
+	m_pInterface->SendCmd(m_COMportNum, 0, 32, sv, false);
+}
+
+
+void CDlgCommandSheet::OnBnClickedButtonWrite()
+{
+	// TODO: Add your control notification handler code here
+	CString v;
+	int i;
+	unsigned long addr;
+	unsigned long data;
+	unsigned char sv[32] = {0};
+	GetDlgItem(IDC_EDIT_ADDR)->GetWindowTextA(v);
+	addr = strtoul(v, NULL, 16);
+	GetDlgItem(IDC_EDIT_DATA)->GetWindowTextA(v);
+	data = strtoul(v, NULL, 16);
+	memset(sv, 0x5a, 32);
+	i = 0;
+	sv[i++] = 0x33;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x01;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x00;
+	sv[i++] = 0x88;
+	sv[i++] = 0xc3;
+	sv[i++] = (addr >> 24)&0x00ff;
+	sv[i++] = (addr >> 16) & 0x00ff;
+	sv[i++] = (addr >> 8) & 0x00ff;
+	sv[i++] = (addr >> 0) & 0x00ff;
+	sv[i++] = (data >> 24) & 0x00ff;
+	sv[i++] = (data >> 16) & 0x00ff;
+	sv[i++] = (data >> 8) & 0x00ff;
+	sv[i++] = (data >> 0) & 0x00ff;
+	data = 0;
+	for (i = 0; i < 31; i++){
+		data += sv[i];
+	}
+	sv[31] = data;
+
+	m_pInterface->SendCmd(m_COMportNum, 0, 32, sv, false);
+}
+
+
+void CDlgCommandSheet::OnSize(UINT nType, int cx, int cy)
+{
+	//CDialogEx::OnSize(nType, cx, cy);
+
+	//CWnd * pWnd;
+	//pWnd = GetDlgItem(IDC_LIST);      // 获取控件句柄 
+	//if (pWnd) // 判断是否为空，因为对话框创建时会调用此函数，而当时控件还未创建 
+	//{
+	//	CRect rect;    // 获取控件变化前大小 
+	//	pWnd->GetWindowRect(&rect);
+	//	ScreenToClient(&rect); // 将控件大小转换为在对话框中的区域坐标
+	//	// 　cx/m_rect.Width()为对话框在横向的变化比例 
+	//	rect.left = rect.left * cx / m_rect.Width(); /**/ /// //调整控件大小 
+	//	rect.right = rect.right * cx / m_rect.Width();
+	//	rect.top = rect.top * cy / m_rect.Height();
+	//	rect.bottom = rect.bottom * cy / m_rect.Height();
+	//	pWnd->MoveWindow(rect); // 设置控件大小 
+	//}
+	// TODO: Add your message handler code here
 }

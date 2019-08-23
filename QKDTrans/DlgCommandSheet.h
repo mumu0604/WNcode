@@ -91,4 +91,7 @@ public:
 	afx_msg void OnBnClickedButtonOpencom();
 	void displayList(bool isFirst);
 	void initList();
+	afx_msg void OnBnClickedButtonRead();
+	afx_msg void OnBnClickedButtonWrite();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 };

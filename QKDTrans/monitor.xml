@@ -2,7 +2,7 @@
 <CommandSet>
 	<Category CategoryName="实验机指令">
 		<Device DeviceName="实验机" DeviceID="33"/>
-		<Command CommandName="遥测00--指令状态" CommandCode="00" ArgumentByteLength="11">			
+		<Command CommandName="遥测00--指令状态" CommandCode="00" ArgumentByteLength="16">			
 			<Arg ArgumentName="GPS计数" bitStart="0" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="直接指令计数" bitStart="16" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="注入错误计数" bitStart="32" bitLength="16" initValue="0000"/>
@@ -12,47 +12,66 @@
 				<ArgValue ArgumentValueName="工作模式">3C</ArgValue>
 				<ArgValue ArgumentValueName="待机模式">C3</ArgValue>
 			</Arg>
+			<Arg ArgumentName="单次读" bitStart="96" bitLength="32" initValue="0000"/>
 		</Command>
-		<Command CommandName="遥测01--ld遥测" CommandCode="01" ArgumentByteLength="9">		
+		<Command CommandName="遥测01--ld遥测" CommandCode="01" ArgumentByteLength="69">		
 			<Arg ArgumentName="延时锁定" bitStart="0" bitLength="8" initValue="99">
 				<ArgValue ArgumentValueName="空闲">99</ArgValue>
 				<ArgValue ArgumentValueName="失败">3C</ArgValue>
 				<ArgValue ArgumentValueName="成功">C3</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR1初始化" bitStart="8" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="完成">1</ArgValue>
+			<Arg ArgumentName="DDR1初始化" bitStart="71" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="完成">80</ArgValue>
 				<ArgValue ArgumentValueName="未完成">0</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR2初始化" bitStart="9" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="完成">1</ArgValue>
+			<Arg ArgumentName="DDR2初始化" bitStart="70" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="完成">80</ArgValue>
 				<ArgValue ArgumentValueName="未完成">0</ArgValue>
 			</Arg>
-			<Arg ArgumentName="DDR1读写状态" bitStart="10" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="错误">1</ArgValue>
+			<Arg ArgumentName="DDR1读写状态" bitStart="69" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="错误">80</ArgValue>
 				<ArgValue ArgumentValueName="正确">0</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR2读写状态" bitStart="11" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="错误">1</ArgValue>
+			<Arg ArgumentName="DDR2读写状态" bitStart="68" bitLength="1" initValue="0">
+				<ArgValue ArgumentValueName="错误">80</ArgValue>
 				<ArgValue ArgumentValueName="正确">0</ArgValue>
 			</Arg>
-			<Arg ArgumentName="秒脉冲状态" bitStart="12" bitLength="2" initValue="0">
+			<Arg ArgumentName="秒脉冲状态" bitStart="66" bitLength="2" initValue="0">
 				<ArgValue ArgumentValueName="主">0</ArgValue>
-				<ArgValue ArgumentValueName="备">1</ArgValue>
-				<ArgValue ArgumentValueName="内部">2</ArgValue>
+				<ArgValue ArgumentValueName="备">40</ArgValue>
+				<ArgValue ArgumentValueName="内部">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="量子通信状态" bitStart="14" bitLength="1" initValue="0">
+			<Arg ArgumentName="量子通信状态" bitStart="65" bitLength="1" initValue="0">
 				<ArgValue ArgumentValueName="不在进行量子通信">0</ArgValue>
-				<ArgValue ArgumentValueName="正在进行量子通信">1</ArgValue>
+				<ArgValue ArgumentValueName="正在进行量子通信">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="随机数状态" bitStart="15" bitLength="1" initValue="0">
+			<Arg ArgumentName="随机数状态" bitStart="64" bitLength="1" initValue="0">
 				<ArgValue ArgumentValueName="不在产生随机数">0</ArgValue>
-				<ArgValue ArgumentValueName="正在产生随机数">1</ArgValue>
+				<ArgValue ArgumentValueName="正在产生随机数">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="随机数配置状态" bitStart="16" bitLength="1" initValue="0">
+			<Arg ArgumentName="随机数配置状态" bitStart="72" bitLength="1" initValue="0">
 				<ArgValue ArgumentValueName="不在配置">0</ArgValue>
-				<ArgValue ArgumentValueName="正在配置">1</ArgValue>
+				<ArgValue ArgumentValueName="正在配置">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="量子通信帧数" bitStart="40" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="量子通信帧数" bitStart="96" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD1 温度" bitStart="128" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD2 温度" bitStart="144" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD3 温度" bitStart="160" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD4 温度" bitStart="176" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD5 温度" bitStart="192" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD6 温度" bitStart="208" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD7 温度" bitStart="224" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD8 温度" bitStart="240" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LDs 温度" bitStart="256" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD1 功率" bitStart="288" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD2 功率" bitStart="320" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD3 功率" bitStart="352" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD4 功率" bitStart="384" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD5 功率" bitStart="416" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD6 功率" bitStart="448" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD7 功率" bitStart="480" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD8 功率" bitStart="512" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LDs 功率" bitStart="544" bitLength="32" initValue="0000"/>
 		</Command>
 		<Command CommandName="遥测02--隐私放大" CommandCode="02" ArgumentByteLength="64">			
 			<Arg ArgumentName="块号" bitStart="0" bitLength="16" initValue="0000"/>
