@@ -6,8 +6,11 @@
 #include "afxwin.h"
 #include "QKDTimer.h"
 #include "QKDDisplay.h"
+#include <vector>
+#include<queue>
+#include <stack>
 // CDlgCommandSheet dialog
-
+using namespace std;
 class CDlgCommandSheet : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgCommandSheet)
@@ -94,4 +97,9 @@ public:
 	afx_msg void OnBnClickedButtonRead();
 	afx_msg void OnBnClickedButtonWrite();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
+	vector<CString> m_InputNum;
+	void operation(CString TBuff, vector<CString> & m_InputNum);
+	double calculation(vector<CString> m_InputNum);
+	CString Caculate(CString textbuff);
+	
 };

@@ -8,6 +8,10 @@
 #include "DlgAddCommand.h"
 #include "DlgRefreshSheet.h"
 #include "QKDTimer.h"
+
+
+
+
 // CDlgCommandSheet dialog
 
 IMPLEMENT_DYNAMIC(CDlgCommandSheet, CDialogEx)
@@ -915,6 +919,7 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		break;
 	}
 	*pResult = 0;
+	m_ListCtrlCommand.SetSelectionMark(-1);
 }
 
 unsigned short CRC16(unsigned char *pDataToCRC, unsigned short crc_init, int length_crc)
@@ -1759,7 +1764,24 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 			for (int v = 0; v < len; v++){
 				va |= (tempbuf[v] << v * 8);
 			}
-			strBuf.Format("%08x", va);
+			if (pCmdInfo->datatype[i] == 0x0a)
+			{
+				strBuf.Format("%d", va);
+			}
+			else if (pCmdInfo->datatype[i] == 0x0f)
+			{
+				strBuf.Format("%08x", va);
+			}
+			else if (pCmdInfo->datatype[i]==0x0c)
+			{
+				CString str;
+				CString str1(pCmdInfo->cal[i]);
+				int pos = str1.Find('x');
+				str = str1.Left(pos);
+				str.Format(str+"%d", va);
+				str += str1.Mid(pos + 1);
+				strBuf = Caculate(str);
+			}
 			m_listMonitor.SetItemText(index, 3, strBuf);
 			int in_num, decimal;
 
@@ -1809,6 +1831,7 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 	sprintf(xpath_expr, "/CommandSet/Category/Command");
 	xpathObj = LocateXPath(xpath_expr);//查询节点
 	monitor_numcnt = xpathObj->nodesetval->nodeNr;
+	CString str;
 	if (xpathObj){
 		m_MonitorCmdNum = xpathObj->nodesetval->nodeNr;
 		for (i = 0; i < xpathObj->nodesetval->nodeNr; i++){
@@ -1874,10 +1897,9 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 								pCmdInfo->Arg_CombxName[idx][combxCntinArg][length - 1] = '\0';
 							}
 							xmlFree(xmlRtn);							
-							xmlRtn = xmlNodeGetContent(pNodeSub);
-							CString str;
+							xmlRtn = xmlNodeGetContent(pNodeSub);							
 							str= xmlRtn;
-							char *endptr;
+							
 							pCmdInfo->Arg_CombxCode[idx][combxCntinArg] = strtol(str.Left(2),&endptr,16);							
 							combxCntinArg++;
 
@@ -1885,6 +1907,23 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 						pCmdInfo->combcntNum[idx] = combxCntinArg;
 						pNodeSub = pNodeSub->next;
 					}
+					xmlRtn = xmlGetProp(pNode, BAD_CAST("datatype"));
+					if (xmlRtn)
+					{
+						str = xmlRtn;
+						pCmdInfo->datatype[idx] = strtol(str.Left(2), &endptr, 16);
+						xmlFree(xmlRtn);
+					}					
+					
+					xmlRtn = CXML::xmlGetPropGBK(pNode, BAD_CAST("cal"));
+					if (xmlRtn)
+					{
+						length = strlen((char *)xmlRtn);
+						if (length > MAX_NAME_LENGTH){
+							length = MAX_NAME_LENGTH - 1;
+						}
+						memcpy(pCmdInfo->cal[idx], xmlRtn, length);
+					}	
 					xmlRtn = xmlGetProp(pNode, BAD_CAST("bitStart"));
 					pCmdInfo->bit_start[idx] = atoi((char *)xmlRtn);
 					xmlFree(xmlRtn);
@@ -2120,4 +2159,218 @@ void CDlgCommandSheet::OnSize(UINT nType, int cx, int cy)
 	//	pWnd->MoveWindow(rect); // 设置控件大小 
 	//}
 	// TODO: Add your message handler code here
+}
+
+INT getpri(char ptr)
+{
+	switch (ptr)
+	{
+	case '+': return 1;
+	case '-': return 1;
+	case '*': return 2;
+	case '/': return 2;
+	default: return 0;
+	}
+
+}
+
+CString CDlgCommandSheet::Caculate(CString textbuff)
+{
+	// TODO: 在此添加控件通知处理程序代码
+	//获取EDT1输入的字符
+	CString decimal;
+//	m_edit_input.GetWindowText(textbuff);
+	//将字符转成后缀表达式
+	operation(textbuff, m_InputNum);
+
+	//根据后缀表达式计算结果
+	double u_result = calculation(m_InputNum);
+
+	//在EDT2输出结果
+	CString result;
+	result.Format("%f", u_result);
+
+	//找到小数点位置
+	INT Pointindex = result.Find(".");
+
+	//遍历字符串
+	for (INT i = result.GetLength() - 1; i > Pointindex; i--)
+	{
+		//小数最后位是零
+		if (result[i] == '0')
+		{
+			//如果是小数点的下一位，输出整数
+			if (i == Pointindex + 1)
+			{
+				return result.Left(Pointindex);			
+			}
+			//继续遍历
+			else
+				continue;
+		}
+		//如果小数最后位不是0，输出
+		if (result[i] != '0')
+		{
+			return result.Left(i + 1);
+		}
+
+	}
+}
+void CDlgCommandSheet::operation(CString TBuff, vector<CString> & m_InputNum)
+{
+	INT i = 0;
+	INT length = TBuff.GetLength();
+	stack<char> stack1; //存放运算符的栈
+	CString	StrNum = "";
+	CString Strck;
+
+	while (i <= length)
+	{
+		//如果遇到数字，寻找下一个，直到遇到操作符，将数字拼接起来
+		if ((TBuff[i] - '0') >= 0 && (TBuff[i] - '0') <= 9 || (TBuff[i] == '.'))
+		{
+			StrNum += TBuff[i];
+			i++;
+			continue;
+		}
+
+		//如果遇到操作符
+		if (TBuff[i] == '+' || TBuff[i] == '-' || TBuff[i] == '*' || TBuff[i] == '/')
+		{
+			//将拼接起来的数字压进vector
+			m_InputNum.push_back(StrNum);
+			StrNum = "";
+
+			//如果栈空，直接进栈
+			if (stack1.empty())
+			{
+				stack1.push(TBuff[i]);
+				i++;
+				continue;
+			}
+
+			//如果操作符优先级比栈顶操作符优先级高，入栈
+			if (getpri(TBuff[i]) > getpri(stack1.top()))
+			{
+				stack1.push(TBuff[i]);
+			}
+
+			//如果操作符优先级比栈顶操作符优先级低
+			else
+			{
+				while (1)
+				{
+					//栈顶操作符进入vector
+					Strck = stack1.top();
+					m_InputNum.push_back(Strck);
+					stack1.pop();
+
+					//继续判断优先级
+					//栈为空，入栈，退出循环
+					if (stack1.empty())
+					{
+						stack1.push(TBuff[i]);
+						break;
+					}
+					//操作符优先级比栈顶操作符优先级高，入栈，退出循环
+					else if (getpri(TBuff[i]) > getpri(stack1.top()))
+					{
+						stack1.push(TBuff[i]);
+						break;
+					}
+				}
+			}
+		}
+		//将最后面的数字压进vector
+		else
+		{
+			m_InputNum.push_back(StrNum);
+			StrNum = "";
+		}
+
+		i++;
+	}
+	//将栈中的操作符压进vector
+	while (!stack1.empty())
+	{
+		Strck = stack1.top();
+		m_InputNum.push_back(Strck);
+		stack1.pop();
+	}
+	return;
+}
+double CDlgCommandSheet::calculation(vector<CString> m_InputNum)
+{
+	INT i = 0;
+	INT length = (INT)m_InputNum.size();
+	stack<double> temp; //用来存放数字的栈
+	double sum = 0;
+	double first, second;
+	while (i < length)
+	{
+		//如果是数字，转成double压进数字栈
+		if (('+' != m_InputNum[i]) && ('-' != m_InputNum[i]) && ('*' != m_InputNum[i]) && ('/' != m_InputNum[i]))
+		{
+			temp.push(atof(m_InputNum[i]));
+		}
+		//如果是运算符
+		else if (('+' == m_InputNum[i]) || ('-' == m_InputNum[i]) || ('*' == m_InputNum[i]) || ('/' == m_InputNum[i]))
+		{
+			int idx = 0;
+			if ('+' == m_InputNum[i])
+			{
+				idx = 0;
+			}
+			else if ('-' == m_InputNum[i])
+			{
+				idx = 1;
+			}
+			else if ('*' == m_InputNum[i])
+			{
+				idx = 2;
+			}
+			else if ('/' == m_InputNum[i])
+			{
+				idx = 3;
+			}
+
+			switch (idx)
+			{
+			case 0:
+				first = temp.top();
+				temp.pop();
+				second = temp.top();
+				temp.pop();
+				sum = first + second;
+				temp.push(sum);
+				break;
+			case 1:
+				first = temp.top();
+				temp.pop();
+				second = temp.top();
+				temp.pop();
+				sum = second - first;
+				temp.push(sum);
+				break;
+			case 2:
+				first = temp.top();
+				temp.pop();
+				second = temp.top();
+				temp.pop();
+				sum = first * second;
+				temp.push(sum);
+				break;
+			case 3:
+				first = temp.top();
+				temp.pop();
+				second = temp.top();
+				temp.pop();
+				sum = second / first;
+				temp.push(sum);
+				break;
+			}
+		}
+		i++;
+	}
+	return temp.top();
 }

@@ -77,7 +77,9 @@ typedef struct
 	unsigned char arg_name[MAX_ARG_NUM][MAX_NAME_LENGTH];
 	unsigned char Arg_CombxName[MAX_ARG_NUM][MAX_ARG_NUM][MAX_NAME_LENGTH];
 	unsigned char Arg_CombxCode[MAX_ARG_NUM][MAX_ARG_NUM];
-	 int combcntNum[MAX_ARG_NUM];
+	unsigned char datatype[MAX_ARG_NUM];
+	unsigned char cal[MAX_ARG_NUM][MAX_NAME_LENGTH];;
+	int combcntNum[MAX_ARG_NUM];
 	unsigned char input_type[MAX_ARG_NUM];
 	unsigned char input_ctrl_index[MAX_ARG_NUM];
 	double coef[MAX_ARG_NUM];
