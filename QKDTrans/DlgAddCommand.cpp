@@ -121,25 +121,6 @@ void CDlgAddCommand::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 		DeleteEditAndCombo();
 		m_rect.SetRect(CANVAS_LEFTTOPx, CANVAS_LEFTTOPy, CANVAS_LEFTTOPx + CANVAS_WIDTH, CANVAS_LEFTTOPy + LINEHEIGHT);
 		m_pCmd_WN->cmd_id = m_ListCtrlInCommand.GetItemData(iCmdIdx);
-//		strCmdName = m_ListCtrlInCommand.GetItemText(iCmdIdx, 0);//获取list内容
-		
-
-// 		sprintf(xpath_expr, "%s%s']\0", "//Command[@name='", CXML::g2u((unsigned char *)(LPCSTR)strCmdName));
-// 
-// 		xpathObj = m_xml.GetNodesByXPath(BAD_CAST(xpath_expr));
-// 
-// 		if (xpathObj){
-// 			if (xpathObj->nodesetval->nodeNr == 0){
-// 				xmlXPathFreeObject(xpathObj);
-// 				return;
-// 			}
-// 			pNode = xpathObj->nodesetval->nodeTab[0];
-// 			xmlRtn = CXML::xmlGetPropGBK(pNode, (xmlChar *)"code");
-// 			m_pCMD->ID = (unsigned char)(strtol((char *)xmlRtn, &endptr, 16) & 0xFF);
-// 			xmlFree(xmlRtn);
-// 
-// 			xmlXPathFreeObject(xpathObj);
-// 		}
 
 		InitUI((unsigned char *)(LPCSTR)(strCmdName));//根据strCmdName从command.xml 解析出指令内容
 		SetValueToUI(m_pCmd_WN->cmd_id, m_pDlg->m_pCmdInfo[m_pCmd_WN->cmd_id & 0xFF]->init_value);

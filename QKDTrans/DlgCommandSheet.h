@@ -58,7 +58,6 @@ public:
 	void GetCmdInfo(CmdInfo *m_pCmdInfo[256]);
 	void AddCmdToList(CMD_WN *pCmd, int index, int bNew);
 	__int64 DiffTimeAbsReletive(void);
-	CString GetRelativeTime(unsigned int sec);
 	CString GetDeviceName(unsigned char dev_id);
 	CString GetAbsTime(unsigned int sec);
 	xmlXPathObjectPtr LocateXPath(char xpath_expr[]);
@@ -101,5 +100,7 @@ public:
 	void operation(CString TBuff, vector<CString> & m_InputNum);
 	double calculation(vector<CString> m_InputNum);
 	CString Caculate(CString textbuff);
+	void LoadFromPLD(CString fileName);
+
 	
 };

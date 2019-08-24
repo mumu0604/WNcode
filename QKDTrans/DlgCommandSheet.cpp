@@ -8,8 +8,8 @@
 #include "DlgAddCommand.h"
 #include "DlgRefreshSheet.h"
 #include "QKDTimer.h"
-
-
+#include <io.h>>
+#include <direct.h>
 
 
 // CDlgCommandSheet dialog
@@ -118,11 +118,10 @@ BOOL CDlgCommandSheet::OnInitDialog()
 		{ "分系统", 60 },
 		{ "总线", 40 },
 		{ "绝对时间", 180 },
-		{ "相对时间", 160 },
 		{ "指令功能描述", 200 },
 		{ "指令码", 50 },
 		{ "参数长度", 60 },
-		{ "参数", 500 }
+		{ "参数", 660 }
 	};
 	LV_COLUMN lvc[sizeof(head) / sizeof(LIST_HEAD)];
 	int i;
@@ -144,7 +143,6 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	t.wSecond = 0;
 	t.wMilliseconds = 0;
 	SystemTimeToFileTime(&t, (FILETIME *)&m_base_abs);
-	t.wYear = 2019;
 	SystemTimeToFileTime(&t, (FILETIME *)&m_base_relative);
 	m_MonitorCmdNum = 0;
 
@@ -698,38 +696,11 @@ HMSTime CDlgCommandSheet::SecondToHMSTime(int second)
 	time.second = second % 60;
 	return time;
 }
-
 int CDlgCommandSheet::HMSTimeToSecond(HMSTime time)
 {
 	int second;
 	second = time.hour * 3600 + time.minute * 60 + time.second;
 	return second;
-}
-CString CDlgCommandSheet::GetRelativeTime(unsigned int sec)
-{
-
-	__int64 relative_sec;
-	int data;
-
-	relative_sec = DiffTimeAbsReletive() + sec;
-
-	CString strBuf1, strBuf2;
-
-	strBuf1 = "+";
-	if (relative_sec < 0){
-		strBuf1.Format("-");
-		relative_sec = -relative_sec;
-	}
-
-	data = relative_sec / 60;
-	strBuf2.Format("%d分", data);
-	strBuf1 += strBuf2;
-
-	data = relative_sec % 60;
-	strBuf2.Format("%02d秒", data);
-	strBuf1 += strBuf2;
-
-	return strBuf1;
 }
 CString CDlgCommandSheet::GetAbsTime(unsigned int sec)
 {
@@ -817,8 +788,8 @@ void CDlgCommandSheet::AddCmdToList(CMD_WN *pCmd, int index, int bNew)
 	if (index < 0){
 		index = iRow;
 	}
-	pAddedCmd = (CMD_WN *)malloc(sizeof(CMD));
-	memcpy(pAddedCmd, pCmd, sizeof(CMD));
+	pAddedCmd = (CMD_WN *)malloc(sizeof(CMD_WN));
+	memcpy(pAddedCmd, pCmd, sizeof(CMD_WN));
 	if (!bNew){
 		free((CMD *)m_ListCtrlCommand.GetItemData(index));
 	}
@@ -840,12 +811,10 @@ void CDlgCommandSheet::AddCmdToList(CMD_WN *pCmd, int index, int bNew)
 		m_ListCtrlCommand.SetItemText(index, COL_BUS, "A");
 	}
 	if (pAddedCmd->immediate_flag){
-		m_ListCtrlCommand.SetItemText(index, COL_ABS_TIME, "立即令");
-		m_ListCtrlCommand.SetItemText(index, COL_RELATIVE_TIME, "立即令");
+		m_ListCtrlCommand.SetItemText(index, COL_ABS_TIME, "立即令");	
 	}
 	else{
-		m_ListCtrlCommand.SetItemText(index, COL_ABS_TIME, GetAbsTime(pAddedCmd->time));
-		m_ListCtrlCommand.SetItemText(index, COL_RELATIVE_TIME, GetRelativeTime(pAddedCmd->time));
+		m_ListCtrlCommand.SetItemText(index, COL_ABS_TIME, GetAbsTime(pAddedCmd->time));		
 	}
 
 	m_ListCtrlCommand.SetItemText(index, COL_DESC, (char *)pCmdInfo->cmd_name);
@@ -1333,13 +1302,72 @@ void CDlgCommandSheet::SendCycleCmd()
 // 	GetDlgItem(IDC_LVDSCntReal)->SetWindowText(strBuf);
 
 }
+void CDlgCommandSheet::LoadFromPLD(CString fileName)
+{
+	CFile pldFile;
+	pldFile.Open(fileName, CFile::modeRead | CFile::typeBinary);
+	CMD_WN cmd;
+	CmdInfo *pCmdInfo;
 
+	unsigned char buf[32];
+	int cnt, idx = 0, iPos;
+
+	cnt = pldFile.GetLength();
+// 	if ((cnt & 0x1F) != 10){
+// 		return;
+// 	}
+
+	cnt >>= 5;
+//	pldFile.Read(buf, 8);//度xw_header[8]
+	unsigned short crc = 0;
+
+// 	for (idx = 0; idx < cnt; idx++){
+// 		pldFile.Read(buf, 32);
+// 		crc = CRC16((unsigned char *)buf, crc, 32);
+// 	}
+// 	pldFile.Read(buf, 2);
+// 	if ((((crc & 0xFF00) >> 8) != buf[0]) || ((crc & 0xFF) != buf[1])){
+// 		MessageBox("文件格式错误！");
+// 		return;
+// 	}
+
+	pldFile.SeekToBegin();
+//	pldFile.Read(buf, 8);
+
+
+
+	for (int i = 0; i < cnt; i++){
+		pldFile.Read(buf, 32);
+		iPos = 4;
+		for (int j = 0; j < (buf[3] & 0xF); j++){
+			cmd.dev_id = buf[0];
+			cmd.bus_flag = buf[2] & 0xF0;
+			cmd.immediate_flag = (buf[3] & 0xF0) ? 0 : 1;
+
+			cmd.time = (buf[iPos] << 24) | (buf[iPos + 1] << 16) |
+				(buf[iPos + 2] << 8) | buf[iPos + 3];
+			iPos += 4;
+
+			cmd.cmd_id = buf[iPos];
+			pCmdInfo = m_pCmdInfo[cmd.cmd_id];
+			if (!pCmdInfo){
+				MessageBox("指令码错误,导入注入数据失败！", "错误");
+				return;
+			}
+			iPos++;
+			memcpy(cmd.args, buf + iPos, pCmdInfo->arg_byte_num);
+			iPos += pCmdInfo->arg_byte_num;
+			AddCmdToList(&cmd, -1, 1);
+		}
+	}
+	pldFile.Close();
+}
 void CDlgCommandSheet::OnBnClickedButtonInCmd()
 {
 	// TODO: Add your control notification handler code here
 	CFileDialog dlg(TRUE, "QCmdList", NULL,
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR,
-		"QCmdXml Files (*.xml)|*.xml||", NULL);
+		"QCmdXml Files (*.dat)|*.dat||", NULL);
 	//		"QCmdList Files (*.cls)|*.cls|QCmdLog Files (*.clg)|*.clg|QCmdXml Files (*.xml)|*.xml||", NULL);
 	if (dlg.DoModal() != IDOK)
 		return;
@@ -1347,33 +1375,8 @@ void CDlgCommandSheet::OnBnClickedButtonInCmd()
 	m_ListCtrlCommand.DeleteAllItems();
 	CString strFileName = dlg.GetPathName();
 	CString strExt = dlg.GetFileExt();
-
-	if (!strcmp((LPCTSTR)strExt, "clg")){
-		GetCMDArrayFromLog(strFileName);
-	}
-	else if (!strcmp((LPCTSTR)strExt, "xml")){
-		GetCMDArrayFromXml(strFileName);
-	}
-	else if (!strcmp((LPCTSTR)strExt, "cls")){
-		GetCMDArray(strFileName);
-	}
-	else{
-		return;
-	}
-
-	for (int i = 0; i < m_iRealCmdCnt; i++)
-	{
-		DisplayCmd(i, m_CMDArray[i]);
-	}
-	// 	GetDlgItem(IDC_EDITCMDSEND)->SetWindowText("");
-	// 	GetDlgItem(IDC_EDITCMDRECV)->SetWindowText("");
-	// 	GetDlgItem(IDC_EDITCMDSENDCNT)->SetWindowText("");
-	// 	GetDlgItem(IDC_EDITCMDCORRECTRESPONSECNT)->SetWindowText("");
-	// 	GetDlgItem(IDC_EDITCMDERRORRESPONSECNT)->SetWindowText("");
-// 	m_iCmdCorrectResponseCnt = 0;
-// 	m_iCmdErrorResponseCnt = 0;
-// 	m_iCmdRecvCnt = 0;
-// 	m_iCmdSendCnt = 0;
+	LoadFromPLD(strFileName);
+	
 }
 void CDlgCommandSheet::GetCMDArray(CString fileName)
 {
@@ -1611,9 +1614,19 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 	int leftByteOf64B = 64;
 
 	char filter[] = "QCmdList Files(*.cls) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
-	CString FileName;
+	
 	COleDateTime t;
 	t = COleDateTime::GetCurrentTime();
+	char projectDir[256];
+	char cmdfilename[256];
+	GetCurrentDirectory(256, projectDir);
+	strcpy(cmdfilename, projectDir);
+	strcat(cmdfilename, "\\CMD\\");
+	if (_access(cmdfilename, 0) != 0)
+	{
+		_mkdir(cmdfilename);
+	}
+	CString FileName=cmdfilename;
 
 	CString strVer;
 	GetWindowText(strVer);	
