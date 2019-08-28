@@ -150,6 +150,7 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	SetTimer(1, 1000, NULL);
 	m_pInterface = new CInterface;
 	m_display.Open("monitor.xml", NULL, &m_listMonitor, NULL);
+//	m_listMonitor.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_SUBITEMIMAGES | LVS_EX_TRACKSELECT);
 	m_iRealCmdCnt = 0;
 	m_CMD_length = 0;
 	m_CMDBuf = (char *)malloc(32 * 1024 + 8);
@@ -1772,7 +1773,7 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 		}
 		else                                 //edit
 		{			
-			int va = 0;
+			long long va = 0;
 			int len = (pCmdInfo->arg_length[i] + 7) / 8;
 			for (int v = 0; v < len; v++){
 				va |= (tempbuf[v] << v * 8);
@@ -1780,6 +1781,9 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 			if (pCmdInfo->datatype[i] == 0x0a)
 			{
 				strBuf.Format("%d", va);
+			}
+			else if (pCmdInfo->datatype[i] == 0xaa){
+				strBuf.Format("%lld", va);
 			}
 			else if (pCmdInfo->datatype[i] == 0x0f)
 			{
@@ -2024,6 +2028,12 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	while (m_pDlg->m_displayMonitor)
 	{
 		templength = m_pInterface->RecvCmd(RecvBuferLength, m_COMportNum, tempBuf);
+		if (templength > RecvBuferLength){
+			m_pInterface->ClearRflush(m_COMportNum);
+			Recvlength = 0;
+			templength = 0;
+			continue;
+		}
 		memcpy(RecvBuf + Recvlength, tempBuf, templength);
 		Recvlength += templength;		
 		if (Recvlength >= RecvBuferLength && Recvlength > 0)
@@ -2067,7 +2077,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 			
 		}
 		
-		Sleep(1000);
+		Sleep(500);
 	}
 	
 	return 0;

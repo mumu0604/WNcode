@@ -2,17 +2,18 @@
 <CommandSet>
 	<Category CategoryName="实验机指令">
 		<Device DeviceName="实验机" DeviceID="33"/>
-		<Command CommandName="遥测00--指令状态" CommandCode="00" ArgumentByteLength="16">			
+		<Command CommandName="遥测00--指令状态" CommandCode="00" ArgumentByteLength="20">			
 			<Arg ArgumentName="GPS计数" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="直接指令计数" datatype="0F" bitStart="16" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="注入错误计数" datatype="0c" cal="35*x/26+24/26-100/26" bitStart="32" bitLength="16" initValue="0003"/>
-			<Arg ArgumentName="注入正确计数" datatype="0c" cal="3*x" bitStart="48" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="注入总计数" datatype="0c" cal="3*x" bitStart="64" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="直接指令计数" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入错误计数" datatype="0A" cal="1*x" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入正确计数" datatype="0A" cal="1*x" bitStart="48" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="注入总计数" datatype="0A" cal="1*x" bitStart="64" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="模式配置" bitStart="80" bitLength="8" initValue="c3">
 				<ArgValue ArgumentValueName="工作模式">3C</ArgValue>
 				<ArgValue ArgumentValueName="待机模式">C3</ArgValue>
 			</Arg>
-			<Arg ArgumentName="单次读" datatype="0F" col="3*x" bitStart="96" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="单次读" datatype="0f" bitStart="96" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="载荷有效计数" datatype="0A" bitStart="128" bitLength="32" initValue="0000"/>
 		</Command>
 		<Command CommandName="遥测01--ld遥测" CommandCode="01" ArgumentByteLength="69">		
 			<Arg ArgumentName="延时锁定" bitStart="0" bitLength="8" initValue="99">
@@ -53,30 +54,30 @@
 				<ArgValue ArgumentValueName="不在配置">0</ArgValue>
 				<ArgValue ArgumentValueName="正在配置">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="量子通信帧数" bitStart="96" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD1 温度" datatype="0c" cal="3*x" bitStart="128" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD2 温度" datatype="0c" cal="3*x" bitStart="144" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD3 温度" datatype="0c" cal="3*x" bitStart="160" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD4 温度" datatype="0c" cal="3*x" bitStart="176" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD5 温度" datatype="0c" cal="3*x" bitStart="192" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD6 温度" datatype="0c" cal="3*x" bitStart="208" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD7 温度" datatype="0c" cal="3*x" bitStart="224" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD8 温度" datatype="0c" cal="3*x" bitStart="240" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LDs 温度" datatype="0c" cal="3*x" bitStart="256" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="LD1 功率" datatype="0c" cal="3*x" bitStart="288" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD2 功率" datatype="0c" cal="3*x" bitStart="320" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD3 功率" datatype="0c" cal="3*x" bitStart="352" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD4 功率" datatype="0c" cal="3*x" bitStart="384" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD5 功率" datatype="0c" cal="3*x" bitStart="416" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD6 功率" datatype="0c" cal="3*x" bitStart="448" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD7 功率" datatype="0c" cal="3*x" bitStart="480" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LD8 功率" datatype="0c" cal="3*x" bitStart="512" bitLength="32" initValue="0000"/>
-			<Arg ArgumentName="LDs 功率" datatype="0c" cal="3*x" bitStart="544" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="量子通信帧数" datatype="0A" bitStart="96" bitLength="32" initValue="00000000"/>
+			<Arg ArgumentName="LD1 温度" datatype="0f" cal="1*x" bitStart="128" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD2 温度" datatype="0f" cal="1*x" bitStart="144" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD3 温度" datatype="0f" cal="1*x" bitStart="160" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD4 温度" datatype="0f" cal="1*x" bitStart="176" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD5 温度" datatype="0f" cal="1*x" bitStart="192" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD6 温度" datatype="0f" cal="1*x" bitStart="208" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD7 温度" datatype="0f" cal="1*x" bitStart="224" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD8 温度" datatype="0f" cal="1*x" bitStart="240" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LDs 温度" datatype="0f" cal="1*x" bitStart="256" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="LD1 功率" datatype="0f" cal="1*x" bitStart="288" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD2 功率" datatype="0f" cal="1*x" bitStart="320" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD3 功率" datatype="0f" cal="1*x" bitStart="352" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD4 功率" datatype="0f" cal="1*x" bitStart="384" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD5 功率" datatype="0f" cal="1*x" bitStart="416" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD6 功率" datatype="0f" cal="1*x" bitStart="448" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD7 功率" datatype="0f" cal="1*x" bitStart="480" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LD8 功率" datatype="0f" cal="1*x" bitStart="512" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="LDs 功率" datatype="0f" cal="1*x" bitStart="544" bitLength="32" initValue="0000"/>
 		</Command>
-		<Command CommandName="遥测02--隐私放大" CommandCode="02" ArgumentByteLength="64">			
-			<Arg ArgumentName="块号" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="最终密钥" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="发射计数" datatype="0A" bitStart="32" bitLength="64" initValue="0000"/>
+		<Command CommandName="遥测02--QKD后处理" CommandCode="02" ArgumentByteLength="72">			
+			<Arg ArgumentName="密钥块号" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="100K最终密钥" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="发射计数" datatype="AA" bitStart="32" bitLength="64" initValue="0000"/>
 			<Arg ArgumentName="真空态计数" datatype="0A" bitStart="96" bitLength="32" initValue="0000"/>
 			<Arg ArgumentName="x基信号态计数" datatype="0A" bitStart="128" bitLength="32" initValue="0000"/>
 			<Arg ArgumentName="x基信号态采样计数" datatype="0A" bitStart="160" bitLength="32" initValue="0000"/>
@@ -90,6 +91,48 @@
 			<Arg ArgumentName="z基诱骗态计数" datatype="0A" bitStart="416" bitLength="32" initValue="0000"/>
 			<Arg ArgumentName="z基诱骗态采样计数" datatype="0A" bitStart="448" bitLength="32" initValue="0000"/>
 			<Arg ArgumentName="z基诱骗态采样错误计数" datatype="0A" bitStart="480" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="最终密钥总计数" datatype="0A" bitStart="512" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="正确最终密钥段数" datatype="0A" bitStart="544" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="错误最终密钥段数" datatype="0A" bitStart="560" bitLength="16" initValue="0000"/>
+		</Command>
+		<Command CommandName="遥测03--激光通信" CommandCode="03" ArgumentByteLength="152">			
+			<Arg ArgumentName="激光器温度" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="激光器功率" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="探测器偏置高压" datatype="0A" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="探测器信号" bitStart="48" bitLength="8" initValue="0a">
+				<ArgValue ArgumentValueName="丢失">0f</ArgValue>
+				<ArgValue ArgumentValueName="正常">0a</ArgValue>
+			</Arg>
+			<Arg ArgumentName="CDR时钟锁定" bitStart="56" bitLength="8" initValue="0a">
+				<ArgValue ArgumentValueName="失锁">0f</ArgValue>
+				<ArgValue ArgumentValueName="锁定">0a</ArgValue>
+			</Arg>
+			<Arg ArgumentName="探测器信号丢失时长" datatype="AA" bitStart="64" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="时钟失锁时长" datatype="AA" bitStart="128" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式1时长" datatype="AA" bitStart="192" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式1接收计数" datatype="AA" bitStart="256" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式1错误计数" datatype="AA" bitStart="320" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式2发送计数" datatype="AA" bitStart="384" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式2RS前接收计数" datatype="AA" bitStart="448" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式2RS前错误计数" datatype="AA" bitStart="512" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式2RS后接收计数" datatype="AA" bitStart="576" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="测试模式2RS后错误计数" datatype="AA" bitStart="640" bitLength="64" initValue="0000"/>
+			<Arg ArgumentName="已发送总同步脉冲计数" datatype="0A" bitStart="704" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="当前同步脉冲编号" datatype="0A" bitStart="736" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="当前同步脉冲频率" datatype="0A" bitStart="768" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="接收同步脉冲个数" datatype="0A" bitStart="800" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="接收同步脉冲编号" datatype="0A" bitStart="832" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="物理帧校验通过帧数" datatype="0A" bitStart="864" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="物理帧校验失败帧数" datatype="0A" bitStart="896" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="RS成功块数" datatype="0A" bitStart="928" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="RS0到1个数" datatype="0A" bitStart="960" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="RS1到0个数" datatype="0A" bitStart="992" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="RS失败块数" datatype="0A" bitStart="1024" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="工作模式发送应用帧数" datatype="0A" bitStart="1056" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="工作模式发送传输帧数" datatype="0A" bitStart="1088" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="工作模式传输帧校验成功数" datatype="0A" bitStart="1120" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="工作模式传输帧校验失败数" datatype="0A" bitStart="1152" bitLength="32" initValue="0000"/>
+			<Arg ArgumentName="工作模式接收应用帧数" datatype="0A" bitStart="1184" bitLength="32" initValue="0000"/>
 		</Command>
 </Category>
 </CommandSet>
