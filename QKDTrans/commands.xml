@@ -198,13 +198,77 @@
 				<ArgValue ArgumentValueName="使能">C3</ArgValue>
 			</Arg>
 		</Command>
+		<Command CommandName="事件0b--激光通信发送控制" CommandCode="0b" ArgumentByteLength="22">
+			<Arg ArgumentName="工作模式" bitStart="0" bitLength="8" initValue="0A">
+				<ArgValue ArgumentValueName="测试模式1">7E</ArgValue>
+				<ArgValue ArgumentValueName="测试模式2">7F</ArgValue>
+				<ArgValue ArgumentValueName="正常模式">0A</ArgValue>
+			</Arg>
+			<Arg ArgumentName="通信频率" bitStart="8" bitLength="8" initValue="00">
+				<ArgValue ArgumentValueName="156.25">00</ArgValue>
+				<ArgValue ArgumentValueName="312.2">01</ArgValue>
+				<ArgValue ArgumentValueName="625">02</ArgValue>
+				<ArgValue ArgumentValueName="1250">04</ArgValue>
+				<ArgValue ArgumentValueName="2500">08</ArgValue>
+			</Arg>
+			<Arg ArgumentName="软件使能" bitStart="16" bitLength="8" initValue="01">
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+				<ArgValue ArgumentValueName="使能">01</ArgValue>
+			</Arg>
+			<Arg ArgumentName="硬件使能" bitStart="24" bitLength="8" initValue="01">
+				<ArgValue ArgumentValueName="禁止">00</ArgValue>
+				<ArgValue ArgumentValueName="使能">01</ArgValue>
+			</Arg>
+			<Arg ArgumentName="交织深度" bitStart="32" bitLength="8" initValue="02">
+				<ArgValue ArgumentValueName="255*70">00</ArgValue>
+				<ArgValue ArgumentValueName="255*140">01</ArgValue>
+				<ArgValue ArgumentValueName="255*210">02</ArgValue>
+				<ArgValue ArgumentValueName="255*280">04</ArgValue>
+				<ArgValue ArgumentValueName="255*350">08</ArgValue>
+				<ArgValue ArgumentValueName="255*420">10</ArgValue>
+				<ArgValue ArgumentValueName="255*840">20</ArgValue>
+				<ArgValue ArgumentValueName="255*1680">40</ArgValue>
+				<ArgValue ArgumentValueName="255*3360">80</ArgValue>
+			</Arg>
+			<Arg ArgumentName="同步周期（时钟数）" bitStart="40" bitLength="8" initValue="10">
+				<ArgValue ArgumentValueName="64*8">00</ArgValue>
+				<ArgValue ArgumentValueName="128*8">01</ArgValue>
+				<ArgValue ArgumentValueName="256*8">02</ArgValue>
+				<ArgValue ArgumentValueName="512*8">04</ArgValue>
+				<ArgValue ArgumentValueName="1024*8">08</ArgValue>
+				<ArgValue ArgumentValueName="2048*8">10</ArgValue>
+				<ArgValue ArgumentValueName="4096*8">20</ArgValue>
+				<ArgValue ArgumentValueName="8192*8">40</ArgValue>
+				<ArgValue ArgumentValueName="16384*8">80</ArgValue>
+			</Arg>
+			<Arg ArgumentName="工控P" bitStart="48" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="工控I" bitStart="64" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="偏置电流" bitStart="80" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="调制电流" bitStart="96" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="温控P" bitStart="112" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="温控I" bitStart="128" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="温度设置" bitStart="144" bitLength="16" initValue="0110"/>
+			<Arg ArgumentName="温控使能" bitStart="160" bitLength="16" initValue="0a">
+				<ArgValue ArgumentValueName="禁止">0f</ArgValue>
+				<ArgValue ArgumentValueName="使能">0a</ArgValue>
+			</Arg>
+		</Command>
+		<Command CommandName="事件0c--激光通信探测控制" CommandCode="0c" ArgumentByteLength="12">
+			<Arg ArgumentName="偏置电压" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="温控P" bitStart="16" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="温控I" bitStart="32" bitLength="16" initValue="1f7f"/>
+			<Arg ArgumentName="温度设置" bitStart="48" bitLength="16" initValue="0110"/>
+			<Arg ArgumentName="温控使能" bitStart="64" bitLength="16" initValue="0a">
+				<ArgValue ArgumentValueName="禁止">0f</ArgValue>
+				<ArgValue ArgumentValueName="使能">0a</ArgValue>
+			</Arg>
+		</Command>
 
 		
 		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
 			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>
 			<Arg ArgumentName="结束地址" bitStart="24" bitLength="24" initValue="FFFFFF"/>
-		</Command>
-		
+		</Command>		
 		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
 			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>
 			<Arg ArgumentName="结束地址" bitStart="24" bitLength="24" initValue="FFFFFF"/>
