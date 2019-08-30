@@ -24,6 +24,7 @@ CDlgAddCommand::CDlgAddCommand(CDlgCommandSheet *pDlg, CMD_WN *pCmd, int bNew, C
 	m_min_sec = -86399;
 	m_sec = 0;
 	m_CheckTimeFlag = TRUE;
+	m_bNew = bNew;
 }
 
 CDlgAddCommand::~CDlgAddCommand()
@@ -96,7 +97,28 @@ void CDlgAddCommand::SetValueToUI(unsigned char cmd_id, unsigned char *pArgValue
 		}
 	}
 }
+void CDlgAddCommand::ReviseCmd()
+{
+	
+	// TODO: Add your control notification handler code here
+	m_bHaveChosenCmd = true;	
 
+	xmlXPathObjectPtr xpathObj;
+	xmlNodePtr pNode;
+	xmlChar *xmlRtn;
+	char *endptr;
+
+	char xpath_expr[200];
+	CString strCmdName;
+	if (1)//
+	{
+		DeleteEditAndCombo();
+		m_rect.SetRect(CANVAS_LEFTTOPx, CANVAS_LEFTTOPy, CANVAS_LEFTTOPx + CANVAS_WIDTH, CANVAS_LEFTTOPy + LINEHEIGHT);
+		InitUI((unsigned char *)(LPCSTR)(strCmdName));//根据strCmdName从command.xml 解析出指令内容
+		SetValueToUI(m_pCmd_WN->cmd_id, m_pCmd_WN->args);
+	}
+
+}
 void CDlgAddCommand::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
@@ -121,12 +143,13 @@ void CDlgAddCommand::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 		DeleteEditAndCombo();
 		m_rect.SetRect(CANVAS_LEFTTOPx, CANVAS_LEFTTOPy, CANVAS_LEFTTOPx + CANVAS_WIDTH, CANVAS_LEFTTOPy + LINEHEIGHT);
 		m_pCmd_WN->cmd_id = m_ListCtrlInCommand.GetItemData(iCmdIdx);
-
+		m_pCmd_WN->addCntIdx = m_pCmd_WN->cmd_id;
 		InitUI((unsigned char *)(LPCSTR)(strCmdName));//根据strCmdName从command.xml 解析出指令内容
 		SetValueToUI(m_pCmd_WN->cmd_id, m_pDlg->m_pCmdInfo[m_pCmd_WN->cmd_id & 0xFF]->init_value);
 	}
 	*pResult = 0;
 }
+
 void CDlgAddCommand::MoveNextLine()
 {
 	m_rect.left = CANVAS_LEFTTOPx;
@@ -400,6 +423,10 @@ BOOL CDlgAddCommand::OnInitDialog()
 	((CEdit *)GetDlgItem(IDC_EDITTIMEDay))->SetLimitText(0);
 	((CEdit *)GetDlgItem(IDC_EDITTIMEMiSec))->SetLimitText(0);
 	UpdateData(FALSE);
+	if (!m_bNew)
+	{
+		ReviseCmd();
+	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }

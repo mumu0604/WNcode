@@ -213,26 +213,23 @@ void CDlgCommandSheet::OnDblclkList2(NMHDR *pNMHDR, LRESULT *pResult)
 		
 		if (dlgAddCommand.DoModal() == IDOK)
 		{			
-			cmd.dev_id = 0x33;
+			
 			AddCmdToList(&cmd, m_iRealCmdCnt, 1);
+			memcpy(&m_cmdAddInfo[m_iRealCmdCnt], &cmd, sizeof(CMD_WN));
 			m_iRealCmdCnt++;
-
-
 		}
-
 	}
 	else//修改指令
 	{
-		CDlgAddCommand dlgAddCommand(this, &cmd, 1);
+		CDlgAddCommand dlgAddCommand(this, &m_cmdAddInfo[iListIndex], 0);
 		dlgAddCommand.m_pCMD = &m_CMDArray[iListIndex];
 		dlgAddCommand.m_bIsAddNewCmd = false;//控制addCommandsdlg显示m_CMDArray[iListIndex]指令
 		dlgAddCommand.m_bHaveChosenCmd = true;
 		CMD cmdTmp = m_CMDArray[iListIndex];//保存原来CMD指令
 		if (dlgAddCommand.DoModal() == IDOK)
-		{
-			cmd.dev_id = 0x33;
+		{		
 			m_ListCtrlCommand.DeleteItem(iListIndex);
-			AddCmdToList(&cmd, iListIndex, 1);
+			AddCmdToList(&m_cmdAddInfo[iListIndex], iListIndex, 1);
 	//		m_iRealCmdCnt++;			
 		}
 		m_ListCtrlCommand.SetItemState(iListIndex, 0, -1);
@@ -769,7 +766,7 @@ void CDlgCommandSheet::AddCmdToList(CMD_WN *pCmd, int index, int bNew)
 	CMD_WN *pAddedCmd;
 
 	unsigned char temp[MAX_ARG_LENGTH];
-
+	pCmd->dev_id = 0x33;
 	strDev = GetDeviceName(pCmd->dev_id);
 	if (!strDev.Compare("无效!")){
 		MessageBox("设备不存在,指令插入/替换失败!", "警告");

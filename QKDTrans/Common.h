@@ -65,6 +65,7 @@ typedef struct
 	unsigned char bus_flag;
 	unsigned char args[MAX_ARG_LENGTH];
 	unsigned int time;
+	unsigned char addCntIdx;
 }CMD_WN;
 
 typedef struct

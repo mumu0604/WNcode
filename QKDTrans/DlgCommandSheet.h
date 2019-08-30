@@ -33,6 +33,7 @@ public:
 	int m_iRealCmdCnt;
 	bool m_bCmdChanged;
 	CMD m_CMDArray[MAXCOMMAND];
+	CMD_WN m_cmdAddInfo[MAXCOMMAND];
 	int m_iCmdSendCnt;
 	bool m_displayMonitor;
 	

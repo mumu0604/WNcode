@@ -45,6 +45,7 @@ public:
 //	CDateTimeCtrl	m_timePick;
 	int m_max_sec, m_min_sec, m_sec;
 	CRect m_rect;
+	int m_bNew = 0;
 	CXML m_xml;
 	int m_iArgCnt;
 	int m_iArgByteLen[20];
@@ -80,4 +81,5 @@ public:
 	int m_iTimeDay;
 	int m_iTimeMiliSec;
 	BOOL m_CheckTimeFlag;
+	void ReviseCmd();
 };
