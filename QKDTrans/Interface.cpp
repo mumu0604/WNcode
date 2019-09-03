@@ -41,7 +41,7 @@ bool  CInterface::CloseComm(int PortNum)
 		return false;
 	}
 }
-int CInterface::RecvCmd(int RecvLength, int PortNum, char RecvBuf[100])
+int CInterface::RecvCmd(int RecvLength, int PortNum, char* RecvBuf)
 {
 		return sio_read(PortNum, (char *)RecvBuf, RecvLength);
 }
