@@ -21,37 +21,37 @@
 				<ArgValue ArgumentValueName="失败">3C</ArgValue>
 				<ArgValue ArgumentValueName="成功">C3</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR1初始化" bitStart="71" bitLength="1" initValue="0">
+			<Arg ArgumentName="DDR1初始化" bitStart="71" bitLength="1" initValue="00">
 				<ArgValue ArgumentValueName="完成">80</ArgValue>
-				<ArgValue ArgumentValueName="未完成">0</ArgValue>
+				<ArgValue ArgumentValueName="未完成">00</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR2初始化" bitStart="70" bitLength="1" initValue="0">
+			<Arg ArgumentName="DDR2初始化" bitStart="70" bitLength="1" initValue="00">
 				<ArgValue ArgumentValueName="完成">80</ArgValue>
-				<ArgValue ArgumentValueName="未完成">0</ArgValue>
+				<ArgValue ArgumentValueName="未完成">00</ArgValue>
 			</Arg>
-			<Arg ArgumentName="DDR1读写状态" bitStart="69" bitLength="1" initValue="0">
+			<Arg ArgumentName="DDR1读写状态" bitStart="69" bitLength="1" initValue="00">
 				<ArgValue ArgumentValueName="错误">80</ArgValue>
-				<ArgValue ArgumentValueName="正确">0</ArgValue>
+				<ArgValue ArgumentValueName="正确">00</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR2读写状态" bitStart="68" bitLength="1" initValue="0">
+			<Arg ArgumentName="DDR2读写状态" bitStart="68" bitLength="1" initValue="00">
 				<ArgValue ArgumentValueName="错误">80</ArgValue>
-				<ArgValue ArgumentValueName="正确">0</ArgValue>
+				<ArgValue ArgumentValueName="正确">00</ArgValue>
 			</Arg>
-			<Arg ArgumentName="秒脉冲状态" bitStart="66" bitLength="2" initValue="0">
-				<ArgValue ArgumentValueName="主">0</ArgValue>
+			<Arg ArgumentName="秒脉冲状态" bitStart="66" bitLength="2" initValue="00">
+				<ArgValue ArgumentValueName="主">00</ArgValue>
 				<ArgValue ArgumentValueName="备">40</ArgValue>
 				<ArgValue ArgumentValueName="内部">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="量子通信状态" bitStart="65" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="不在进行量子通信">0</ArgValue>
+			<Arg ArgumentName="量子通信状态" bitStart="65" bitLength="1" initValue="00">
+				<ArgValue ArgumentValueName="不在进行量子通信">00</ArgValue>
 				<ArgValue ArgumentValueName="正在进行量子通信">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="随机数状态" bitStart="64" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="不在产生随机数">0</ArgValue>
+			<Arg ArgumentName="随机数状态" bitStart="64" bitLength="1" initValue="00">
+				<ArgValue ArgumentValueName="不在产生随机数">00</ArgValue>
 				<ArgValue ArgumentValueName="正在产生随机数">80</ArgValue>
 			</Arg>
-			<Arg ArgumentName="随机数配置状态" bitStart="72" bitLength="1" initValue="0">
-				<ArgValue ArgumentValueName="不在配置">0</ArgValue>
+			<Arg ArgumentName="随机数配置状态" bitStart="72" bitLength="1" initValue="00">
+				<ArgValue ArgumentValueName="不在配置">00</ArgValue>
 				<ArgValue ArgumentValueName="正在配置">80</ArgValue>
 			</Arg>
 			<Arg ArgumentName="量子通信帧数" datatype="0A" bitStart="96" bitLength="32" initValue="00000000"/>

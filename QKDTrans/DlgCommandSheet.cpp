@@ -2006,13 +2006,16 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 		}
 	}
 }
+//getActiveFrame()
 DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 {
-	#define  RecvBuferLength 512
-	char RecvBuf[RecvBuferLength] = { 0 };
-	char tempBuf[RecvBuferLength] = { 0 };
-	int Recvlength = 0, templength = 0;
+	#define  FREAM_LEN 512
+	char RecvBuf[65536] = { 0 };
+	char frame[FREAM_LEN] = { 0 };
+	long long recvLen = 0, readLen = 0;
 	CDlgCommandSheet *m_pDlg;
+	long long i;
+	unsigned int frameHead;
 	m_pDlg = ((RECVPARAM*)lpParameter)->aa;
 	m_pDlg->m_xml.Open("monitor.xml");
 	m_pDlg->GetCmdInfo_monitor(m_pDlg->m_pCmdInfo_Recv);
@@ -2020,30 +2023,74 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 //	m_pDlg->SetTimer(2, 1000, NULL);
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
-	int idx;
+	int idx, k;
+	unsigned short ibuf;
+	char* data;
+	FILE* fpFk;
+	fopen_s(&fpFk, "fk.data", "wb");
 	m_pDlg->displayList(true);
 	while (m_pDlg->m_displayMonitor)
 	{
-		templength = m_pInterface->RecvCmd(RecvBuferLength, m_COMportNum, tempBuf);
-		if (templength > RecvBuferLength){
+		recvLen += m_pInterface->RecvCmd(FREAM_LEN, m_COMportNum, RecvBuf + (recvLen & 0xffff));
+		for (i = readLen; i < recvLen; i++){
+			if (recvLen - i > FREAM_LEN){	
+				ibuf = i;
+				if (RecvBuf[ibuf++] == 0x60 && RecvBuf[ibuf++] == 0x61 && RecvBuf[ibuf++] == 0x62 && RecvBuf[ibuf++] == 0x63){
+					char type = RecvBuf[ibuf++];
+					unsigned short crc_Recv = 0, crc_cal = 0;
+					//data = RecvBuf + ibuf;
+					for (k = 0; k < FREAM_LEN - 5; k++){
+						frame[k] = RecvBuf[ibuf++];
+					}
+					for (k = 0; k < FREAM_LEN - 7; k++){
+						crc_cal += (unsigned char)(frame[k]);
+					}
+					crc_Recv = *(unsigned short *)(frame + k);
+					if (crc_cal == crc_Recv)
+					{
+						if (type == 0x7e){
+							k = 0;
+							while (k < FREAM_LEN - 7)
+							{
+								idx = frame[k] & 0xFF;
+								if (idx < 0){
+									break;
+								}
+								pCmdInfo = m_pDlg->m_pCmdInfo_Recv[idx];
+								if (pCmdInfo == NULL){
+									break;
+								}
+								memcpy(pCmdInfo->init_value, frame + k + 1, pCmdInfo->arg_byte_num);
+								k += pCmdInfo->arg_byte_num + 1;
+							}
+							m_pDlg->displayList(false);
+						}
+						else{
+							fwrite(&type, 1, 1, fpFk);
+							fwrite(frame, FREAM_LEN - 7, 1, fpFk);
+						}
+						readLen = (i + FREAM_LEN);
+						break;
+					}
+				}
+			}
+		}
+		/*if (templength > FREAM_LEN){
 			m_pInterface->ClearRflush(m_COMportNum);
 			Recvlength = 0;
 			templength = 0;
 			continue;
-		}
-		memcpy(RecvBuf + Recvlength, tempBuf, templength);
-		Recvlength += templength;		
+		}	
 		if (Recvlength >= RecvBuferLength && Recvlength > 0)
 		{
 			unsigned short crc_Recv = 0,crc_cal=0;
-			for (int i = 0; i < RecvBuferLength-2; i++){
+			for (int i = 5; i < RecvBuferLength-2; i++){
 				crc_cal += (unsigned char)(RecvBuf[i]);
 			}
 			crc_Recv = *(unsigned short *)(RecvBuf + RecvBuferLength - 2);
 			lastBufCntRe = Recvlength - RecvBuferLength;
 			Recvlength = RecvBuferLength;
 			if (crc_cal == crc_Recv)
-//			if (1)
 			{
 				int lastCharCnt = 0;
 				while (Recvlength > 0)
@@ -2060,9 +2107,6 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 					lastCharCnt += pCmdInfo->arg_byte_num + 1;
 					Recvlength -= (pCmdInfo->arg_byte_num + 1);
 				}
-				Recvlength = lastBufCntRe;
-				memcpy(RecvBuf, tempBuf + templength - lastBufCntRe, lastBufCntRe);//将多余字符给下一个帧
-				templength = 0;
 				m_pDlg->displayList(false);
 			}
 			else
@@ -2072,9 +2116,9 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 				templength = 0;
 			}
 			
-		}
+		}*/
 		
-		Sleep(500);
+		Sleep(1);
 	}
 	
 	return 0;
