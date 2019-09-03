@@ -73,7 +73,7 @@ public:
 	afx_msg void OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult);
 	void SendCycleCmd();
 	CEdit m_pEditCmdSend;
-	CEdit m_pEditCmdRecv;
+//	CEdit m_pEditCmdRecv;
 	afx_msg void OnBnClickedButtonInCmd();
 	afx_msg void OnBnClickedButtonOutCmd();
 //	afx_msg void OnTimer(UINT_PTR nIDEvent);
@@ -102,6 +102,12 @@ public:
 	double calculation(vector<CString> m_InputNum);
 	CString Caculate(CString textbuff);
 	void LoadFromPLD(CString fileName);
+	void setFlashCmd(unsigned char type);
+	void creatFrame(unsigned char *buf, unsigned char type);
 
 	
+	afx_msg void OnBnClickedButtonFlashRead();
+	afx_msg void OnBnClickedButtonFlashWrite();
+	afx_msg void OnBnClickedButtonFlashErase();
+	afx_msg void OnBnClickedButtonFlashRst();
 };

@@ -29,11 +29,11 @@
 				<ArgValue ArgumentValueName="Íê³É">80</ArgValue>
 				<ArgValue ArgumentValueName="Î´Íê³É">00</ArgValue>
 			</Arg>
-			<Arg ArgumentName="DDR1¶ÁÐ´×´Ì¬" bitStart="69" bitLength="1" initValue="00">
+			<Arg ArgumentName="DDR1¶ÁÐ´×´Ì¬" bitStart="69" bitLength="1" initValue="80">
 				<ArgValue ArgumentValueName="´íÎó">80</ArgValue>
 				<ArgValue ArgumentValueName="ÕýÈ·">00</ArgValue>
 			</Arg>	
-			<Arg ArgumentName="DDR2¶ÁÐ´×´Ì¬" bitStart="68" bitLength="1" initValue="00">
+			<Arg ArgumentName="DDR2¶ÁÐ´×´Ì¬" bitStart="68" bitLength="1" initValue="80">
 				<ArgValue ArgumentValueName="´íÎó">80</ArgValue>
 				<ArgValue ArgumentValueName="ÕýÈ·">00</ArgValue>
 			</Arg>
@@ -99,11 +99,11 @@
 			<Arg ArgumentName="¼¤¹âÆ÷ÎÂ¶È" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="¼¤¹âÆ÷¹¦ÂÊ" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
 			<Arg ArgumentName="Ì½²âÆ÷Æ«ÖÃ¸ßÑ¹" datatype="0A" bitStart="32" bitLength="16" initValue="0000"/>
-			<Arg ArgumentName="Ì½²âÆ÷ÐÅºÅ" bitStart="48" bitLength="8" initValue="0a">
+			<Arg ArgumentName="Ì½²âÆ÷ÐÅºÅ" bitStart="48" bitLength="8" initValue="0f">
 				<ArgValue ArgumentValueName="¶ªÊ§">0f</ArgValue>
 				<ArgValue ArgumentValueName="Õý³£">0a</ArgValue>
 			</Arg>
-			<Arg ArgumentName="CDRÊ±ÖÓËø¶¨" bitStart="56" bitLength="8" initValue="0a">
+			<Arg ArgumentName="CDRÊ±ÖÓËø¶¨" bitStart="56" bitLength="8" initValue="0f">
 				<ArgValue ArgumentValueName="Ê§Ëø">0f</ArgValue>
 				<ArgValue ArgumentValueName="Ëø¶¨">0a</ArgValue>
 			</Arg>
