@@ -10,7 +10,7 @@
 #include "QKDTimer.h"
 #include <io.h>>
 #include <direct.h>
-
+#include <sys/stat.h>  
 
 // CDlgCommandSheet dialog
 
@@ -44,7 +44,6 @@ void CDlgCommandSheet::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST2, m_ListCtrlCommand);
 	DDX_Control(pDX, IDC_EDITCMDSEND, m_pEditCmdSend);
-	DDX_Control(pDX, IDC_EDITCMDRECV, m_pEditCmdRecv);
 	DDX_Control(pDX, IDC_LIST_MONITOR, m_listMonitor);
 	DDX_Control(pDX, IDC_COMBO1, m_ComboPort);
 }
@@ -61,6 +60,10 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_READ, &CDlgCommandSheet::OnBnClickedButtonRead)
 	ON_BN_CLICKED(IDC_BUTTON_WRITE, &CDlgCommandSheet::OnBnClickedButtonWrite)
 	ON_WM_SIZE()
+	ON_BN_CLICKED(IDC_BUTTON_FLASH_READ, &CDlgCommandSheet::OnBnClickedButtonFlashRead)
+	ON_BN_CLICKED(IDC_BUTTON_FLASH_WRITE, &CDlgCommandSheet::OnBnClickedButtonFlashWrite)
+	ON_BN_CLICKED(IDC_BUTTON_FLASH_ERASE, &CDlgCommandSheet::OnBnClickedButtonFlashErase)
+	ON_BN_CLICKED(IDC_BUTTON_FLASH_RST, &CDlgCommandSheet::OnBnClickedButtonFlashRst)
 END_MESSAGE_MAP()
 
 
@@ -2007,9 +2010,10 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 	}
 }
 //getActiveFrame()
+#define  FREAM_LEN 512
 DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 {
-	#define  FREAM_LEN 512
+	
 	char RecvBuf[65536] = { 0 };
 	char frame[FREAM_LEN] = { 0 };
 	long long recvLen = 0, readLen = 0;
@@ -2437,4 +2441,101 @@ double CDlgCommandSheet::calculation(vector<CString> m_InputNum)
 		i++;
 	}
 	return temp.top();
+}
+
+
+#define FLASH_READ 0x30
+#define FLASH_WRITE 0x31
+#define FLASH_ERASE 0x32
+#define FLASH_RST 0x33
+#define FLASH_DATA 0x34
+void CDlgCommandSheet::creatFrame(unsigned char *buf, unsigned char type){
+	int i;
+	unsigned short check = 0;
+	buf[0] = 0x60; buf[1] = 0x61; buf[2] = 0x62; buf[3] = 0x63;
+	buf[4] = type;
+	for (i = 5; i < FREAM_LEN - 2; i++){
+		check += buf[i];
+	}
+	buf[FREAM_LEN - 2] = (unsigned char)check;
+	buf[FREAM_LEN - 1] = (unsigned char)(check >> 8);
+}
+
+void CDlgCommandSheet::setFlashCmd(unsigned char type){
+	unsigned char frameBuf[FREAM_LEN];
+	CString v;
+	unsigned long addr;
+	unsigned long len;
+	int i = 0;
+	GetDlgItem(IDC_EDIT_FLASH_ADDR)->GetWindowTextA(v);
+	addr = strtoul(v, NULL, 10);
+	GetDlgItem(IDC_EDIT_FLASH_LEN)->GetWindowTextA(v);
+	len = strtoul(v, NULL, 10);
+	*(unsigned int*)(frameBuf + 8) = addr;
+	*(unsigned int*)(frameBuf + 12) = len;
+	creatFrame(frameBuf, FLASH_READ);
+	m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
+}
+
+void CDlgCommandSheet::OnBnClickedButtonFlashRead()
+{
+	setFlashCmd(FLASH_READ);
+}
+
+void CDlgCommandSheet::OnBnClickedButtonFlashWrite()
+{
+	CFileDialog dlg(TRUE, "QCmdList", NULL,
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR,
+		"QCmdXml Files (*.*)|*.dat||", NULL);
+	//		"QCmdList Files (*.cls)|*.cls|QCmdLog Files (*.clg)|*.clg|QCmdXml Files (*.xml)|*.xml||", NULL);
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString strFileName = dlg.GetPathName();
+	FILE* fp;
+	struct stat statbuf;
+	stat(strFileName, &statbuf);
+	int size = statbuf.st_size;
+	unsigned char frameBuf[FREAM_LEN];
+	CString v;
+	unsigned long addr;
+	unsigned long len;
+	int i = 0;
+	fopen_s(&fp, strFileName, "rb");
+	GetDlgItem(IDC_EDIT_FLASH_ADDR)->GetWindowTextA(v);
+	addr = strtoul(v, NULL, 10);
+	GetDlgItem(IDC_EDIT_FLASH_LEN)->GetWindowTextA(v);
+	len = strtoul(v, NULL, 10);
+	size = size / (FREAM_LEN - 7) + 1;
+	*(unsigned int*)(frameBuf + 8) = addr;
+	*(unsigned int*)(frameBuf + 12) = len;
+	*(unsigned int*)(frameBuf + 16) = size;
+	creatFrame(frameBuf, FLASH_WRITE);
+	m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
+	for (i = 0; i < size; i++){
+		Sleep(10);
+		fread(frameBuf, 1, FREAM_LEN - 7, fp);
+		creatFrame(frameBuf, FLASH_DATA);
+		m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
+		//m_pEditCmdSend.SetSel(-1);
+		//m_pEditCmdSend.ReplaceSel(_T("Hello, World!"));
+		v.Format("send %d%%", (i * 100 / size));
+		m_pEditCmdSend.SetWindowTextA(v);
+	}
+	v.Format("send %d%%", (i * 100 / size));
+	m_pEditCmdSend.SetWindowTextA(v);
+	// TODO: Add your control notification handler code here
+}
+
+
+void CDlgCommandSheet::OnBnClickedButtonFlashErase()
+{
+	setFlashCmd(FLASH_ERASE);
+}
+
+
+void CDlgCommandSheet::OnBnClickedButtonFlashRst()
+{
+	setFlashCmd(FLASH_RST);
+	// TODO: Add your control notification handler code here
 }
