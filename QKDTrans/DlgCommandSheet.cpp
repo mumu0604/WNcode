@@ -189,6 +189,7 @@ BOOL CDlgCommandSheet::OnInitDialog()
 		
 	}
 	m_ComboPort.SetCurSel(0);
+	hThread_recv = NULL;
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -860,6 +861,10 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 	// TODO: Add your control notification handler code here
 	int i = 0, iListIndex = -1;
 	CString strTxt;
+	int cmdIdx;
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	bool reb=false;
 	switch (pLVKeyDow->wVKey)
 	{
 	case VK_DELETE:
@@ -879,9 +884,23 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		}
 		m_bCmdChanged = true;
 		break;
-	case 'S':
-		OnSend();
-		m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)m_CMDBuf, false);
+	case 'S':	
+		m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+		m_Str_send += "：";
+		cmdIdx = m_ListCtrlCommand.GetSelectionMark();
+		if (cmdIdx < 0)
+		{
+			MessageBox("未选定指令！");
+			return;
+		}
+		OnSend();		
+		reb=m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)m_CMDBuf, false);
+		if (reb)
+		{
+			m_pEditCmdSend.SetWindowTextA(m_Str_send);
+			m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+		}
+		
 		break;
 	case 'D':
 		m_iRealCmdCnt = 0;
@@ -889,6 +908,7 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		break;
 	}
 	*pResult = 0;
+	m_ListCtrlCommand.SetItemState(iListIndex, 0, -1);
 	m_ListCtrlCommand.SetSelectionMark(-1);
 }
 
@@ -947,6 +967,8 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 			free(pBuf1);
 			return;
 		}
+		m_Str_send += (char*)(pCmdInfo->cmd_name);
+		m_Str_send += "  ";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
 			cmdTimeFlag = 0;
@@ -1079,6 +1101,7 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 	memcpy(m_CMDBuf, pBuf, idx32B * 32);
 	m_CMD_length = idx32B * 32 + 2;
 	free(pBuf1);
+	m_Str_send += "\r\n";
 }
 void CDlgCommandSheet::DeleteCmdItem(int iIdx)
 {
@@ -1145,6 +1168,8 @@ void CDlgCommandSheet::OnSend()
 		memcpy(buffer1, buffer, 40);
 		pCmd = (CMD_WN *)m_ListCtrlCommand.GetItemData(cmdIdx);
 		pCmdInfo = m_pCmdInfo[pCmd->cmd_id & 0xFF];
+		m_Str_send += (char*)(pCmdInfo->cmd_name);
+		m_Str_send += "\r\n";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
 			cmdTimeFlag = 0;
@@ -1358,7 +1383,10 @@ void CDlgCommandSheet::LoadFromPLD(CString fileName)
 			iPos++;
 			memcpy(cmd.args, buf + iPos, pCmdInfo->arg_byte_num);
 			iPos += pCmdInfo->arg_byte_num;
-			AddCmdToList(&cmd, -1, 1);
+//			AddCmdToList(&cmd, -1, 1);
+			AddCmdToList(&cmd, m_iRealCmdCnt, 1);
+			memcpy(&m_cmdAddInfo[m_iRealCmdCnt], &cmd, sizeof(CMD_WN));
+			m_iRealCmdCnt++;
 		}
 	}
 	pldFile.Close();
@@ -1368,7 +1396,7 @@ void CDlgCommandSheet::OnBnClickedButtonInCmd()
 	// TODO: Add your control notification handler code here
 	CFileDialog dlg(TRUE, "QCmdList", NULL,
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR,
-		"QCmdXml Files (*.dat)|*.dat||", NULL);
+		"QCmdXml Files (*.bin)|*.bin||", NULL);
 	//		"QCmdList Files (*.cls)|*.cls|QCmdLog Files (*.clg)|*.clg|QCmdXml Files (*.xml)|*.xml||", NULL);
 	if (dlg.DoModal() != IDOK)
 		return;
@@ -1376,6 +1404,7 @@ void CDlgCommandSheet::OnBnClickedButtonInCmd()
 	m_ListCtrlCommand.DeleteAllItems();
 	CString strFileName = dlg.GetPathName();
 	CString strExt = dlg.GetFileExt();
+	m_iRealCmdCnt = 0;
 	LoadFromPLD(strFileName);
 	
 }
@@ -1604,10 +1633,8 @@ void CDlgCommandSheet::GetCMDArrayFromXml(CString fileName)
 	}
 	xmlXPathFreeObject(xpathObj);
 }
-
-void CDlgCommandSheet::OnBnClickedButtonOutCmd()
+void CDlgCommandSheet::CMDSend()
 {
-	// TODO: Add your control notification handler code here
 	FILE *fp;
 	int cmdIndex = 0;
 	int cmdCntIn64B = 0;
@@ -1615,7 +1642,7 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 	int leftByteOf64B = 64;
 
 	char filter[] = "QCmdList Files(*.cls) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
-	
+
 	COleDateTime t;
 	t = COleDateTime::GetCurrentTime();
 	char projectDir[256];
@@ -1627,13 +1654,71 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 	{
 		_mkdir(cmdfilename);
 	}
-	CString FileName=cmdfilename;
+	CString FileName = cmdfilename;
 
 	CString strVer;
-	GetWindowText(strVer);	
+	GetWindowText(strVer);
 	FileName += t.Format("%Y%m%d%H%M%S_");
 
 	FileName += "cmd.dat";
+
+	CFile pld_file;
+
+	pld_file.Open(FileName, CFile::modeCreate | CFile::modeWrite | CFile::typeBinary, NULL);
+	SaveToPLD(&pld_file);
+	pld_file.Close();
+}
+void CDlgCommandSheet::OnBnClickedButtonOutCmd()
+{
+	// TODO: Add your control notification handler code here
+	if (!m_ListCtrlCommand.GetItemCount()){
+		MessageBox("指令都没有,输出个鬼啊!", "错误");
+		return;
+	}
+	FILE *fp;
+	int cmdIndex = 0;
+	int cmdCntIn64B = 0;
+	int cnt_64B = 0;
+	int leftByteOf64B = 64;
+
+	char filter[] = "QCmdList Files(*.bin) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
+	CString FileName;
+	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR, (LPCTSTR)filter/*,NULL*/);
+	if (dlgOpen.DoModal() == IDOK)
+		FileName = dlgOpen.GetPathName();
+	else
+		return;
+	CString strExt;
+	strExt = dlgOpen.GetFileExt();
+
+	if (!strcmp((LPCTSTR)strExt, "")){
+		if (dlgOpen.m_ofn.nFilterIndex == 1){
+			strExt = "bin";
+			FileName += ".bin";
+		}
+		else{
+			strExt = "txt";
+			FileName += ".txt";
+		}
+	}
+// 	COleDateTime t;
+// 	t = COleDateTime::GetCurrentTime();
+// 	char projectDir[256];
+// 	char cmdfilename[256];
+// 	GetCurrentDirectory(256, projectDir);
+// 	strcpy(cmdfilename, projectDir);
+// 	strcat(cmdfilename, "\\CMD\\");
+// 	if (_access(cmdfilename, 0) != 0)
+// 	{
+// 		_mkdir(cmdfilename);
+// 	}
+// 	CString FileName=cmdfilename;
+// 
+// 	CString strVer;
+// 	GetWindowText(strVer);	
+// 	FileName += t.Format("%Y%m%d%H%M%S_");
+// 
+// 	FileName += "cmd.dat";
 
 	CFile pld_file;
 
@@ -1676,9 +1761,17 @@ void CDlgCommandSheet::displayList(bool isFirst){
 void CDlgCommandSheet::OnBnClickedOk()
 {
 	// TODO: Add your control notification handler code here
-	
-	OnBnClickedButtonOutCmd();
-	m_pInterface->SendCmd(m_COMportNum,0, m_CMD_length, (unsigned char *)m_CMDBuf, false);
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send += ":";	
+	CMDSend();
+	bool state= m_pInterface->SendCmd(m_COMportNum,0, m_CMD_length, (unsigned char *)m_CMDBuf, false);
+	if (state)
+	{
+		m_pEditCmdSend.SetWindowTextA(m_Str_send);
+		m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+	}
 
 //	CDialogEx::OnOK();
 }
@@ -1692,7 +1785,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	m_ComboPort.GetWindowTextA(s);
 	s.Delete(0, 3);
 	m_COMportNum = atoi(s);
-	HANDLE hThread_recv=NULL;
+	
 	GetDlgItem(IDC_BUTTON_OPENCOM)->GetWindowTextA(strCOMname);
 	RECVPARAM *pRecvParam = new RECVPARAM;
 	pRecvParam->aa = this;
@@ -1701,17 +1794,19 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 		m_ComStatus = m_pInterface->OpenComm(m_COMportNum);
 		if (m_ComStatus)
 		{
+			m_displayMonitor = true;
 			hThread_recv = CreateThread(NULL, 0, RecvGPSProc, (LPVOID)pRecvParam, 0, NULL);
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("关闭串口"));
 		}
 
 	}		
 	else if (strCOMname == "关闭串口")
-	{
-		m_displayMonitor = false;
+	{		
 		bool rec = m_pInterface->CloseComm(m_COMportNum);
 		if (rec)
 		{
+			m_displayMonitor = false;
+			m_ComStatus = false;
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("打开串口"));
 			TerminateThread(hThread_recv, EXIT_FAILURE);
 			CloseHandle(hThread_recv);
@@ -2030,11 +2125,32 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	int idx, k;
 	unsigned short ibuf;
 	char* data;
-	FILE* fpFk;
-	fopen_s(&fpFk, "fk.data", "wb");
-	m_pDlg->displayList(true);
-	while (m_pDlg->m_displayMonitor)
+
+
+	COleDateTime t;
+	t = COleDateTime::GetCurrentTime();
+	char projectDir[256];
+	char cmdfilename[256];
+	GetCurrentDirectory(256, projectDir);
+	strcpy(cmdfilename, projectDir);
+	strcat(cmdfilename, "\\FK\\");
+	if (_access(cmdfilename, 0) != 0)
 	{
+		_mkdir(cmdfilename);
+	}
+	CString FileName = cmdfilename;	
+	FileName += t.Format("%Y%m%d%H%M%S_");
+	FileName += "fk.dat";
+	char *fkfilename=FileName.GetBuffer();
+	FILE* fpFk;
+	fopen_s(&fpFk, fkfilename, "wb");
+	m_pDlg->displayList(true);
+	while (true)
+	{		
+		if (!m_pDlg->m_displayMonitor)
+		{
+			break;
+		}
 		recvLen += m_pInterface->RecvCmd(FREAM_LEN, m_COMportNum, RecvBuf + (recvLen & 0xffff));
 		for (i = readLen; i < recvLen; i++){
 			if (recvLen - i > FREAM_LEN){	
@@ -2124,6 +2240,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 		
 		Sleep(1);
 	}
+	fclose(fpFk);
 	
 	return 0;
 

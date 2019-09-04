@@ -49,7 +49,7 @@ void CInterface::ClearRflush(int PortNum)
 {
 	sio_flush(PortNum, 1);
 }
-void CInterface::SendCmd(int PortNum, int type, int byteLen, unsigned char *pContent, bool isLocal)
+bool CInterface::SendCmd(int PortNum, int type, int byteLen, unsigned char *pContent, bool isLocal)
 {
 	unsigned char buf[70];
 	 sio_flush(PortNum, 0);
@@ -57,7 +57,9 @@ void CInterface::SendCmd(int PortNum, int type, int byteLen, unsigned char *pCon
 	 if (len11 == -1)
 	 {
 		 AfxMessageBox(_T("÷∏¡Ó∑¢ÀÕ ß∞‹£¨«ÎºÏ≤È£°"));
+		 return false;
 	 }
+	 return true;
 
 
 		

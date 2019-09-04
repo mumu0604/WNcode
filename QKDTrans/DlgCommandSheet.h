@@ -104,8 +104,9 @@ public:
 	void LoadFromPLD(CString fileName);
 	void setFlashCmd(unsigned char type);
 	void creatFrame(unsigned char *buf, unsigned char type);
-
-	
+	CString m_Str_send;
+	HANDLE hThread_recv;
+	void CMDSend();
 	afx_msg void OnBnClickedButtonFlashRead();
 	afx_msg void OnBnClickedButtonFlashWrite();
 	afx_msg void OnBnClickedButtonFlashErase();
