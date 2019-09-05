@@ -10,5 +10,6 @@ public:
 	bool OpenComm(int PortNum);
 	bool  CloseComm(int PortNum);
 	void ClearRflush(int PortNum);
+	int sioCntIrq(int port, VOID(CALLBACK *func)(int port), int count);
 };
 

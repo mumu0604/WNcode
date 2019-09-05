@@ -45,6 +45,10 @@ int CInterface::RecvCmd(int RecvLength, int PortNum, char* RecvBuf)
 {
 		return sio_read(PortNum, (char *)RecvBuf, RecvLength);
 }
+int CInterface::sioCntIrq(int port, VOID(CALLBACK *func)(int port), int count)
+{
+	return sio_cnt_irq(port, func, count);
+}
 void CInterface::ClearRflush(int PortNum)
 {
 	sio_flush(PortNum, 1);

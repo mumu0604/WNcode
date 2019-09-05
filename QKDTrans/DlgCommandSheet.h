@@ -76,7 +76,7 @@ public:
 //	CEdit m_pEditCmdRecv;
 	afx_msg void OnBnClickedButtonInCmd();
 	afx_msg void OnBnClickedButtonOutCmd();
-//	afx_msg void OnTimer(UINT_PTR nIDEvent);
+	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	CListCtrl m_listMonitor;
 	ULARGE_INTEGER m_base_relative;
 	ULARGE_INTEGER m_base_abs;
