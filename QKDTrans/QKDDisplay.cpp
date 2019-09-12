@@ -2,7 +2,7 @@
 	$Id: QKDDisplay.cpp 631 2012-07-02 17:34:33Z lwy $
 	$URL: http://172.17.8.1/svn/QUESS/tags/QKDBench-2.2.1/QKDDisplay.cpp $
 */
-
+#include "stdafx.h"
 #include <afx.h>
 #include <math.h>
 #include "QKDDisplay.h"
