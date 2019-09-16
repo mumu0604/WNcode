@@ -125,7 +125,7 @@ BOOL CQKDTransDlg::OnInitDialog()
 	//保存当前选择
 
 	m_CurSelTab = 0;
-	SetTimer(0, 10, NULL);
+	SetTimer(0, 500, NULL);
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 

@@ -150,7 +150,7 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	m_MonitorCmdNum = 0;
 
 	
-	SetTimer(1, 1000, NULL);
+//	SetTimer(1, 1, NULL);
 	m_pInterface = new CInterface;
 	m_display.Open("monitor.xml", NULL, &m_listMonitor, NULL);
 //	m_listMonitor.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES | LVS_EX_SUBITEMIMAGES | LVS_EX_TRACKSELECT);
@@ -1741,22 +1741,6 @@ void CDlgCommandSheet::displayList(bool isFirst){
 	}
 }
 
-//void CDlgCommandSheet::OnTimer(UINT_PTR nIDEvent)
-//{
-//	// TODO: Add your message handler code here and/or call default
-////	CmdInfo *pCmdInfo;
-//	switch (nIDEvent)
-//	{
-//	case 2:
-//		displayList();
-//		break;
-//	default:
-//		break;
-//	}
-//
-//	CDialogEx::OnTimer(nIDEvent);
-//}
-
 
 void CDlgCommandSheet::OnBnClickedOk()
 {
@@ -1797,6 +1781,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 			m_displayMonitor = true;
 			hThread_recv = CreateThread(NULL, 0, RecvGPSProc, (LPVOID)pRecvParam, 0, NULL);
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("关闭串口"));
+			SetTimer(1, 2, NULL);
 		}
 
 	}		
@@ -1808,9 +1793,9 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 			m_displayMonitor = false;
 			m_ComStatus = false;
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("打开串口"));
-			TerminateThread(hThread_recv, EXIT_FAILURE);
-			CloseHandle(hThread_recv);
-			KillTimer(2);
+//			TerminateThread(hThread_recv, EXIT_FAILURE);
+//			CloseHandle(hThread_recv);
+			KillTimer(1);
 			m_listMonitor.DeleteAllItems();
 		}		
 	}
@@ -1870,9 +1855,23 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 		{			
 			long long va = 0;
 			int len = (pCmdInfo->arg_length[i] + 7) / 8;
-			for (int v = 0; v < len; v++){
-				va |= (tempbuf[v] << v * 8);
+			switch (len){
+			case 1:
+				va = *(unsigned char*)(tempbuf);
+				break;
+			case 2:
+				va = *(unsigned short*)(tempbuf);
+				break;
+			case 4:
+				va = *(unsigned int*)(tempbuf);
+				break;
+			case 8:
+				va = *(long long*)(tempbuf);
+				break;
 			}
+			//for (int v = 0; v < len; v++){
+			//	va |= (tempbuf[v] << v * 8);
+			//}
 			if (pCmdInfo->datatype[i] == 0x0a)
 			{
 				strBuf.Format("%d", va);
@@ -2106,12 +2105,26 @@ void CDlgCommandSheet::GetCmdInfo_monitor(CmdInfo *m_pCmdInfo[256])
 }
 //getActiveFrame()
 #define  FREAM_LEN 512
+char RecvBuf[65536 + FREAM_LEN] = { 0 };
+long long recvLen = 0, readLen = 0;
+
+void CDlgCommandSheet::OnTimer(UINT_PTR nIDEvent)
+{
+	// TODO: Add your message handler code here and/or call default
+//	CmdInfo *pCmdInfo;
+	int l,x;
+	x = (recvLen & 0xffff);
+	l = m_pInterface->RecvCmd(FREAM_LEN, m_COMportNum, RecvBuf + x);
+	x = x + l - 65536;
+	if (x > 0){
+		memcpy(RecvBuf, RecvBuf + 65536, x);
+	}
+	recvLen += l;
+	CDialogEx::OnTimer(nIDEvent);
+}
 DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 {
-	
-	char RecvBuf[65536] = { 0 };
 	char frame[FREAM_LEN] = { 0 };
-	long long recvLen = 0, readLen = 0;
 	CDlgCommandSheet *m_pDlg;
 	long long i;
 	unsigned int frameHead;
@@ -2119,7 +2132,6 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	m_pDlg->m_xml.Open("monitor.xml");
 	m_pDlg->GetCmdInfo_monitor(m_pDlg->m_pCmdInfo_Recv);
 	m_pDlg->m_xml.Open("commands.xml");
-//	m_pDlg->SetTimer(2, 1000, NULL);
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
 	int idx, k;
@@ -2145,15 +2157,10 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	FILE* fpFk;
 	fopen_s(&fpFk, fkfilename, "wb");
 	m_pDlg->displayList(true);
-	while (true)
-	{		
-		if (!m_pDlg->m_displayMonitor)
-		{
-			break;
-		}
-		recvLen += m_pInterface->RecvCmd(FREAM_LEN, m_COMportNum, RecvBuf + (recvLen & 0xffff));
+	while (m_pDlg->m_displayMonitor)
+	{				
 		for (i = readLen; i < recvLen; i++){
-			if (recvLen - i > FREAM_LEN){	
+			if (recvLen - i >= FREAM_LEN){	
 				ibuf = i;
 				if (RecvBuf[ibuf++] == 0x60 && RecvBuf[ibuf++] == 0x61 && RecvBuf[ibuf++] == 0x62 && RecvBuf[ibuf++] == 0x63){
 					char type = RecvBuf[ibuf++];
@@ -2185,7 +2192,19 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 							}
 							m_pDlg->displayList(false);
 						}
-						else{
+						else if ((type >> 2) == 0){
+							CString tt;							
+							tt.Format("flash state %x\r\n", type);
+							m_pDlg->m_pEditCmdSend.SetSel(-1,-1);
+							m_pDlg->m_pEditCmdSend.ReplaceSel(tt);
+							//static int zz = 0;
+							//zz++;
+							//tt.Format("flash state %d\n\r", zz);
+							//m_pDlg->m_pEditCmdSend.SetWindowTextA(tt);
+							//fwrite(&type, 1, 1, fpFk);
+							//fwrite(frame, FREAM_LEN - 7, 1, fpFk);
+						}else
+						{
 							fwrite(&type, 1, 1, fpFk);
 							fwrite(frame, FREAM_LEN - 7, 1, fpFk);
 						}
@@ -2590,7 +2609,7 @@ void CDlgCommandSheet::setFlashCmd(unsigned char type){
 	len = strtoul(v, NULL, 10);
 	*(unsigned int*)(frameBuf + 8) = addr;
 	*(unsigned int*)(frameBuf + 12) = len;
-	creatFrame(frameBuf, FLASH_READ);
+	creatFrame(frameBuf, type);
 	m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
 }
 
@@ -2631,7 +2650,7 @@ void CDlgCommandSheet::OnBnClickedButtonFlashWrite()
 	m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
 	for (i = 0; i < size; i++){
 		Sleep(10);
-		fread(frameBuf, 1, FREAM_LEN - 7, fp);
+		fread(frameBuf+5, 1, FREAM_LEN - 7, fp);
 		creatFrame(frameBuf, FLASH_DATA);
 		m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
 		//m_pEditCmdSend.SetSel(-1);

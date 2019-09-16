@@ -2,6 +2,7 @@
 	$Id: Xml.cpp 624 2012-06-29 04:22:44Z lwy $
 	$URL: http://172.17.8.1/svn/QUESS/tags/QKDBench-2.2.1/Xml.cpp $
 */
+#include "stdafx.h"
 #include <stdio.h>
 #include <string.h>
 #include "xml.h"
