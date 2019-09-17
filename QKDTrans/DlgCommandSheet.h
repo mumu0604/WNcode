@@ -105,10 +105,13 @@ public:
 	void setFlashCmd(unsigned char type);
 	void creatFrame(unsigned char *buf, unsigned char type);
 	CString m_Str_send;
+	CString m_Str_send_temp;
 	HANDLE hThread_recv;
+	FILE *fp_commandSend;
 	void CMDSend();
 	afx_msg void OnBnClickedButtonFlashRead();
 	afx_msg void OnBnClickedButtonFlashWrite();
 	afx_msg void OnBnClickedButtonFlashErase();
 	afx_msg void OnBnClickedButtonFlashRst();
+	afx_msg void OnBnClickedComandsend();
 };

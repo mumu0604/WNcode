@@ -14,6 +14,7 @@
 
 // CDlgCommandSheet dialog
 
+
 IMPLEMENT_DYNAMIC(CDlgCommandSheet, CDialogEx)
 int m_COMportNum;
 
@@ -64,6 +65,7 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_WRITE, &CDlgCommandSheet::OnBnClickedButtonFlashWrite)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_ERASE, &CDlgCommandSheet::OnBnClickedButtonFlashErase)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_RST, &CDlgCommandSheet::OnBnClickedButtonFlashRst)
+	ON_BN_CLICKED(IDCOMANDSEND, &CDlgCommandSheet::OnBnClickedComandsend)
 END_MESSAGE_MAP()
 
 
@@ -885,8 +887,11 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		m_bCmdChanged = true;
 		break;
 	case 'S':	
+		m_Str_send_temp = "";
 		m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
 		m_Str_send += "：";
+		m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+		m_Str_send_temp += "：";
 		cmdIdx = m_ListCtrlCommand.GetSelectionMark();
 		if (cmdIdx < 0)
 		{
@@ -897,10 +902,22 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		reb=m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)m_CMDBuf, false);
 		if (reb)
 		{
+			m_Str_send += "  指令发送成功\r\n";
+			m_Str_send_temp += "  指令发送成功\r\n";
 			m_pEditCmdSend.SetWindowTextA(m_Str_send);
 			m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
 		}
-		
+		else
+		{
+			m_Str_send += "  指令发送失败\r\n";
+			m_Str_send_temp += "  指令发送失败\r\n";
+			m_pEditCmdSend.SetWindowTextA(m_Str_send);
+			m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+		}
+		if (fp_commandSend)
+		{
+			fprintf(fp_commandSend, "%s", m_Str_send_temp);
+		}
 		break;
 	case 'D':
 		m_iRealCmdCnt = 0;
@@ -969,6 +986,8 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 		}
 		m_Str_send += (char*)(pCmdInfo->cmd_name);
 		m_Str_send += "  ";
+		m_Str_send_temp += (char*)(pCmdInfo->cmd_name);
+		m_Str_send_temp += "  ";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
 			cmdTimeFlag = 0;
@@ -1101,7 +1120,7 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 	memcpy(m_CMDBuf, pBuf, idx32B * 32);
 	m_CMD_length = idx32B * 32 + 2;
 	free(pBuf1);
-	m_Str_send += "\r\n";
+//	m_Str_send += "\r\n";
 }
 void CDlgCommandSheet::DeleteCmdItem(int iIdx)
 {
@@ -1169,7 +1188,8 @@ void CDlgCommandSheet::OnSend()
 		pCmd = (CMD_WN *)m_ListCtrlCommand.GetItemData(cmdIdx);
 		pCmdInfo = m_pCmdInfo[pCmd->cmd_id & 0xFF];
 		m_Str_send += (char*)(pCmdInfo->cmd_name);
-		m_Str_send += "\r\n";
+		m_Str_send_temp += (char*)(pCmdInfo->cmd_name);
+//		m_Str_send += "\r\n";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
 			cmdTimeFlag = 0;
@@ -1683,7 +1703,7 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 
 	char filter[] = "QCmdList Files(*.bin) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
 	CString FileName;
-	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR, (LPCTSTR)filter/*,NULL*/);
+	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST/*, (LPCTSTR)filter*/, NULL);
 	if (dlgOpen.DoModal() == IDOK)
 		FileName = dlgOpen.GetPathName();
 	else
@@ -1749,14 +1769,29 @@ void CDlgCommandSheet::OnBnClickedOk()
 	GetLocalTime(&st);
 	m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
 	m_Str_send += ":";	
+	m_Str_send_temp = "";
+	m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send_temp += ":";
 	CMDSend();
 	bool state= m_pInterface->SendCmd(m_COMportNum,0, m_CMD_length, (unsigned char *)m_CMDBuf, false);
 	if (state)
 	{
+		m_Str_send += "  指令发送成功\r\n";
+		m_Str_send_temp += "  指令发送成功\r\n";
 		m_pEditCmdSend.SetWindowTextA(m_Str_send);
 		m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
 	}
-
+	else
+	{
+		m_Str_send += "  指令发送失败\r\n";
+		m_Str_send_temp += "  指令发送失败\r\n";
+		m_pEditCmdSend.SetWindowTextA(m_Str_send);
+		m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+	}
+	if (fp_commandSend)
+	{
+		fprintf(fp_commandSend, "%s", m_Str_send_temp);
+	}
 //	CDialogEx::OnOK();
 }
 
@@ -1776,6 +1811,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	if (strCOMname == "打开串口")
 	{
 		m_ComStatus = m_pInterface->OpenComm(m_COMportNum);
+		fp_commandSend = fopen("log_CommandSend.txt", "a");
 		if (m_ComStatus)
 		{
 			m_displayMonitor = true;
@@ -1793,10 +1829,11 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 			m_displayMonitor = false;
 			m_ComStatus = false;
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("打开串口"));
-//			TerminateThread(hThread_recv, EXIT_FAILURE);
-//			CloseHandle(hThread_recv);
+			TerminateThread(hThread_recv, EXIT_FAILURE);
+			CloseHandle(hThread_recv);
 			KillTimer(1);
 			m_listMonitor.DeleteAllItems();
+			fclose(fp_commandSend);
 		}		
 	}
 	
@@ -2674,4 +2711,48 @@ void CDlgCommandSheet::OnBnClickedButtonFlashRst()
 {
 	setFlashCmd(FLASH_RST);
 	// TODO: Add your control notification handler code here
+}
+
+
+void CDlgCommandSheet::OnBnClickedComandsend()
+{
+	// TODO: Add your control notification handler code here
+	m_Str_send_temp = "";
+	int i = 0, iListIndex = -1;
+	CString strTxt;
+	int cmdIdx;
+	bool reb = false;
+	SYSTEMTIME st;
+	GetLocalTime(&st);
+	m_Str_send.Format(m_Str_send + "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send += "：";
+	m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send_temp += "：";
+	cmdIdx = m_ListCtrlCommand.GetSelectionMark();
+	if (cmdIdx < 0)
+	{
+		MessageBox("未选定指令！");
+		return;
+	}
+	OnSend();
+	reb = m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)m_CMDBuf, false);
+	if (reb)
+	{
+		m_Str_send += "  指令发送成功\r\n";
+		m_Str_send_temp += "  指令发送成功\r\n";
+		m_pEditCmdSend.SetWindowTextA(m_Str_send);
+		m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+	}
+	else
+	{
+		m_Str_send += "  指令发送失败\r\n";
+		m_Str_send_temp += "  指令发送失败\r\n";
+		m_pEditCmdSend.SetWindowTextA(m_Str_send);
+		m_pEditCmdSend.LineScroll(m_pEditCmdSend.GetLineCount(), 0);
+	}
+	if (fp_commandSend)
+	{
+		fprintf(fp_commandSend, "%s", m_Str_send_temp);
+	}
+	
 }
