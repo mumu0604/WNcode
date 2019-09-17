@@ -11,7 +11,7 @@
 #include <io.h>>
 #include <direct.h>
 #include <sys/stat.h>  
-
+#include <malloc.h>
 // CDlgCommandSheet dialog
 
 
@@ -875,6 +875,10 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 			MessageBox("请先选择需删除的指令！", "错误");
 			return;
 		}
+		for (int i = iListIndex; i < MAXCOMMAND - 1; i++)
+		{
+			memcpy(m_cmdAddInfo + i, m_cmdAddInfo + i + 1, sizeof(CMD_WN));
+		}
 		m_iRealCmdCnt -= 1;
 		CMD_WN *pCmd;
 		pCmd = (CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex);
@@ -987,6 +991,11 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 		m_Str_send += (char*)(pCmdInfo->cmd_name);
 		m_Str_send += "  ";
 		m_Str_send_temp += (char*)(pCmdInfo->cmd_name);
+		
+		for (int i = 0; i < pCmdInfo->arg_byte_num; i++)
+		{
+			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmdInfo->init_value[i]);
+		}
 		m_Str_send_temp += "  ";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
@@ -1163,7 +1172,7 @@ void CDlgCommandSheet::OnSend()
 		CMD_WN *pCmd;
 		CmdInfo *pCmdInfo;
 		int cmdTimeFlag;
-
+	
 		char *pBuf, *pBuf1;
 		int cnt;
 		int idx32B = 0, eventNum32B = 0, dev32B, bus32B, left32B = 0, time32B, byte32B;//数据注入段采用32字节
@@ -1189,6 +1198,12 @@ void CDlgCommandSheet::OnSend()
 		pCmdInfo = m_pCmdInfo[pCmd->cmd_id & 0xFF];
 		m_Str_send += (char*)(pCmdInfo->cmd_name);
 		m_Str_send_temp += (char*)(pCmdInfo->cmd_name);
+
+		for (int i = 0; i < pCmdInfo->arg_byte_num; i++)
+		{
+			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmdInfo->init_value[i]);
+		}
+		
 //		m_Str_send += "\r\n";
 		cmdTimeFlag = 1;
 		if (pCmd->immediate_flag){
@@ -1804,7 +1819,7 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	m_ComboPort.GetWindowTextA(s);
 	s.Delete(0, 3);
 	m_COMportNum = atoi(s);
-	
+	GetDlgItem(IDOK)->EnableWindow(FALSE);
 	GetDlgItem(IDC_BUTTON_OPENCOM)->GetWindowTextA(strCOMname);
 	RECVPARAM *pRecvParam = new RECVPARAM;
 	pRecvParam->aa = this;
