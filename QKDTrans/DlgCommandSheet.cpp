@@ -2208,6 +2208,19 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	char *fkfilename=FileName.GetBuffer();
 	FILE* fpFk;
 	fopen_s(&fpFk, fkfilename, "wb");
+
+	strcpy(cmdfilename, projectDir);
+	strcat(cmdfilename, "\\telemeter\\");
+	if (_access(cmdfilename, 0) != 0)
+	{
+		_mkdir(cmdfilename);
+	}
+	FileName = cmdfilename;
+	FileName += t.Format("%Y%m%d%H%M%S_");
+	FileName += "telemeter.dat";
+	char* telefilename = FileName.GetBuffer();
+	FILE *fpTele;
+	fopen_s(&fpTele, telefilename, "wb");
 	m_pDlg->displayList(true);
 	while (m_pDlg->m_displayMonitor)
 	{				
@@ -2242,6 +2255,8 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 								memcpy(pCmdInfo->init_value, frame + k + 1, pCmdInfo->arg_byte_num);
 								k += pCmdInfo->arg_byte_num + 1;
 							}
+							fwrite(&type, 1, 1, fpTele);
+							fwrite(frame, FREAM_LEN - 7, 1, fpTele);
 							m_pDlg->displayList(false);
 						}
 						else if ((type >> 2) == 0){
@@ -2312,6 +2327,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 		Sleep(1);
 	}
 	fclose(fpFk);
+	fclose(fpTele);
 	
 	return 0;
 
