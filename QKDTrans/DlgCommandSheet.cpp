@@ -66,6 +66,7 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_ERASE, &CDlgCommandSheet::OnBnClickedButtonFlashErase)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_RST, &CDlgCommandSheet::OnBnClickedButtonFlashRst)
 	ON_BN_CLICKED(IDCOMANDSEND, &CDlgCommandSheet::OnBnClickedComandsend)
+	ON_BN_CLICKED(IDC_BUTTON_TANS2DDR, &CDlgCommandSheet::OnBnClickedButtonTans2ddr)
 END_MESSAGE_MAP()
 
 
@@ -1844,9 +1845,9 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 			m_displayMonitor = false;
 			m_ComStatus = false;
 			GetDlgItem(IDC_BUTTON_OPENCOM)->SetWindowText(_T("´ò¿ª´®¿Ú"));
-			TerminateThread(hThread_recv, EXIT_FAILURE);
-			CloseHandle(hThread_recv);
-			KillTimer(1);
+			//TerminateThread(hThread_recv, EXIT_FAILURE);
+			//CloseHandle(hThread_recv);
+			//KillTimer(1);
 			m_listMonitor.DeleteAllItems();
 			fclose(fp_commandSend);
 		}		
@@ -2653,6 +2654,7 @@ double CDlgCommandSheet::calculation(vector<CString> m_InputNum)
 #define FLASH_ERASE 0x32
 #define FLASH_RST 0x33
 #define FLASH_DATA 0x34
+#define FLASH_DDR 0X35
 void CDlgCommandSheet::creatFrame(unsigned char *buf, unsigned char type){
 	int i;
 	unsigned short check = 0;
@@ -2744,6 +2746,12 @@ void CDlgCommandSheet::OnBnClickedButtonFlashRst()
 	// TODO: Add your control notification handler code here
 }
 
+void CDlgCommandSheet::OnBnClickedButtonTans2ddr()
+{
+	setFlashCmd(FLASH_DDR);
+	// TODO: Add your control notification handler code here
+}
+
 
 void CDlgCommandSheet::OnBnClickedComandsend()
 {
@@ -2787,3 +2795,5 @@ void CDlgCommandSheet::OnBnClickedComandsend()
 	}
 	
 }
+
+
