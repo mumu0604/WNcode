@@ -263,6 +263,27 @@
 				<ArgValue ArgumentValueName="Ê¹ÄÜ">0a</ArgValue>
 			</Arg>
 		</Command>
+		<Command CommandName="ÊÂ¼þ0d--LDPCÎóÂë±ß½ç" CommandCode="0d" ArgumentByteLength="19">
+			<Arg ArgumentName="¾ØÕó1¾À´íÉÏ½ç" bitStart="0" bitLength="8" initValue="20"/>
+			<Arg ArgumentName="¾ØÕó2¾À´íÉÏ½ç" bitStart="8" bitLength="8" initValue="42"/>
+			<Arg ArgumentName="¾ØÕó3¾À´íÉÏ½ç" bitStart="16" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó4¾À´íÉÏ½ç" bitStart="32" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó5¾À´íÉÏ½ç" bitStart="40" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó6¾À´íÉÏ½ç" bitStart="48" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó7¾À´íÉÏ½ç" bitStart="56" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó8¾À´íÉÏ½ç" bitStart="64" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó9¾À´íÉÏ½ç" bitStart="72" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó10¾À´íÉÏ½ç" bitStart="80" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó11¾À´íÉÏ½ç" bitStart="88" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó12¾À´íÉÏ½ç" bitStart="96" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó13¾À´íÉÏ½ç" bitStart="104" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó14¾À´íÉÏ½ç" bitStart="112" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó15¾À´íÉÏ½ç" bitStart="120" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó16¾À´íÉÏ½ç" bitStart="128" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó17¾À´íÉÏ½ç" bitStart="136" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó18¾À´íÉÏ½ç" bitStart="144" bitLength="8" initValue="69"/>
+			<Arg ArgumentName="¾ØÕó19¾À´íÉÏ½ç" bitStart="152" bitLength="8" initValue="69"/>
+		</Command>
 
 		
 		<Command CommandName="ÊÂ¼þ02--Ä¬ÈÏ²ÎÊýÅäÖÃ" CommandCode="69" ArgumentByteLength="6">
