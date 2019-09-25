@@ -134,5 +134,27 @@
 			<Arg ArgumentName="工作模式传输帧校验失败数" datatype="0A" bitStart="1152" bitLength="32" initValue="0000"/>
 			<Arg ArgumentName="工作模式接收应用帧数" datatype="0A" bitStart="1184" bitLength="32" initValue="0000"/>
 		</Command>
-</Category>
+		<Command CommandName="遥测04--flash状态" CommandCode="04" ArgumentByteLength="22">			
+			<Arg ArgumentName="flash超时计数" datatype="0A" bitStart="0" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash读正确计数" datatype="0A" bitStart="16" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash读错误计数" datatype="0A" bitStart="32" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash写正确计数" datatype="0A" bitStart="48" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash写错误计数" datatype="0A"  bitStart="64" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash擦除正确计数" datatype="0A"  bitStart="80" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="flash擦除错误计数" datatype="0A"  bitStart="96" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="bin读取正确计数" datatype="0A"  bitStart="112" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="bin读取错误计数" datatype="0A"  bitStart="128" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="坏块计数" datatype="0A"  bitStart="144" bitLength="16" initValue="0000"/>
+			<Arg ArgumentName="初始化替换表" bitStart="160" bitLength="8" initValue="00">
+				<ArgValue ArgumentValueName="空闲">00</ArgValue>
+				<ArgValue ArgumentValueName="成功">3C</ArgValue>
+				<ArgValue ArgumentValueName="失败">C3</ArgValue>
+			</Arg>
+			<Arg ArgumentName="恢复化替换表" bitStart="168" bitLength="8" initValue="00">
+				<ArgValue ArgumentValueName="空闲">00</ArgValue>
+				<ArgValue ArgumentValueName="成功">3C</ArgValue>
+				<ArgValue ArgumentValueName="失败">C3</ArgValue>
+			</Arg>
+		</Command>
+	</Category>
 </CommandSet>
