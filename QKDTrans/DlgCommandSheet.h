@@ -115,4 +115,6 @@ public:
 	afx_msg void OnBnClickedButtonFlashRst();
 	afx_msg void OnBnClickedComandsend();
 	afx_msg void OnBnClickedButtonTans2ddr();
+	afx_msg void OnBnClickedButtonTxdata();
+	afx_msg void OnBnClickedButtonRxdata();
 };

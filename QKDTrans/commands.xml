@@ -284,7 +284,18 @@
 			<Arg ArgumentName="矩阵18纠错上界" bitStart="144" bitLength="8" initValue="69"/>
 			<Arg ArgumentName="矩阵19纠错上界" bitStart="152" bitLength="8" initValue="69"/>
 		</Command>
-
+		<Command CommandName="事件0e--flash控制" CommandCode="0e" ArgumentByteLength="7">
+			<Arg ArgumentName="操作" bitStart="0" bitLength="8" initValue="3c">
+				<ArgValue ArgumentValueName="复位">3C</ArgValue>
+				<ArgValue ArgumentValueName="读取">69</ArgValue>
+				<ArgValue ArgumentValueName="写入">96</ArgValue>
+				<ArgValue ArgumentValueName="擦除">C3</ArgValue>
+				<ArgValue ArgumentValueName="导入ddr">f0</ArgValue>
+			</Arg>
+			<Arg ArgumentName="flash地址(块号)" bitStart="8" bitLength="16" initValue="0"/>
+			<Arg ArgumentName="flash长度(块数)" bitStart="24" bitLength="16" initValue="0"/>
+			<Arg ArgumentName="内存偏移" bitStart="40" bitLength="16" initValue="0"/>
+		</Command>
 		
 		<Command CommandName="事件02--默认参数配置" CommandCode="69" ArgumentByteLength="6">
 			<Arg ArgumentName="读取地址" bitStart="0" bitLength="24" initValue="000000"/>

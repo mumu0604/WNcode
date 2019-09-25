@@ -67,6 +67,8 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_FLASH_RST, &CDlgCommandSheet::OnBnClickedButtonFlashRst)
 	ON_BN_CLICKED(IDCOMANDSEND, &CDlgCommandSheet::OnBnClickedComandsend)
 	ON_BN_CLICKED(IDC_BUTTON_TANS2DDR, &CDlgCommandSheet::OnBnClickedButtonTans2ddr)
+	ON_BN_CLICKED(IDC_BUTTON_TXDATA, &CDlgCommandSheet::OnBnClickedButtonTxdata)
+	ON_BN_CLICKED(IDC_BUTTON_RXDATA, &CDlgCommandSheet::OnBnClickedButtonRxdata)
 END_MESSAGE_MAP()
 
 
@@ -2692,7 +2694,7 @@ void CDlgCommandSheet::OnBnClickedButtonFlashWrite()
 {
 	CFileDialog dlg(TRUE, "QCmdList", NULL,
 		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR,
-		"QCmdXml Files (*.*)|*.dat||", NULL);
+		"QCmdXml Files (*.*)||", NULL);
 	//		"QCmdList Files (*.cls)|*.cls|QCmdLog Files (*.clg)|*.clg|QCmdXml Files (*.xml)|*.xml||", NULL);
 	if (dlg.DoModal() != IDOK)
 		return;
@@ -2797,3 +2799,64 @@ void CDlgCommandSheet::OnBnClickedComandsend()
 }
 
 
+
+
+void CDlgCommandSheet::OnBnClickedButtonTxdata()
+{
+	CFileDialog dlg(TRUE, "QCmdList", NULL,
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR,
+		"QCmdXml Files (*.*)||", NULL);
+	//		"QCmdList Files (*.cls)|*.cls|QCmdLog Files (*.clg)|*.clg|QCmdXml Files (*.xml)|*.xml||", NULL);
+	if (dlg.DoModal() != IDOK)
+		return;
+
+	CString strFileName = dlg.GetPathName();
+	FILE* fp;
+	struct stat statbuf;
+	stat(strFileName, &statbuf);
+	int size = statbuf.st_size;
+	unsigned char frameBuf[FREAM_LEN];
+	CString v;
+	unsigned long addr;
+	unsigned long len;
+	int i = 0;
+	fopen_s(&fp, strFileName, "rb");
+	GetDlgItem(IDC_EDIT_DATA_SIZE)->GetWindowTextA(v);
+	len = strtoul(v, NULL, 10);
+	size = size / (FREAM_LEN) + 1;
+	frameBuf[0] = 0X32;
+	frameBuf[1] = 0x3c;
+	if (size * 512 > 10 * 1024 * 1024){
+		size = 10 * 1024 * 1024 / 512;
+	}
+	*(unsigned short*)(frameBuf + 2) = size;
+	m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)frameBuf, false);
+	Sleep(1000);
+	for (i = 0; i < size; i++){
+		Sleep(10);
+		fread(frameBuf, 1, FREAM_LEN, fp);
+		m_pInterface->SendCmd(m_COMportNum, 0, FREAM_LEN, (unsigned char *)frameBuf, false);
+		v.Format("send %d%%", (i * 100 / size));
+		m_pEditCmdSend.SetWindowTextA(v);
+	}
+	v.Format("send %d%%", (i * 100 / size));
+	m_pEditCmdSend.SetWindowTextA(v);
+	// TODO: Add your control notification handler code here
+}
+
+
+void CDlgCommandSheet::OnBnClickedButtonRxdata()
+{
+	CString v;
+	unsigned char frameBuf[32];
+	GetDlgItem(IDC_EDIT_DATA_SIZE)->GetWindowTextA(v);
+	unsigned long len = strtoul(v, NULL, 10);
+	frameBuf[0] = 0X32;
+	frameBuf[1] = 0xc3;
+	if (len > 10 * 1024 * 1024){
+		len = 10 * 1024 * 1024 / 512;
+	}
+	*(unsigned short*)(frameBuf + 2) = len;
+	m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)frameBuf, false);
+	// TODO: Add your control notification handler code here
+}
