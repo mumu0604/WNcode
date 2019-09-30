@@ -109,6 +109,7 @@ public:
 	HANDLE hThread_recv;
 	FILE *fp_commandSend;
 	void CMDSend();
+	void deTem();
 	afx_msg void OnBnClickedButtonFlashRead();
 	afx_msg void OnBnClickedButtonFlashWrite();
 	afx_msg void OnBnClickedButtonFlashErase();
@@ -117,4 +118,5 @@ public:
 	afx_msg void OnBnClickedButtonTans2ddr();
 	afx_msg void OnBnClickedButtonTxdata();
 	afx_msg void OnBnClickedButtonRxdata();
+	afx_msg void OnBnClickedButtonDeTem();
 };
