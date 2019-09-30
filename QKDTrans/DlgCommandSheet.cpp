@@ -69,6 +69,7 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TANS2DDR, &CDlgCommandSheet::OnBnClickedButtonTans2ddr)
 	ON_BN_CLICKED(IDC_BUTTON_TXDATA, &CDlgCommandSheet::OnBnClickedButtonTxdata)
 	ON_BN_CLICKED(IDC_BUTTON_RXDATA, &CDlgCommandSheet::OnBnClickedButtonRxdata)
+	ON_BN_CLICKED(IDC_BUTTON_DE_TEM, &CDlgCommandSheet::OnBnClickedButtonDeTem)
 END_MESSAGE_MAP()
 
 
@@ -195,6 +196,9 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	}
 	m_ComboPort.SetCurSel(0);
 	hThread_recv = NULL;
+	m_xml.Open("monitor.xml");
+	GetCmdInfo_monitor(m_pCmdInfo_Recv);
+	m_xml.Open("commands.xml");
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -1857,6 +1861,97 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	
 }
 
+void CDlgCommandSheet::deTem(){
+	FILE *fp, *fpde;
+	fopen_s(&fp, "tm.dat", "rb");
+	fopen_s(&fpde, "a.csv", "w");
+	CmdInfo *pCmdInfo;
+	int i, j, k, idx;
+	unsigned char ff[506];
+	unsigned char *frame = ff + 1;
+	unsigned char tempbuf[MAX_ARG_LENGTH];
+	//	m_listMonitor.DeleteAllItems();
+	for (i = 0; i < m_MonitorCmdNum; i++)
+	{
+		pCmdInfo = m_pCmdInfo_Recv[i];
+		for (j = 0; j < pCmdInfo->arg_num; j++){
+			fprintf(fpde, "%s,", (char *)pCmdInfo->arg_name[j]);
+		}
+	}
+	fprintf(fpde, "\n");
+	while (fread(ff, 1, 506, fp)>0){
+		k = 0;
+		while (k < 505)
+		{
+			idx = frame[k] & 0xFF;
+			if (idx < 0){
+				break;
+			}
+			pCmdInfo = m_pCmdInfo_Recv[idx];
+			if (pCmdInfo == NULL){
+				break;
+			}
+			memcpy(pCmdInfo->init_value, frame + k + 1, pCmdInfo->arg_byte_num);
+			k += pCmdInfo->arg_byte_num + 1;
+		}
+
+		for (i = 0; i < m_MonitorCmdNum; i++)
+		{
+			pCmdInfo = m_pCmdInfo_Recv[i];
+			for (j = 0; j < pCmdInfo->arg_num; j++){
+				ExtractArgValue(tempbuf, pCmdInfo->init_value, pCmdInfo->bit_start[j], pCmdInfo->arg_length[j]);
+				if (pCmdInfo->input_type[j] == 0)//combox
+				{
+					for (k = 0; k < pCmdInfo->combcntNum[j]; k++)
+					{
+						if (tempbuf[0] == pCmdInfo->Arg_CombxCode[j][k])//init_value 是从高位到地位填充
+						{
+							fprintf(fpde, "%s,", (char *)pCmdInfo->Arg_CombxName[j][k]); break;
+						}
+						else if (k == pCmdInfo->combcntNum[j] - 1){
+							fprintf(fpde, " ,");
+						}
+					}
+				}
+				else                                 //edit
+				{
+					long long va = 0;
+					int len = (pCmdInfo->arg_length[j] + 7) / 8;
+					switch (len){
+					case 1:
+						va = *(unsigned char*)(tempbuf);
+						break;
+					case 2:
+						va = *(unsigned short*)(tempbuf);
+						break;
+					case 4:
+						va = *(unsigned int*)(tempbuf);
+						break;
+					case 8:
+						va = *(long long*)(tempbuf);
+						break;
+					}
+					if (pCmdInfo->datatype[j] == 0x0a)
+					{
+						fprintf(fpde, "%u,", va);
+					}
+					else if (pCmdInfo->datatype[j] == 0xaa){
+						fprintf(fpde, "%lld,", va);
+					}
+					else if (pCmdInfo->datatype[j] == 0x0f)
+					{
+						fprintf(fpde, "%08x,", va);
+					}
+				}
+			}
+		}
+		fprintf(fpde, "\n");
+	}
+
+	fclose(fp);
+	fclose(fpde);
+}
+
 void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, bool isFirst)
 {
 	int i = 0, k = 0;
@@ -1929,7 +2024,7 @@ void CDlgCommandSheet::MonitorDisplay(CmdInfo *pCmdInfo, int listCurrentNum, boo
 			//}
 			if (pCmdInfo->datatype[i] == 0x0a)
 			{
-				strBuf.Format("%d", va);
+				strBuf.Format("%u", va);
 			}
 			else if (pCmdInfo->datatype[i] == 0xaa){
 				strBuf.Format("%lld", va);
@@ -2184,9 +2279,6 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	long long i;
 	unsigned int frameHead;
 	m_pDlg = ((RECVPARAM*)lpParameter)->aa;
-	m_pDlg->m_xml.Open("monitor.xml");
-	m_pDlg->GetCmdInfo_monitor(m_pDlg->m_pCmdInfo_Recv);
-	m_pDlg->m_xml.Open("commands.xml");
 	CmdInfo *pCmdInfo;
 	int lastBufCntRe = 0;
 	int idx, k;
@@ -2858,5 +2950,12 @@ void CDlgCommandSheet::OnBnClickedButtonRxdata()
 	}
 	*(unsigned short*)(frameBuf + 2) = len;
 	m_pInterface->SendCmd(m_COMportNum, 0, 32, (unsigned char *)frameBuf, false);
+	// TODO: Add your control notification handler code here
+}
+
+
+void CDlgCommandSheet::OnBnClickedButtonDeTem()
+{
+	deTem();
 	// TODO: Add your control notification handler code here
 }
