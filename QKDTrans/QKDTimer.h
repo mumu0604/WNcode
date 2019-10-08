@@ -21,7 +21,8 @@ public:
 	~QKDTimer();
 	void ClearShipTime();
 	void SetShipTime(__int64 time);
-	__int64 GetShipTime(); 
+	__int64 GetShipTime();
+	static __int64 GetShipTimeS();
 	static __int64 GetShipTime(int day, int hour, int min, int sec, int ms);
 	static __int64 GetShipTime(unsigned char *pBuf);
 	static void GetShipTimeCode(__int64 time, unsigned char *pBuf);
