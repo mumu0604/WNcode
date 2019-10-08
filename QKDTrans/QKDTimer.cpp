@@ -61,6 +61,21 @@ __int64 QKDTimer::GetShipTime()
 	return tm_ms - m_ShipTimeBase;
 }
 
+__int64 QKDTimer::GetShipTimeS()
+{
+	__int64 tm_ms;
+	SYSTEMTIME t;
+	FILETIME f;
+	ULARGE_INTEGER l;
+
+	GetLocalTime(&t);
+	SystemTimeToFileTime(&t, &f);
+	memcpy(&l, &f, sizeof(FILETIME));
+	tm_ms = l.QuadPart / 10000;
+
+	return tm_ms;
+}
+
 void QKDTimer::SetShipTime(__int64 time)
 {
 	if(time > GetShipTime()){

@@ -1861,16 +1861,18 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	
 }
 
+#define TELEMTER_LEN 514
 void CDlgCommandSheet::deTem(){
 	FILE *fp, *fpde;
 	fopen_s(&fp, "tm.dat", "rb");
 	fopen_s(&fpde, "a.csv", "w");
 	CmdInfo *pCmdInfo;
 	int i, j, k, idx;
-	unsigned char ff[506];
-	unsigned char *frame = ff + 1;
+	unsigned char ff[TELEMTER_LEN];
+	unsigned char *frame = ff + 1 + 8;
 	unsigned char tempbuf[MAX_ARG_LENGTH];
 	//	m_listMonitor.DeleteAllItems();
+	fprintf(fpde, "TIME,");
 	for (i = 0; i < m_MonitorCmdNum; i++)
 	{
 		pCmdInfo = m_pCmdInfo_Recv[i];
@@ -1879,7 +1881,8 @@ void CDlgCommandSheet::deTem(){
 		}
 	}
 	fprintf(fpde, "\n");
-	while (fread(ff, 1, 506, fp)>0){
+	while (fread(ff, 1, TELEMTER_LEN, fp)>0){
+		fprintf(fpde, "%lld,", *(long long*)(ff + 1));
 		k = 0;
 		while (k < 505)
 		{
@@ -2285,7 +2288,6 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	unsigned short ibuf;
 	char* data;
 
-
 	COleDateTime t;
 	t = COleDateTime::GetCurrentTime();
 	char projectDir[256];
@@ -2350,7 +2352,9 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 								memcpy(pCmdInfo->init_value, frame + k + 1, pCmdInfo->arg_byte_num);
 								k += pCmdInfo->arg_byte_num + 1;
 							}
+							long long tm = QKDTimer::GetShipTimeS();
 							fwrite(&type, 1, 1, fpTele);
+							fwrite(&tm, 1, 8, fpTele);
 							fwrite(frame, FREAM_LEN - 7, 1, fpTele);
 							m_pDlg->displayList(false);
 						}
