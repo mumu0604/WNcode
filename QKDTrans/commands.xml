@@ -58,7 +58,7 @@
 			</Arg>	
 			<Arg ArgumentName="固定随机数" bitStart="72" bitLength="64" initValue="0001020304050607"/>					
 		</Command>
-		<Command CommandName="事件07--量子通信参数配置" CommandCode="07" ArgumentByteLength="18">
+		<Command CommandName="事件07--量子通信参数配置" CommandCode="07" ArgumentByteLength="20">
 			<Arg ArgumentName="随机数选择" bitStart="0" bitLength="8" initValue="00">
 				<ArgValue ArgumentValueName="真随机">00</ArgValue>
 				<ArgValue ArgumentValueName="指令随机">01</ArgValue>
@@ -98,7 +98,9 @@
 			<Arg ArgumentName="X探测比例" bitStart="112" bitLength="8" initValue="80"/>
 			<Arg ArgumentName="信号态平均光子" bitStart="120" bitLength="8" initValue="CC"/>
 			<Arg ArgumentName="诱骗态平均光子" bitStart="128" bitLength="8" initValue="33"/>
-			<Arg ArgumentName="波动" bitStart="136" bitLength="8" initValue="0"/>
+			<Arg ArgumentName="统计波动" bitStart="136" bitLength="8" initValue="0"/>
+			<Arg ArgumentName="失败概率" bitStart="144" bitLength="8" initValue="46"/>
+			<Arg ArgumentName="光强波动" bitStart="152" bitLength="8" initValue="0"/>
 		</Command>
 		<Command CommandName="事件08--LD 温控PI" CommandCode="08" ArgumentByteLength="20">
 			<Arg ArgumentName="通道" bitStart="0" bitLength="8" initValue="0">
