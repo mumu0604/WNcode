@@ -899,9 +899,9 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 		break;
 	case 'S':	
 		m_Str_send_temp = "";
-		m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+		m_Str_send.Format(m_Str_send + "%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 		m_Str_send += "£º";
-		m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+		m_Str_send_temp.Format("%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 		m_Str_send_temp += "£º";
 		cmdIdx = m_ListCtrlCommand.GetSelectionMark();
 		if (cmdIdx < 0)
@@ -1001,7 +1001,7 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 		
 		for (int i = 0; i < pCmdInfo->arg_byte_num; i++)
 		{
-			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmdInfo->init_value[i]);
+			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmd->args[i]);
 		}
 		m_Str_send_temp += "  ";
 		cmdTimeFlag = 1;
@@ -1208,7 +1208,7 @@ void CDlgCommandSheet::OnSend()
 
 		for (int i = 0; i < pCmdInfo->arg_byte_num; i++)
 		{
-			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmdInfo->init_value[i]);
+			m_Str_send_temp.Format(m_Str_send_temp + "%02x", pCmd->args[i]);
 		}
 		
 //		m_Str_send += "\r\n";
@@ -1789,10 +1789,10 @@ void CDlgCommandSheet::OnBnClickedOk()
 	// TODO: Add your control notification handler code here
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	m_Str_send.Format(m_Str_send+"%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send.Format(m_Str_send + "%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 	m_Str_send += ":";	
 	m_Str_send_temp = "";
-	m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send_temp.Format("%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 	m_Str_send_temp += ":";
 	CMDSend();
 	bool state= m_pInterface->SendCmd(m_COMportNum,0, m_CMD_length, (unsigned char *)m_CMDBuf, false);
@@ -1830,10 +1830,28 @@ void CDlgCommandSheet::OnBnClickedButtonOpencom()
 	GetDlgItem(IDC_BUTTON_OPENCOM)->GetWindowTextA(strCOMname);
 	RECVPARAM *pRecvParam = new RECVPARAM;
 	pRecvParam->aa = this;
+
+	COleDateTime t;
+	t = COleDateTime::GetCurrentTime();
+	char projectDir[256];
+	char logfilename[256];
+	GetCurrentDirectory(256, projectDir);
+	strcpy(logfilename, projectDir);
+	strcat(logfilename, "\\Log\\");
+	if (_access(logfilename, 0) != 0)
+	{
+		_mkdir(logfilename);
+	}
+	CString FileName = logfilename;
+	FileName += "log_CmdSend_";
+	FileName += t.Format("%Y%m%d%H%M%S.txt");
+	char *logsendfilename = FileName.GetBuffer();
+
+
 	if (strCOMname == "´ò¿ª´®¿Ú")
 	{
 		m_ComStatus = m_pInterface->OpenComm(m_COMportNum);
-		fp_commandSend = fopen("log_CommandSend.txt", "a");
+		fp_commandSend = fopen(logsendfilename, "a");
 		if (m_ComStatus)
 		{
 			m_displayMonitor = true;
@@ -2300,8 +2318,8 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 		_mkdir(cmdfilename);
 	}
 	CString FileName = cmdfilename;	
-	FileName += t.Format("%Y%m%d%H%M%S_");
-	FileName += "fk.dat";
+	FileName += "skt_fk_";
+	FileName += t.Format("%Y%m%d%H%M%S.dat");	
 	char *fkfilename=FileName.GetBuffer();
 	FILE* fpFk;
 	fopen_s(&fpFk, fkfilename, "wb");
@@ -2861,9 +2879,9 @@ void CDlgCommandSheet::OnBnClickedComandsend()
 	bool reb = false;
 	SYSTEMTIME st;
 	GetLocalTime(&st);
-	m_Str_send.Format(m_Str_send + "%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send.Format(m_Str_send + "%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 	m_Str_send += "£º";
-	m_Str_send_temp.Format("%02d:%02d:%02d", st.wHour, st.wMinute, st.wSecond);
+	m_Str_send_temp.Format("%04d-%02d-%02d %02d:%02d:%02d", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 	m_Str_send_temp += "£º";
 	cmdIdx = m_ListCtrlCommand.GetSelectionMark();
 	if (cmdIdx < 0)
