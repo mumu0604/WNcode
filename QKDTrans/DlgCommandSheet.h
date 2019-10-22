@@ -119,4 +119,11 @@ public:
 	afx_msg void OnBnClickedButtonTxdata();
 	afx_msg void OnBnClickedButtonRxdata();
 	afx_msg void OnBnClickedButtonDeTem();
+	CMenu m_menu;
+	afx_msg void OnNMRClickList2(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnInsert();
+	afx_msg void OnDelete();
+	afx_msg void OnMoveup();
+	afx_msg void OnMovedown();
+	afx_msg void OnDeleteallcmd();
 };

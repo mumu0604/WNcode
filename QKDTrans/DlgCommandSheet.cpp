@@ -70,6 +70,12 @@ BEGIN_MESSAGE_MAP(CDlgCommandSheet, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON_TXDATA, &CDlgCommandSheet::OnBnClickedButtonTxdata)
 	ON_BN_CLICKED(IDC_BUTTON_RXDATA, &CDlgCommandSheet::OnBnClickedButtonRxdata)
 	ON_BN_CLICKED(IDC_BUTTON_DE_TEM, &CDlgCommandSheet::OnBnClickedButtonDeTem)
+	ON_NOTIFY(NM_RCLICK, IDC_LIST2, &CDlgCommandSheet::OnNMRClickList2)
+	ON_COMMAND(ID_INSERT, &CDlgCommandSheet::OnInsert)
+	ON_COMMAND(ID_DELETE, &CDlgCommandSheet::OnDelete)
+	ON_COMMAND(ID_MOVEUP, &CDlgCommandSheet::OnMoveup)
+	ON_COMMAND(ID_MOVEDOWN, &CDlgCommandSheet::OnMovedown)
+	ON_COMMAND(ID_DELETEALLCMD, &CDlgCommandSheet::OnDeleteallcmd)
 END_MESSAGE_MAP()
 
 
@@ -199,6 +205,14 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	m_xml.Open("monitor.xml");
 	GetCmdInfo_monitor(m_pCmdInfo_Recv);
 	m_xml.Open("commands.xml");
+
+	m_menu.LoadMenu(IDR_MENU_CMD);
+	CMenu *pMenu;
+	pMenu = m_menu.GetSubMenu(0);
+	SetMenu(&m_menu);
+
+	
+
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -895,7 +909,7 @@ void CDlgCommandSheet::OnKeydownList2(NMHDR *pNMHDR, LRESULT *pResult)
 			strTxt.Format("%d", i);
 			m_ListCtrlCommand.SetItemText(i, COL_SEQ, strTxt);
 		}
-		m_bCmdChanged = true;
+		
 		break;
 	case 'S':	
 		m_Str_send_temp = "";
@@ -2337,6 +2351,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	FILE *fpTele;
 	fopen_s(&fpTele, telefilename, "wb");
 	m_pDlg->displayList(true);
+	SYSTEMTIME tm;
 	while (m_pDlg->m_displayMonitor)
 	{				
 		for (i = readLen; i < recvLen; i++){
@@ -2370,9 +2385,10 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 								memcpy(pCmdInfo->init_value, frame + k + 1, pCmdInfo->arg_byte_num);
 								k += pCmdInfo->arg_byte_num + 1;
 							}
-							long long tm = QKDTimer::GetShipTimeS();
+							GetLocalTime(&tm);
+							long long tm_s = tm.wYear*1e10+tm.wMonth*1e8+tm.wDay*1e6+tm.wHour*1e4+tm.wMinute*1e2+tm.wSecond;
 							fwrite(&type, 1, 1, fpTele);
-							fwrite(&tm, 1, 8, fpTele);
+							fwrite(&tm_s, 1, 8, fpTele);
 							fwrite(frame, FREAM_LEN - 7, 1, fpTele);
 							m_pDlg->displayList(false);
 						}
@@ -2980,4 +2996,170 @@ void CDlgCommandSheet::OnBnClickedButtonDeTem()
 {
 	deTem();
 	// TODO: Add your control notification handler code here
+}
+
+
+void CDlgCommandSheet::OnNMRClickList2(NMHDR *pNMHDR, LRESULT *pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: Add your control notification handler code here
+	CMenu* pPopup = m_menu.GetSubMenu(0);
+	POINT point;
+	GetCursorPos(&point);
+	pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, CWnd::FromHandle(m_hWnd));
+	*pResult = 0;
+}
+
+
+void CDlgCommandSheet::OnInsert()
+{
+	// TODO: Add your command handler code here
+	CMD_WN cmd;
+	CDlgAddCommand dlgAddCmd(this, &cmd, 1);
+	int index;
+
+	index = m_ListCtrlCommand.GetSelectionMark();
+
+	if (!m_ListCtrlCommand.GetItemState(index, LVIS_FOCUSED)){
+		MessageBox("请先选择插入位置！", "错误");
+		return;
+	}
+
+	unsigned int time;
+	CMD_WN *pCmd, *pCmd1;
+	pCmd = (CMD_WN *)m_ListCtrlCommand.GetItemData(index);
+	cmd.dev_id = pCmd->dev_id;
+
+	dlgAddCmd.m_sec = DiffTimeAbsReletive() + pCmd->time - 1;
+	dlgAddCmd.m_max_sec = dlgAddCmd.m_sec;
+
+
+	for (int i = index - 1; i >= 0; i--){
+		pCmd1 = (CMD_WN *)m_ListCtrlCommand.GetItemData(i);
+		if (pCmd1->dev_id != cmd.dev_id){
+			continue;
+		}
+		if (pCmd1->immediate_flag){
+			continue;
+		}
+		time = pCmd1->time;
+		dlgAddCmd.m_min_sec = DiffTimeAbsReletive() + time;
+		break;
+	}
+
+	cmd.bus_flag = m_bus_flag;
+	int ret = dlgAddCmd.DoModal();
+	if (ret == IDOK){
+		AddCmdToList(&cmd, index, 1);
+		memcpy(&m_cmdAddInfo[m_iRealCmdCnt], &cmd, sizeof(CMD_WN));
+		m_iRealCmdCnt++;
+		//		m_list.DeleteItem(index);
+		
+	}
+	m_ListCtrlCommand.SetSelectionMark(-1);
+}
+
+
+void CDlgCommandSheet::OnDelete()
+{
+	// TODO: Add your command handler code here
+	int i = 0, iListIndex = -1;
+	CString strTxt;
+	int cmdIdx;
+	iListIndex = m_ListCtrlCommand.GetSelectionMark();
+	if (!m_ListCtrlCommand.GetItemState(iListIndex, LVIS_FOCUSED)){
+		MessageBox("请先选择需删除的指令！", "错误");
+		return;
+	}
+	for (int i = iListIndex; i < MAXCOMMAND - 1; i++)
+	{
+		memcpy(m_cmdAddInfo + i, m_cmdAddInfo + i + 1, sizeof(CMD_WN));
+	}
+	m_iRealCmdCnt -= 1;
+	CMD_WN *pCmd;
+	pCmd = (CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex);
+	m_ListCtrlCommand.DeleteItem(iListIndex);
+
+	for (int i = iListIndex; i < m_ListCtrlCommand.GetItemCount(); i++){
+		strTxt.Format("%d", i);
+		m_ListCtrlCommand.SetItemText(i, COL_SEQ, strTxt);
+	}	
+	m_ListCtrlCommand.SetSelectionMark(-1);
+	
+}
+
+
+void CDlgCommandSheet::OnMoveup()
+{
+	// TODO: Add your command handler code here
+	int i = 0, iListIndex = -1;
+	CString strTxt;
+	CString Str[2][8];
+	CMD_WN m_cmdAddInfotemp;
+	int cmdIdx;
+	iListIndex = m_ListCtrlCommand.GetSelectionMark();
+	if (!m_ListCtrlCommand.GetItemState(iListIndex, LVIS_FOCUSED)){
+		MessageBox("请先选择需上移的指令！", "错误");
+		return;
+	}
+	if (iListIndex < 1)
+	{
+		MessageBox("指令已经是最上面的啦！", "错误");
+		return;
+	}
+	memcpy(&m_cmdAddInfotemp, m_cmdAddInfo + iListIndex-1, sizeof(CMD_WN));
+	memcpy(m_cmdAddInfo + iListIndex - 1, m_cmdAddInfo + iListIndex, sizeof(CMD_WN));
+	memcpy(m_cmdAddInfo + iListIndex, &m_cmdAddInfotemp, sizeof(CMD_WN));
+	for (i = 1; i < 8; i++)
+	{
+		Str[0][i] = m_ListCtrlCommand.GetItemText(iListIndex-1, i);
+		Str[1][i] = m_ListCtrlCommand.GetItemText(iListIndex, i);
+		m_ListCtrlCommand.SetItemText(iListIndex - 1, i, Str[1][i]);
+		m_ListCtrlCommand.SetItemText(iListIndex , i, Str[0][i]);
+	}	
+	m_ListCtrlCommand.SetSelectionMark(-1);
+}
+
+
+void CDlgCommandSheet::OnMovedown()
+{
+	// TODO: Add your command handler code here
+	int i = 0, iListIndex = -1;
+	CString strTxt;
+	CString Str[2][8];
+	CMD_WN m_cmdAddInfotemp;
+	int cmdIdx;
+	iListIndex = m_ListCtrlCommand.GetSelectionMark();
+	int totalCMD = m_ListCtrlCommand.GetItemCount();
+	if (!m_ListCtrlCommand.GetItemState(iListIndex, LVIS_FOCUSED)){
+		MessageBox("请先选择需上移的指令！", "错误");
+		return;
+	}
+	if (iListIndex >= totalCMD-1)
+	{
+		MessageBox("指令已经是最下面的啦！", "错误");
+		return;
+	}
+	memcpy(&m_cmdAddInfotemp, m_cmdAddInfo + iListIndex + 1, sizeof(CMD_WN));
+	memcpy(m_cmdAddInfo + iListIndex + 1, m_cmdAddInfo + iListIndex, sizeof(CMD_WN));
+	memcpy(m_cmdAddInfo + iListIndex, &m_cmdAddInfotemp, sizeof(CMD_WN));
+	for (i = 1; i < 8; i++)
+	{
+		Str[0][i] = m_ListCtrlCommand.GetItemText(iListIndex , i);
+		Str[1][i] = m_ListCtrlCommand.GetItemText(iListIndex+1, i);
+		m_ListCtrlCommand.SetItemText(iListIndex , i, Str[1][i]);
+		m_ListCtrlCommand.SetItemText(iListIndex+1, i, Str[0][i]);
+	}
+	m_ListCtrlCommand.SetSelectionMark(-1);
+}
+
+
+void CDlgCommandSheet::OnDeleteallcmd()
+{
+	// TODO: Add your command handler code here
+	m_iRealCmdCnt = 0;
+	m_ListCtrlCommand.DeleteAllItems();
+
+	m_ListCtrlCommand.SetSelectionMark(-1);
+
 }
