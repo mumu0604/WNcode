@@ -1739,7 +1739,7 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 
 	char filter[] = "QCmdList Files(*.bin) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
 	CString FileName;
-	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST/*, (LPCTSTR)filter*/, NULL);
+	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST, (LPCTSTR)filter, NULL);
 	if (dlgOpen.DoModal() == IDOK)
 		FileName = dlgOpen.GetPathName();
 	else
@@ -3110,6 +3110,12 @@ void CDlgCommandSheet::OnMoveup()
 	memcpy(&m_cmdAddInfotemp, m_cmdAddInfo + iListIndex-1, sizeof(CMD_WN));
 	memcpy(m_cmdAddInfo + iListIndex - 1, m_cmdAddInfo + iListIndex, sizeof(CMD_WN));
 	memcpy(m_cmdAddInfo + iListIndex, &m_cmdAddInfotemp, sizeof(CMD_WN));
+	CMD_WN *PCMD;
+	PCMD = (CMD_WN *)malloc(sizeof(CMD_WN));
+	PCMD = (CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex - 1);
+	m_ListCtrlCommand.SetItemData(iListIndex - 1, (DWORD)((CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex)));
+	m_ListCtrlCommand.SetItemData(iListIndex, (DWORD)PCMD);
+
 	for (i = 1; i < 8; i++)
 	{
 		Str[0][i] = m_ListCtrlCommand.GetItemText(iListIndex-1, i);
@@ -3143,6 +3149,11 @@ void CDlgCommandSheet::OnMovedown()
 	memcpy(&m_cmdAddInfotemp, m_cmdAddInfo + iListIndex + 1, sizeof(CMD_WN));
 	memcpy(m_cmdAddInfo + iListIndex + 1, m_cmdAddInfo + iListIndex, sizeof(CMD_WN));
 	memcpy(m_cmdAddInfo + iListIndex, &m_cmdAddInfotemp, sizeof(CMD_WN));
+	CMD_WN *PCMD;
+	PCMD = (CMD_WN *)malloc(sizeof(CMD_WN));
+	PCMD = (CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex + 1);
+	m_ListCtrlCommand.SetItemData(iListIndex + 1, (DWORD)((CMD_WN *)m_ListCtrlCommand.GetItemData(iListIndex)));
+	m_ListCtrlCommand.SetItemData(iListIndex, (DWORD)PCMD);
 	for (i = 1; i < 8; i++)
 	{
 		Str[0][i] = m_ListCtrlCommand.GetItemText(iListIndex , i);
