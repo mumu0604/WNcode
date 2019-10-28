@@ -132,8 +132,8 @@ BOOL CDlgCommandSheet::OnInitDialog()
 		{ "序号", 36 },
 		{ "分系统", 60 },
 		{ "总线", 40 },
-		{ "绝对时间", 180 },
-		{ "指令功能描述", 200 },
+		{ "绝对时间", 60 },
+		{ "指令功能描述", 180 },
 		{ "指令码", 50 },
 		{ "参数长度", 60 },
 		{ "参数", 660 }
@@ -2311,6 +2311,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 {
 	char frame[FREAM_LEN] = { 0 };
 	CDlgCommandSheet *m_pDlg;
+
 	long long i;
 	unsigned int frameHead;
 	m_pDlg = ((RECVPARAM*)lpParameter)->aa;
@@ -2351,6 +2352,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 	FILE *fpTele;
 	fopen_s(&fpTele, telefilename, "wb");
 	m_pDlg->displayList(true);
+	m_pDlg->m_CDlgRefresh->displayList(true, m_pDlg->m_pCmdInfo_Recv, m_pDlg->m_MonitorCmdNum);
 	SYSTEMTIME tm;
 	while (m_pDlg->m_displayMonitor)
 	{				
@@ -2391,6 +2393,7 @@ DWORD WINAPI CDlgCommandSheet::RecvGPSProc(LPVOID lpParameter)
 							fwrite(&tm_s, 1, 8, fpTele);
 							fwrite(frame, FREAM_LEN - 7, 1, fpTele);
 							m_pDlg->displayList(false);
+							m_pDlg->m_CDlgRefresh->displayList(false, m_pDlg->m_pCmdInfo_Recv, m_pDlg->m_MonitorCmdNum);
 						}
 						else if ((type >> 2) == 0){
 							CString tt;							
@@ -3173,4 +3176,9 @@ void CDlgCommandSheet::OnDeleteallcmd()
 
 	m_ListCtrlCommand.SetSelectionMark(-1);
 
+}
+
+void CDlgCommandSheet::setRefreshDlg(CDlgRefreshSheet *Refresh)
+{
+	m_CDlgRefresh = Refresh;
 }

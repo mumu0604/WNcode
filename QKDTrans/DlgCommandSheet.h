@@ -9,6 +9,7 @@
 #include <vector>
 #include<queue>
 #include <stack>
+#include "DlgRefreshSheet.h"
 // CDlgCommandSheet dialog
 using namespace std;
 class CDlgCommandSheet : public CDialogEx
@@ -126,4 +127,7 @@ public:
 	afx_msg void OnMoveup();
 	afx_msg void OnMovedown();
 	afx_msg void OnDeleteallcmd();
+	CDlgRefreshSheet *m_CDlgRefresh;
+	void setRefreshDlg(CDlgRefreshSheet *Refresh);
+	
 };

@@ -101,7 +101,7 @@ BOOL CQKDTransDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here
 	m_TabQKDTrans.InsertItem(0, ("运行控制"));
-	m_TabQKDTrans.InsertItem(1, "实时工参");
+	m_TabQKDTrans.InsertItem(1, "实时遥测");
 	//	m_CanTab.Create(IDD_TAB1, &m_tab1dialog);
 	m_CDlgCommandSheet.Create(IDD_DLGCOMMANDSHEET, &m_TabQKDTrans);
 	m_CDlgRefreshSheet.Create(IDD_DLGREFRESHSHEET, &m_TabQKDTrans);
@@ -123,7 +123,7 @@ BOOL CQKDTransDlg::OnInitDialog()
 	m_TavPDialog[0]->ShowWindow(SW_SHOW);
 	m_TavPDialog[1]->ShowWindow(SW_HIDE);
 	//保存当前选择
-
+	m_CDlgCommandSheet.setRefreshDlg(&m_CDlgRefreshSheet);
 	m_CurSelTab = 0;
 	SetTimer(0, 500, NULL);
 	return TRUE;  // return TRUE  unless you set the focus to a control

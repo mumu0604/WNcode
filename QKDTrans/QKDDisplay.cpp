@@ -120,10 +120,11 @@ void QKDDisplay::FillMonitorHead()
 	lStyle |= LVS_REPORT;
 	SetWindowLong(m_pListMonitor->m_hWnd, GWL_STYLE, lStyle);
 	
-	DWORD dwStyle = m_pListMonitor->GetExtendedStyle(); //获取当前扩展样式
-	dwStyle &= ~LVS_EX_FULLROWSELECT; //选中某行使整行高亮（report风格时）
+	DWORD dwStyle = dwStyle = m_pListMonitor->GetExtendedStyle(); //获取当前扩展样式
+	dwStyle |= LVS_EX_FULLROWSELECT; //选中某行使整行高亮（report风格时）
 	dwStyle |= LVS_EX_GRIDLINES; //网格线（report风格时）
-	dwStyle &= ~LVS_EX_CHECKBOXES; //item前生成checkbox控件
+	//	dwStyle |= LVS_EX_CHECKBOXES; //item前生成checkbox控件
+	m_pListMonitor->SetExtendedStyle(dwStyle); //设置扩展风格
 	
 	m_pListMonitor->SetExtendedStyle(dwStyle);
 	
