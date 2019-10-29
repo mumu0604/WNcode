@@ -1737,7 +1737,7 @@ void CDlgCommandSheet::OnBnClickedButtonOutCmd()
 	int cnt_64B = 0;
 	int leftByteOf64B = 64;
 
-	char filter[] = "QCmdList Files(*.bin) |*.cls|QCmdTxt Files(*.txt) |*.txt||";
+	char filter[] = "QCmdList Files(*.bin) |*.bin|QCmdTxt Files(*.txt) |*.txt||";
 	CString FileName;
 	CFileDialog dlgOpen(FALSE, NULL, TEXT("list"), OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT | OFN_ENABLESIZING | OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_FILEMUSTEXIST, (LPCTSTR)filter, NULL);
 	if (dlgOpen.DoModal() == IDOK)
