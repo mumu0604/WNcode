@@ -4,9 +4,16 @@
 #include <vector>
 #include<queue>
 #include <stack>
+#include <list>
 //#include "DlgCommandSheet.h"
 // CDlgRefreshSheet dialog
 using namespace std;
+typedef struct Rect2
+{
+public:
+	int Id;
+	double scale[4];
+}control_2;
 class CDlgRefreshSheet : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgRefreshSheet)
@@ -34,4 +41,8 @@ public:
 	double calculation(vector<CString> m_InputNum);
 	CString Caculate(CString textbuff);
 	int m_TotalTeleNUM;
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	void get_control_original_proportion();
+	CRect m_rect;
+	list<control_2*> m_con_list;
 };

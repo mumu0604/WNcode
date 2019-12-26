@@ -10,8 +10,15 @@
 #include<queue>
 #include <stack>
 #include "DlgRefreshSheet.h"
+#include <list>
 // CDlgCommandSheet dialog
 using namespace std;
+typedef struct Rect1
+{
+public:
+	int Id;
+	double scale[4];
+}control_1;
 class CDlgCommandSheet : public CDialogEx
 {
 	DECLARE_DYNAMIC(CDlgCommandSheet)
@@ -129,5 +136,7 @@ public:
 	afx_msg void OnDeleteallcmd();
 	CDlgRefreshSheet *m_CDlgRefresh;
 	void setRefreshDlg(CDlgRefreshSheet *Refresh);
-	
+	CRect m_rect;
+	list<control_1*> m_con_list;
+	void get_control_original_proportion();
 };

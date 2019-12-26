@@ -49,6 +49,7 @@ END_MESSAGE_MAP()
 
 CQKDTransDlg::CQKDTransDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CQKDTransDlg::IDD, pParent)
+	, isfirstOpen(TRUE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -65,6 +66,7 @@ BEGIN_MESSAGE_MAP(CQKDTransDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB_QKDTRANS, &CQKDTransDlg::OnTcnSelchangeTabQkdtrans)
 	ON_WM_TIMER()
+	ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 
@@ -126,6 +128,7 @@ BOOL CQKDTransDlg::OnInitDialog()
 	m_CDlgCommandSheet.setRefreshDlg(&m_CDlgRefreshSheet);
 	m_CurSelTab = 0;
 	SetTimer(0, 500, NULL);
+	get_control_original_proportion();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -199,4 +202,75 @@ void CQKDTransDlg::OnTimer(UINT_PTR nIDEvent)
 	m_CDlgCommandSheet.SendCycleCmd();
 
 	CDialogEx::OnTimer(nIDEvent);
+}
+
+
+void CQKDTransDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+	if (nType == 1)
+	{
+		return;
+	}
+	else
+	{
+		CRect rect;//获取当前窗口的大小
+		for (std::list<control*>::iterator it = m_con_list.begin(); it != m_con_list.end(); it++)
+		{
+			CWnd* pWnd = GetDlgItem((*it)->Id);//获取ID为woc的空间的句柄
+			pWnd->GetWindowRect(&rect);
+			ScreenToClient(&rect);//将控件大小转换为在对话框中的区域坐标
+			rect.left = (*it)->scale[0] * cx;
+			rect.right = (*it)->scale[1] * cx;
+			rect.top = (*it)->scale[2] * cy;
+			rect.bottom = (*it)->scale[3] * cy;
+			pWnd->MoveWindow(rect);//设置控件大小	
+			isfirstOpen = false;
+		}
+	}
+	GetClientRect(&m_rect);//将变化后的对话框大小设为旧大小
+	if (isfirstOpen){
+		return;
+	}
+	CRect TabRect;
+	m_TabQKDTrans.GetClientRect(&TabRect);
+	TabRect.left += 1;
+	TabRect.right -= 1;
+	TabRect.top += 25;
+	TabRect.bottom -= 1;	m_CDlgCommandSheet.OnSize(nType, cx, cy);
+	m_CDlgRefreshSheet.OnSize(nType, cx, cy);
+	switch (m_TabQKDTrans.GetCurSel())
+	{
+	case 0:
+		m_CDlgCommandSheet.SetWindowPos(NULL, TabRect.left, TabRect.top, TabRect.Width(), TabRect.Height(), SWP_SHOWWINDOW);
+		m_CDlgRefreshSheet.SetWindowPos(NULL, TabRect.left, TabRect.top, TabRect.Width(), TabRect.Height(), SWP_HIDEWINDOW);
+		break;
+	case 1:
+		m_CDlgCommandSheet.SetWindowPos(NULL, TabRect.left, TabRect.top, TabRect.Width(), TabRect.Height(), SWP_HIDEWINDOW);
+		m_CDlgRefreshSheet.SetWindowPos(NULL, TabRect.left, TabRect.top, TabRect.Width(), TabRect.Height(), SWP_SHOWWINDOW);
+		break;
+	default:
+		break;
+	}
+	// TODO: Add your message handler code here
+
+}
+void CQKDTransDlg::get_control_original_proportion()
+{
+	HWND hwndChild = ::GetWindow(m_hWnd, GW_CHILD);
+	while (hwndChild)
+	{
+		CRect rect;//获取当前窗口的大小
+		control* tempcon = new control;
+		CWnd* pWnd = GetDlgItem(::GetDlgCtrlID(hwndChild));//获取ID为woc的空间的句柄
+		pWnd->GetWindowRect(&rect);
+		ScreenToClient(&rect);//将控件大小转换为在对话框中的区域坐标
+		tempcon->Id = ::GetDlgCtrlID(hwndChild);//获得控件的ID;
+		tempcon->scale[0] = (double)rect.left / m_rect.Width();//注意类型转换，不然保存成long型就直接为0了
+		tempcon->scale[1] = (double)rect.right / m_rect.Width();
+		tempcon->scale[2] = (double)rect.top / m_rect.Height();
+		tempcon->scale[3] = (double)rect.bottom / m_rect.Height();
+		m_con_list.push_back(tempcon);
+		hwndChild = ::GetWindow(hwndChild, GW_HWNDNEXT);
+	}
 }

@@ -211,7 +211,7 @@ BOOL CDlgCommandSheet::OnInitDialog()
 	pMenu = m_menu.GetSubMenu(0);
 	SetMenu(&m_menu);
 
-	
+	get_control_original_proportion();
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// EXCEPTION: OCX Property Pages should return FALSE
@@ -2547,26 +2547,47 @@ void CDlgCommandSheet::OnBnClickedButtonWrite()
 	m_pInterface->SendCmd(m_COMportNum, 0, 32, sv, false);
 }
 
-
+void CDlgCommandSheet::get_control_original_proportion()
+{
+	HWND hwndChild = ::GetWindow(m_hWnd, GW_CHILD);
+	while (hwndChild)
+	{
+		CRect rect;//获取当前窗口的大小
+		control_1* tempcon = new control_1;
+		CWnd* pWnd = GetDlgItem(::GetDlgCtrlID(hwndChild));//获取ID为woc的空间的句柄
+		pWnd->GetWindowRect(&rect);
+		ScreenToClient(&rect);//将控件大小转换为在对话框中的区域坐标
+		tempcon->Id = ::GetDlgCtrlID(hwndChild);//获得控件的ID;
+		tempcon->scale[0] = (double)rect.left / m_rect.Width();//注意类型转换，不然保存成long型就直接为0了
+		tempcon->scale[1] = (double)rect.right / m_rect.Width();
+		tempcon->scale[2] = (double)rect.top / m_rect.Height();
+		tempcon->scale[3] = (double)rect.bottom / m_rect.Height();
+		m_con_list.push_back(tempcon);
+		hwndChild = ::GetWindow(hwndChild, GW_HWNDNEXT);
+	}
+}
 void CDlgCommandSheet::OnSize(UINT nType, int cx, int cy)
 {
-	//CDialogEx::OnSize(nType, cx, cy);
-
-	//CWnd * pWnd;
-	//pWnd = GetDlgItem(IDC_LIST);      // 获取控件句柄 
-	//if (pWnd) // 判断是否为空，因为对话框创建时会调用此函数，而当时控件还未创建 
-	//{
-	//	CRect rect;    // 获取控件变化前大小 
-	//	pWnd->GetWindowRect(&rect);
-	//	ScreenToClient(&rect); // 将控件大小转换为在对话框中的区域坐标
-	//	// 　cx/m_rect.Width()为对话框在横向的变化比例 
-	//	rect.left = rect.left * cx / m_rect.Width(); /**/ /// //调整控件大小 
-	//	rect.right = rect.right * cx / m_rect.Width();
-	//	rect.top = rect.top * cy / m_rect.Height();
-	//	rect.bottom = rect.bottom * cy / m_rect.Height();
-	//	pWnd->MoveWindow(rect); // 设置控件大小 
-	//}
-	// TODO: Add your message handler code here
+	if (nType == 1)
+	{
+		return;
+	}
+	else
+	{
+		CRect rect;//获取当前窗口的大小
+		for (std::list<control_1*>::iterator it = m_con_list.begin(); it != m_con_list.end(); it++)
+		{
+			CWnd* pWnd = GetDlgItem((*it)->Id);//获取ID为woc的空间的句柄
+			pWnd->GetWindowRect(&rect);
+			ScreenToClient(&rect);//将控件大小转换为在对话框中的区域坐标
+			rect.left = (*it)->scale[0] * cx;
+			rect.right = (*it)->scale[1] * cx;
+			rect.top = (*it)->scale[2] * cy;
+			rect.bottom = (*it)->scale[3] * cy;
+			pWnd->MoveWindow(rect);//设置控件大小	
+		}
+	}
+	GetClientRect(&m_rect);//将变化后的对话框大小设为旧大小
 }
 
 INT getpri(char ptr)
