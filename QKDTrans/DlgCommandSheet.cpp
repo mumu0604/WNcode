@@ -1054,7 +1054,7 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 			}
 
 			//2. new 32B
-			eventNum32B = 0;
+			eventNum32B = 0;//指令计数
 			dev32B = pCmd->dev_id;
 			bus32B = pCmd->bus_flag;
 			left32B = 27;
@@ -1068,9 +1068,9 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 		pBuf[byte32B] = (time & 0xFF000000) >> 24;
 		pBuf[byte32B + 1] = (time & 0xFF0000) >> 16;
 		pBuf[byte32B + 2] = (time & 0xFF00) >> 8;
-		pBuf[byte32B + 3] = time & 0xFF;
-		pBuf[byte32B + 4] = pCmd->cmd_id;
-		memcpy(pBuf + byte32B + 5, pCmd->args, pCmdInfo->arg_byte_num);
+		pBuf[byte32B + 3] = time & 0xFF;//时间，立即令是0
+		pBuf[byte32B + 4] = pCmd->cmd_id;//指令ID
+		memcpy(pBuf + byte32B + 5, pCmd->args, pCmdInfo->arg_byte_num);//参数写入
 		byte32B += pCmdInfo->arg_byte_num + 5;
 		left32B -= pCmdInfo->arg_byte_num + 5;
 		eventNum32B++;
@@ -1080,10 +1080,10 @@ void CDlgCommandSheet::SaveToPLD(CFile *pldFile)
 	devIndex = ((dev32B & 0x80) >> 6) | ((dev32B & 0x20) >> 5);//a simple hack for retrieving device index.
 	if ((dev32B == DEV_ID_KZ) && (time32B == 0)){
 		pBuf[1] = 0;
-		pBuf[2] = bus32B;
+		pBuf[2] = bus32B;//ABcan总线
 	}
 	else{
-		pBuf[1] = cnt32BDev[devIndex];
+		pBuf[1] = cnt32BDev[devIndex];//指令序列计数
 		if (!cnt32BDev[devIndex]){
 			start32BDev[devIndex] = idx32B;
 		}
